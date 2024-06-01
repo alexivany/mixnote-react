@@ -26,7 +26,7 @@ export default function SongDetails() {
             />
           </div>
         </div>
-        <div className="theme-icon--container">
+        <div className="w-6 flex">
           <img id="red-blob" src="./src/assets/SVG/blobs/red-blob.svg" alt="" />
           <img
             id="orange-blob"
