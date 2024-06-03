@@ -1,12 +1,9 @@
 import SidebarSettings from "./SidebarSettings";
-
-type Song = {
-  [key: string]: never;
-};
+import { Song } from "../../types";
 
 interface SidebarProps {
   songs: Song[];
-  setCurrentSong: (song: Song) => void;
+  setCurrentSong: (song: () => Song | undefined) => void;
   currentSong: Song;
 }
 
@@ -23,9 +20,9 @@ export default function Sidebar({
           "bg-gray-100 rounded-2xl outline outline-4 outline-gray-100 font-semibold")
       }
       key={song.id}
-      onClick={() =>
-        setCurrentSong(() => songs.find((newSong) => song.id === newSong.id))
-      }
+      onClick={() => {
+        setCurrentSong(() => songs.find((newSong) => song.id === newSong.id));
+      }}
     >
       {song.title}
     </button>

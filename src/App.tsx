@@ -2,28 +2,57 @@ import { useEffect, useState } from "react";
 import Sidebar from "./components/Sidebar/Sidebar";
 import SongView from "./components/SongView";
 
+import { Song, Version } from "./types";
+
 export default function App() {
   const [songs, setSongs] = useState(
-    JSON.parse(localStorage.getItem("songapp-songs")) || []
+    JSON.parse(localStorage.getItem("songapp-songs") as string) || []
   );
 
-  const [currentSong, setCurrentSong] = useState(songs[0] || {});
+  const [currentSong, setCurrentSong] = useState<Song>(songs[0] || {});
 
-  // const [currentSongId, setCurrentSongId] = useState(
-  //   (songs[0] && songs[0].id) || ""
-  // );
+  const [currentVersion, setCurrentVersion] = useState<Version>({});
 
-  // function findCurrentSong() {
-  //   return (
-  //     songs.find((song) => {
-  //       return song.id === currentSongId;
-  //     }) || songs[0]
-  //   );
-  // }
+  const defaultVersion = Object.values(currentSong).find(
+    (value) => typeof value === "object" && Array.isArray(value) === false
+  );
+
+  useEffect(() => {
+    setCurrentVersion(defaultVersion);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("songapp-songs", JSON.stringify(songs));
   }, [songs]);
+
+  useEffect(() => {
+    const existingSong = songs.find((song) => song.id === currentSong.id);
+
+    if (existingSong) {
+      const existingIndex = songs.findIndex(
+        (song) => song.id === currentSong.id
+      );
+      const newSongArray = songs.map((song, i) => {
+        if (i === existingIndex) {
+          return currentSong;
+        } else {
+          return song;
+        }
+      });
+      setSongs(newSongArray);
+    } else {
+      setSongs([...songs, currentSong]);
+    }
+  }, [currentSong]);
+
+  useEffect(() => {
+    setCurrentSong((prevSongData) => {
+      return {
+        ...prevSongData,
+        [currentVersion.version]: currentVersion,
+      };
+    });
+  }, [currentVersion]);
 
   return (
     <>
@@ -32,7 +61,12 @@ export default function App() {
         setCurrentSong={setCurrentSong}
         currentSong={currentSong}
       />
-      <SongView currentSong={currentSong} />
+      <SongView
+        currentSong={currentSong}
+        setCurrentSong={setCurrentSong}
+        currentVersion={currentVersion}
+        setCurrentVersion={setCurrentVersion}
+      />
     </>
   );
 }
