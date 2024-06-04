@@ -1,13 +1,14 @@
 import SongHeader from "./SongHeader";
 import SongDetails from "./SongDetails";
+import GeneralNotes from "./GeneralNotes";
 
 import { Song, Version } from "../types";
 
 interface SongViewProps {
   currentSong: Song;
-  setCurrentSong: () => void;
+  setCurrentSong: (prevSongData: Song | object) => void;
   currentVersion: Version;
-  setCurrentVersion: () => void;
+  setCurrentVersion: (prevVersionData: Version | object) => void;
 }
 
 export default function SongView({
@@ -16,10 +17,18 @@ export default function SongView({
   currentVersion,
   setCurrentVersion,
 }: SongViewProps) {
-  function handleChange(e) {
+  function handleSongChange(e) {
     setCurrentSong((prevSongData) => {
       return {
         ...prevSongData,
+        [e.target.name]: e.target.value,
+      };
+    });
+  }
+  function handleVersionChange(e) {
+    setCurrentVersion((prevVersionData) => {
+      return {
+        ...prevVersionData,
         [e.target.name]: e.target.value,
       };
     });
@@ -29,17 +38,21 @@ export default function SongView({
       <SongHeader
         currentSong={currentSong}
         setCurrentSong={setCurrentSong}
-        handleChange={handleChange}
+        handleChange={handleSongChange}
         currentVersion={currentVersion}
         setCurrentVersion={setCurrentVersion}
       />
       <SongDetails
         currentSong={currentSong}
         setCurrentSong={setCurrentSong}
-        handleChange={handleChange}
+        handleChange={handleSongChange}
+        setCurrentVersion={setCurrentVersion}
       />
-      {/* <GeneralNotes />
-      <InstrumentInput />
+      <GeneralNotes
+        handleChange={handleVersionChange}
+        currentVersion={currentVersion}
+      />
+      {/* <InstrumentInput />
       <InstrumentNotes /> */}
     </div>
   );

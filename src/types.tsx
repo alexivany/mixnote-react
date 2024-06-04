@@ -1,5 +1,5 @@
 export type Song = {
-  id: number;
+  id: number | string;
   title: string;
   updated: string;
   key: string;

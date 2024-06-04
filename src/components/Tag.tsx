@@ -1,16 +1,32 @@
 import { useState } from "react";
 
-export default function Tag({ tag, i, setCurrentSong, currentSong }) {
+import { Song } from "../types";
+
+interface TagProps {
+  currentSong: Song;
+  setCurrentSong: (prevSongData: Song | object) => void;
+  tag: string;
+  i: number;
+}
+
+export default function Tag({ tag, i, setCurrentSong, currentSong }: TagProps) {
   const [tagCrossToggle, setTagCrossToggle] = useState(false);
 
-  function handleDeleteTag(tag) {
+  function handleTagCrossToggle() {
+    setTagCrossToggle((prevState) => !prevState);
+  }
+
+  function handleDeleteTag(tag: string) {
     const tagArray = Object.entries(currentSong).find(
       ([key]) => key === "tags"
     );
+
+    if (!tagArray) return;
+
     setCurrentSong((prevSongData) => {
       return {
         ...prevSongData,
-        [tagArray[0]]: tagArray[1].filter((prevTag) => prevTag !== tag),
+        tags: (tagArray[1] as string[]).filter((prevTag) => prevTag !== tag),
       };
     });
   }
@@ -20,7 +36,8 @@ export default function Tag({ tag, i, setCurrentSong, currentSong }) {
       name={tag}
       key={i}
       className="border-2 flex items-center border-gray-400 mr-2 rounded-2xl py-1 px-2 text-xs font-semibold text-black cursor-pointer"
-      onClick={() => setTagCrossToggle((prevState) => !prevState)}
+      onClick={handleTagCrossToggle}
+      onBlur={handleTagCrossToggle}
     >
       #{tag}
       {tagCrossToggle && (

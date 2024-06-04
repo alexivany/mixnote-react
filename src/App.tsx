@@ -26,6 +26,9 @@ export default function App() {
   }, [songs]);
 
   useEffect(() => {
+    const date = new Date();
+    currentSong.updated = `${date.toDateString()} ${date.toLocaleTimeString()}`;
+
     const existingSong = songs.find((song) => song.id === currentSong.id);
 
     if (existingSong) {
@@ -60,6 +63,7 @@ export default function App() {
         songs={songs}
         setCurrentSong={setCurrentSong}
         currentSong={currentSong}
+        setSongs={setSongs}
       />
       <SongView
         currentSong={currentSong}
