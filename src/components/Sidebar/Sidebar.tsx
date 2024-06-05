@@ -50,7 +50,7 @@ export default function Sidebar({
     // songRef[0].click();
   }
   return (
-    <div className="p-4 bg-white border-r flex flex-col border-gray-300 gap-4 w-64 fixed inset-y-0 z-10">
+    <div className="p-4 bg-white border-r flex flex-col border-gray-300 gap-4 fixed w-64 inset-y-0 z-10">
       <div className="flex justify-between items-center border-b border-gray-300">
         <h1 className="font-medium text-2xl">MixNote</h1>
         <div className="flex">

@@ -1,6 +1,7 @@
 import SongHeader from "./SongHeader";
 import SongDetails from "./SongDetails";
 import GeneralNotes from "./GeneralNotes";
+import InstrumentSection from "./InstrumentSection";
 
 import { Song, Version } from "../types";
 
@@ -34,7 +35,7 @@ export default function SongView({
     });
   }
   return (
-    <div className="absolute left-64 right-0 p-4">
+    <div className="absolute w-vw ml-64 left-0 right-0 p-4">
       <SongHeader
         currentSong={currentSong}
         setCurrentSong={setCurrentSong}
@@ -52,8 +53,10 @@ export default function SongView({
         handleChange={handleVersionChange}
         currentVersion={currentVersion}
       />
-      {/* <InstrumentInput />
-      <InstrumentNotes /> */}
+      <InstrumentSection
+        currentVersion={currentVersion}
+        setCurrentVersion={setCurrentVersion}
+      />
     </div>
   );
 }

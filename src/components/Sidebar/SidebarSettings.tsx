@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+
+import { useOnClickOutside } from "usehooks-ts";
 import { v4 as uuidv4 } from "uuid";
 
 interface SidebarSettings {
@@ -11,6 +13,8 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
 
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
+  const modalRef = useRef(null);
+
   function handleSongModal() {
     setShowSongModal((prevState) => !prevState);
     setSongModalInput("");
@@ -18,10 +22,19 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
 
   function addNewSong() {
     setSongs((prevSongs) => {
-      return [...prevSongs, { title: songModalInput, id: uuidv4() }];
+      return [
+        ...prevSongs,
+        {
+          title: songModalInput,
+          id: uuidv4(),
+          ["Demo"]: { version: "Demo" },
+        },
+      ];
     });
     handleSongModal();
   }
+
+  useOnClickOutside(modalRef, handleSongModal);
   return (
     <div className="absolute inset-x-4 text-lg bottom-0 pt-4 border-t border-gray-300 mb-4 flex flex-col gap-4">
       <button
@@ -40,7 +53,10 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
         About
       </button>
       {showSongModal && (
-        <div className="bg-white fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 w-2/5 flex flex-col justify-between border border-gray-300 rounded-xl z-10 py-6 px-6">
+        <div
+          ref={modalRef}
+          className="bg-white fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 w-2/5 flex flex-col justify-between border border-gray-300 rounded-xl z-10 py-6 px-6"
+        >
           <span className="text-xl">Enter new song name</span>
           <input
             autoFocus
@@ -48,7 +64,7 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
             onChange={(e) => setSongModalInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && addNewSong()}
             type="text"
-            className="max-w-full mb-2 border border-gray-300 rounded-lg"
+            className="max-w-full font-normal mb-2 border border-gray-300 px-2 rounded-lg"
           ></input>
           <div className="flex gap-4 justify-end">
             <button

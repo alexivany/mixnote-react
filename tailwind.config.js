@@ -5,6 +5,10 @@ export default {
     extend: {
       fontFamily: {
         sans: ["Inter", "sans-serif"],
+        mono: ["monospace"],
+      },
+      borderWidth: {
+        3: "3px",
       },
     },
   },

@@ -18,10 +18,18 @@ export default function SongDetails({
   setCurrentVersion,
 }: SongDetailsProps) {
   const [tagInputToggle, setTagInputToggle] = useState(false);
+  const [duplicateTagWarning, setDuplicateTagWarning] = useState(false);
 
   function handleTagKeyPress(e) {
     if (e.key === "Enter") {
       if (currentSong.tags) {
+        const duplicateCheck = currentSong.tags.some(
+          (tag) => tag === e.target.value
+        );
+        if (duplicateCheck) {
+          setDuplicateTagWarning(true);
+          return;
+        }
         setCurrentSong((prevSongData) => {
           return {
             ...prevSongData,
@@ -42,6 +50,7 @@ export default function SongDetails({
 
   function handleTagInput() {
     setTagInputToggle((prevState) => !prevState);
+    setDuplicateTagWarning(false);
   }
 
   const tagElements = currentSong.tags?.map((tag, i) => (
@@ -57,14 +66,19 @@ export default function SongDetails({
     setCurrentVersion((prevVersionData) => {
       return {
         ...prevVersionData,
-        color: e.target.dataset.color,
+        theme: {
+          bgColor: e.target.dataset.bgcolor,
+          textColor: e.target.dataset.textcolor,
+          borderColor: e.target.dataset.bordercolor,
+          activeColor: e.target.dataset.activecolor,
+        },
       };
     });
   }
 
   return (
     <div className="flex justify-between my-2">
-      <div className="flex">
+      <div className="flex items-center">
         <div className="flex">{tagElements}</div>
         <button
           onClick={handleTagInput}
@@ -82,6 +96,11 @@ export default function SongDetails({
             />
           )}
         </button>
+        {duplicateTagWarning && (
+          <span className="font-semibold text-sm ml-2">
+            Tag already exists!
+          </span>
+        )}
       </div>
       <div className="flex justify-between gap-4 items-center">
         <div className="flex gap-2">
@@ -116,7 +135,10 @@ export default function SongDetails({
             src="./src/assets/SVG/blobs/red-blob.svg"
             alt=""
             className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
-            data-color="red-500"
+            data-bgcolor="bg-red-500"
+            data-textcolor="text-white"
+            data-activecolor="text-red-500"
+            data-bordercolor="border-red-500"
             onClick={handleColorChange}
           />
           <img
@@ -124,7 +146,10 @@ export default function SongDetails({
             src="./src/assets/SVG/blobs/orange-blob.svg"
             alt=""
             className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
-            data-color="orange-500"
+            data-bgcolor="bg-orange-500"
+            data-textcolor="text-white"
+            data-activecolor="text-orange-500"
+            data-bordercolor="border-orange-500"
             onClick={handleColorChange}
           />
           <img
@@ -132,7 +157,10 @@ export default function SongDetails({
             src="./src/assets/SVG/blobs/yellow-blob.svg"
             alt=""
             className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
-            data-color="yellow-400"
+            data-bgcolor="bg-yellow-400"
+            data-textcolor="text-white"
+            data-activecolor="text-yellow-400"
+            data-bordercolor="border-yellow-400"
             onClick={handleColorChange}
           />
           <img
@@ -140,7 +168,10 @@ export default function SongDetails({
             src="./src/assets/SVG/blobs/green-blob.svg"
             alt=""
             className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
-            data-color="green-500"
+            data-bgcolor="bg-green-500"
+            data-textcolor="text-white"
+            data-activecolor="text-green-500"
+            data-bordercolor="border-green-500"
             onClick={handleColorChange}
           />
           <img
@@ -148,7 +179,10 @@ export default function SongDetails({
             src="./src/assets/SVG/blobs/teal-blob.svg"
             alt=""
             className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
-            data-color="teal-500"
+            data-bgcolor="bg-teal-500"
+            data-textcolor="text-white"
+            data-activecolor="text-teal-500"
+            data-bordercolor="border-teal-500"
             onClick={handleColorChange}
           />
           <img
@@ -156,7 +190,10 @@ export default function SongDetails({
             src="./src/assets/SVG/blobs/cyan-blob.svg"
             alt=""
             className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
-            data-color="cyan-500"
+            data-bgcolor="bg-cyan-500"
+            data-textcolor="text-white"
+            data-activecolor="text-cyan-500"
+            data-bordercolor="border-cyan-500"
             onClick={handleColorChange}
           />
           <img
@@ -164,7 +201,10 @@ export default function SongDetails({
             src="./src/assets/SVG/blobs/blue-blob.svg"
             alt=""
             className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
-            data-color="blue-500"
+            data-bgcolor="bg-blue-500"
+            data-textcolor="text-white"
+            data-activecolor="text-blue-500"
+            data-bordercolor="border-blue-500"
             onClick={handleColorChange}
           />
           <img
@@ -172,7 +212,10 @@ export default function SongDetails({
             src="./src/assets/SVG/blobs/purple-blob.svg"
             alt=""
             className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
-            data-color="purple-500"
+            data-bgcolor="bg-purple-500"
+            data-textcolor="text-white"
+            data-activecolor="text-purple-500"
+            data-bordercolor="border-purple-500"
             onClick={handleColorChange}
           />
           <img
@@ -180,14 +223,20 @@ export default function SongDetails({
             src="./src/assets/SVG/blobs/pink-blob.svg"
             alt=""
             className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
-            data-color="pink-500"
+            data-bgcolor="bg-pink-500"
+            data-textcolor="text-white"
+            data-activecolor="text-pink-500"
+            data-bordercolor="border-pink-500"
             onClick={handleColorChange}
           />
           <img
             id="grey-blob"
             src="./src/assets/SVG/blobs/grey-blob.svg"
             alt=""
-            data-color="neutral-300"
+            data-bgcolor="bg-gray-100"
+            data-textcolor="text-black"
+            data-activecolor="text-black"
+            data-bordercolor="border-gray-100"
             className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
             onClick={handleColorChange}
           />

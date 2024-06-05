@@ -19,7 +19,7 @@ export default function App() {
 
   useEffect(() => {
     setCurrentVersion(defaultVersion);
-  }, []);
+  }, [defaultVersion]);
 
   useEffect(() => {
     localStorage.setItem("songapp-songs", JSON.stringify(songs));
@@ -42,6 +42,9 @@ export default function App() {
           return song;
         }
       });
+      newSongArray.sort((a, b) => {
+        return new Date(a.updated) > new Date(b.updated) ? -1 : 1;
+      });
       setSongs(newSongArray);
     } else {
       setSongs([...songs, currentSong]);
@@ -58,7 +61,7 @@ export default function App() {
   }, [currentVersion]);
 
   return (
-    <>
+    <div className="">
       <Sidebar
         songs={songs}
         setCurrentSong={setCurrentSong}
@@ -71,6 +74,6 @@ export default function App() {
         currentVersion={currentVersion}
         setCurrentVersion={setCurrentVersion}
       />
-    </>
+    </div>
   );
 }
