@@ -11,7 +11,7 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
   const [showSongModal, setShowSongModal] = useState(false);
   const [songModalInput, setSongModalInput] = useState("");
 
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  // const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const modalRef = useRef(null);
 

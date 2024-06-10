@@ -24,8 +24,6 @@ export default function SongHeader({
   const [showVersionModal, setShowVersionModal] = useState(false);
   const [versionModalInput, setVersionModalInput] = useState("");
 
-  const versionRef = useRef<HTMLButtonElement>(null);
-
   const versionModalRef = useRef(null);
 
   const versionElements = Object.entries(currentSong).map(
@@ -41,7 +39,7 @@ export default function SongHeader({
               : `border ${value?.theme?.borderColor} ${value?.theme?.bgColor} ${value?.theme?.textColor}`)
           }
         >
-          <button ref={versionRef} onClick={handleVersionChange} value={key}>
+          <button onClick={handleVersionChange} value={key}>
             {key}
           </button>
           {currentVersion?.version === key && (
@@ -111,20 +109,13 @@ export default function SongHeader({
         key !== currentVersion.version
     );
     const filteredSong = Object.entries(currentSong).filter(
-      ([key, value]) =>
-        typeof value !== "object" || Array.isArray(value) === true
+      ([_, value]) => typeof value !== "object" || Array.isArray(value) === true
     );
     const concatSong = filteredSong.concat(filteredVersions);
 
     const newSongObject = Object.fromEntries(concatSong);
 
     setCurrentSong(newSongObject);
-
-    versionRef.current?.click();
-
-    // setCurrentVersion(newVersion[1]);
-
-    // versionRef[1].click();
   }
 
   function handleSongDownload(e) {
@@ -145,7 +136,7 @@ export default function SongHeader({
     reader.readAsText(e.target.files[0]);
 
     reader.addEventListener("load", () => {
-      setCurrentSong(JSON.parse(reader.result));
+      setCurrentSong(JSON.parse(reader.result as string));
     });
   }
 

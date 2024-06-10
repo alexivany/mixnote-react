@@ -10,7 +10,12 @@ export type Song = {
 };
 
 export type Version = {
-  color: string;
+  theme: {
+    activeColor: string;
+    bgColor: string;
+    borderColor: string;
+    textColor: string;
+  };
   version: string;
   generalNotes: string;
 } & {

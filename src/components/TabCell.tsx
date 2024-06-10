@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function TabCell({ value }) {
+export default function TabCell({ setTabString, value }) {
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
@@ -10,11 +10,12 @@ export default function TabCell({ value }) {
     e.preventDefault();
   }
 
-  function handleClick(e) {
+  function handleClick() {
     setShowInput(true);
   }
 
   function handleInputBlur(b) {
+    setTabString();
     setTabValue(b.target.value);
     setShowInput(false);
   }

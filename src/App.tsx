@@ -11,11 +11,11 @@ export default function App() {
 
   const [currentSong, setCurrentSong] = useState<Song>(songs[0] || {});
 
-  const [currentVersion, setCurrentVersion] = useState<Version>({});
-
   const defaultVersion = Object.values(currentSong).find(
     (value) => typeof value === "object" && Array.isArray(value) === false
   );
+
+  const [currentVersion, setCurrentVersion] = useState<Version>(defaultVersion);
 
   useEffect(() => {
     setCurrentVersion(defaultVersion);

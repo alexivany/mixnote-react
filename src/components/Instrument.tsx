@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+// import { useState, useEffect } from "react";
 
 import InstrumentTabs from "./InstrumentTabs";
 
@@ -23,7 +23,10 @@ export default function Instrument({
 
   function handleDeleteInstrument() {
     const filteredVersion = Object.entries(currentVersion).filter(
-      ([key, value]) => key !== instrumentObject.instrument
+      ([key, value]) => {
+        key !== instrumentObject.instrument;
+        console.log(value);
+      }
     );
 
     const newVersionObject = Object.fromEntries(filteredVersion);
@@ -56,6 +59,7 @@ export default function Instrument({
         rows={5}
         placeholder="Enter notes here..."
       />
+
       {(currentInstrument.instrument === "Guitar" ||
         currentInstrument.instrument === "Bass") && (
         <InstrumentTabs

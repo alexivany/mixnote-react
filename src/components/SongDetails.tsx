@@ -86,14 +86,14 @@ export default function SongDetails({
           className="border-2 border-gray-100 rounded-2xl py-1 px-2 text-xs font-semibold text-gray-400 cursor-pointer"
         >
           {tagInputToggle ? (
-            "Add Tags..."
-          ) : (
             <input
               onKeyDown={handleTagKeyPress}
               onBlur={handleTagInput}
               className="text-black border-b-2 outline-none"
               autoFocus
             />
+          ) : (
+            "Add Tags..."
           )}
         </button>
         {duplicateTagWarning && (
@@ -106,7 +106,7 @@ export default function SongDetails({
         <div className="flex gap-2">
           <div>
             <input
-              value={currentSong.key}
+              value={currentSong.key || ""}
               onChange={handleChange}
               type="text"
               name="key"
@@ -118,7 +118,7 @@ export default function SongDetails({
           </div>
           <div>
             <input
-              value={currentSong.bpm}
+              value={currentSong.bpm || ""}
               onChange={handleChange}
               type="number"
               name="bpm"

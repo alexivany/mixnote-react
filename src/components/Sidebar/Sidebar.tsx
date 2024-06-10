@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useRef } from "react";
+import { Dispatch, SetStateAction } from "react";
 import SidebarSettings from "./SidebarSettings";
 import { Song } from "../../types";
 
