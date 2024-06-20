@@ -53,10 +53,11 @@ export default function SongView({
         handleChange={handleVersionChange}
         currentVersion={currentVersion}
       />
-      <InstrumentSection
+      {/* <InstrumentSection
         currentVersion={currentVersion}
         setCurrentVersion={setCurrentVersion}
-      />
+
+      /> */}
     </div>
   );
 }

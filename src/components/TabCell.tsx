@@ -1,6 +1,13 @@
 import { useState } from "react";
 
-export default function TabCell({ setTabString, value }) {
+export default function TabCell({
+  tabArray,
+  setTabArray,
+  setTabString,
+  value,
+  index,
+  row,
+}) {
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
@@ -15,10 +22,26 @@ export default function TabCell({ setTabString, value }) {
   }
 
   function handleInputBlur(b) {
-    setTabString();
-    setTabValue(b.target.value);
-    setShowInput(false);
+    if (b.target.value !== "" || b.target.value !== "-") {
+      const newArray = tabArray.map((subarray) => {
+        if (subarray[1]) {
+          subarray[1].map((t, i) => {
+            if (i === index) {
+              return b.target.value;
+            } else {
+              return t;
+            }
+          });
+        }
+        return subarray;
+      });
+
+      setTabValue(b.target.value);
+      setTabArray(newArray);
+      setShowInput(false);
+    }
   }
+
   return (
     <span
       onClick={handleClick}

@@ -56,6 +56,7 @@ export default function SongDetails({
   const tagElements = currentSong.tags?.map((tag, i) => (
     <Tag
       tag={tag}
+      key={tag}
       i={i}
       setCurrentSong={setCurrentSong}
       currentSong={currentSong}
