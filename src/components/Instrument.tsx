@@ -1,6 +1,6 @@
 // import { useState, useEffect } from "react";
 
-import InstrumentTabs from "./InstrumentTabs";
+// import InstrumentTabs from "./InstrumentTabs";
 
 export default function Instrument({
   currentVersion,
@@ -60,13 +60,31 @@ export default function Instrument({
         placeholder="Enter notes here..."
       />
 
-      {(currentInstrument.instrument === "Guitar" ||
+      {/* {(currentInstrument.instrument === "Guitar" ||
         currentInstrument.instrument === "Bass") && (
         <InstrumentTabs
           instrumentToTab={currentInstrument.instrument}
           currentVersion={currentVersion}
           setCurrentVersion={setCurrentVersion}
         />
+      )} */}
+
+      {currentInstrument.instrument === "Vocals" && (
+        <div className="relative flex">
+          <textarea
+            value={currentInstrument.lyrics}
+            onChange={handleInstrumentChange}
+            name="lyrics"
+            className="resize-none w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-2 focus:outline-gray-500"
+            rows={8}
+            placeholder="Enter lyrics here..."
+          />
+          <button
+            className={`absolute right-5 bottom-4 text-md rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold cursor-pointer`}
+          >
+            Suggest Lyrics...
+          </button>
+        </div>
       )}
     </div>
   );

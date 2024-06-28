@@ -4,12 +4,13 @@ import GeneralNotes from "./GeneralNotes";
 import InstrumentSection from "./InstrumentSection";
 
 import { Song, Version } from "../types";
+import { Dispatch, SetStateAction } from "react";
 
 interface SongViewProps {
   currentSong: Song;
-  setCurrentSong: (prevSongData: Song | object) => void;
+  setCurrentSong: Dispatch<SetStateAction<Song | undefined>>;
   currentVersion: Version;
-  setCurrentVersion: (prevVersionData: Version | object) => void;
+  setCurrentVersion: Dispatch<SetStateAction<Version | undefined>>;
 }
 
 export default function SongView({
@@ -23,7 +24,7 @@ export default function SongView({
       return {
         ...prevSongData,
         [e.target.name]: e.target.value,
-      };
+      } as Song;
     });
   }
   function handleVersionChange(e) {
@@ -31,7 +32,7 @@ export default function SongView({
       return {
         ...prevVersionData,
         [e.target.name]: e.target.value,
-      };
+      } as Version;
     });
   }
   return (
@@ -53,11 +54,10 @@ export default function SongView({
         handleChange={handleVersionChange}
         currentVersion={currentVersion}
       />
-      {/* <InstrumentSection
+      <InstrumentSection
         currentVersion={currentVersion}
         setCurrentVersion={setCurrentVersion}
-
-      /> */}
+      />
     </div>
   );
 }

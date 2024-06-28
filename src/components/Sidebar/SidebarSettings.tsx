@@ -27,7 +27,16 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
         {
           title: songModalInput,
           id: uuidv4(),
-          ["Demo"]: { version: "Demo" },
+          ["Demo"]: {
+            version: "Demo",
+            generalNotes: "",
+            theme: {
+              activeColor: "text-black",
+              bgColor: "bg-gray-100",
+              borderColor: "border-gray-100",
+              textColor: "text-black",
+            },
+          },
         },
       ];
     });

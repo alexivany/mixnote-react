@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, Dispatch, SetStateAction } from "react";
 
 import { useOnClickOutside } from "usehooks-ts";
 
@@ -6,10 +6,10 @@ import { Song, Version } from "../types";
 
 interface SongHeaderProps {
   currentSong: Song;
-  setCurrentSong: (prevSongData: Song | object) => void;
+  setCurrentSong: Dispatch<SetStateAction<Song | undefined>>;
   handleChange: (e) => void;
   currentVersion: Version;
-  setCurrentVersion: (version: Version) => void;
+  setCurrentVersion: Dispatch<SetStateAction<Version | undefined>>;
 }
 
 export default function SongHeader({
@@ -19,10 +19,10 @@ export default function SongHeader({
   currentVersion,
   setCurrentVersion,
 }: SongHeaderProps) {
-  const [showTitleCross, setShowTitleCross] = useState(false);
+  const [showTitleCross, setShowTitleCross] = useState<boolean>(false);
 
-  const [showVersionModal, setShowVersionModal] = useState(false);
-  const [versionModalInput, setVersionModalInput] = useState("");
+  const [showVersionModal, setShowVersionModal] = useState<boolean>(false);
+  const [versionModalInput, setVersionModalInput] = useState<string>("");
 
   const versionModalRef = useRef(null);
 
@@ -56,11 +56,11 @@ export default function SongHeader({
   );
 
   function handleVersionChange(e) {
-    const newVersion = Object.entries<Version>(currentSong).find(
+    const newVersion = Object.entries(currentSong).find(
       ([key]) => key === e.target.value
     );
     if (!newVersion) return;
-    setCurrentVersion(newVersion[1]);
+    setCurrentVersion(newVersion[1] as Version);
   }
   function handleTextFocus(e) {
     if (e.type === "blur") {
@@ -80,7 +80,7 @@ export default function SongHeader({
       return {
         ...prevSongData,
         title: "",
-      };
+      } as Song;
     });
   }
 
@@ -95,8 +95,15 @@ export default function SongHeader({
         ...prevSongData,
         [versionModalInput]: {
           version: versionModalInput,
+          generalNotes: "",
+          theme: {
+            activeColor: "text-black",
+            bgColor: "bg-gray-100",
+            borderColor: "border-gray-100",
+            textColor: "text-black",
+          },
         },
-      };
+      } as Song;
     });
     handleVersionModal();
   }
@@ -113,8 +120,14 @@ export default function SongHeader({
     );
     const concatSong = filteredSong.concat(filteredVersions);
 
-    const newSongObject = Object.fromEntries(concatSong);
+    const newSongObject = Object.fromEntries(concatSong) as Song;
 
+    setCurrentVersion(
+      () =>
+        Object.values(newSongObject).find(
+          (value) => typeof value === "object" && Array.isArray(value) === false
+        ) as Version
+    );
     setCurrentSong(newSongObject);
   }
 
@@ -179,7 +192,8 @@ export default function SongHeader({
               alt=""
               className={
                 "w-5 " +
-                (currentVersion?.theme?.bgColor !== "bg-gray-100" && "invert")
+                (currentVersion?.theme?.bgColor !== ("bg-gray-100" || "") &&
+                  "invert")
               }
             />
           </button>

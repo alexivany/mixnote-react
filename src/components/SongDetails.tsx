@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import Tag from "./Tag";
 
@@ -6,9 +6,9 @@ import { Song, Version } from "../types";
 
 interface SongDetailsProps {
   currentSong: Song;
-  setCurrentSong: (prevSongData: Song | object) => void;
+  setCurrentSong: Dispatch<SetStateAction<Song | undefined>>;
   handleChange: (e) => void;
-  setCurrentVersion: (prevVersionData: Version | object) => void;
+  setCurrentVersion: Dispatch<SetStateAction<Version | undefined>>;
 }
 
 export default function SongDetails({
@@ -17,12 +17,13 @@ export default function SongDetails({
   handleChange,
   setCurrentVersion,
 }: SongDetailsProps) {
-  const [tagInputToggle, setTagInputToggle] = useState(false);
-  const [duplicateTagWarning, setDuplicateTagWarning] = useState(false);
+  const [tagInputToggle, setTagInputToggle] = useState<boolean>(false);
+  const [duplicateTagWarning, setDuplicateTagWarning] =
+    useState<boolean>(false);
 
   function handleTagKeyPress(e) {
     if (e.key === "Enter") {
-      if (currentSong.tags) {
+      if (currentSong?.tags) {
         const duplicateCheck = currentSong.tags.some(
           (tag) => tag === e.target.value
         );
@@ -33,15 +34,15 @@ export default function SongDetails({
         setCurrentSong((prevSongData) => {
           return {
             ...prevSongData,
-            tags: [...prevSongData.tags, e.target.value],
-          };
+            tags: [...(prevSongData?.tags ?? []), e.target.value],
+          } as Song;
         });
       } else {
         setCurrentSong((prevSongData) => {
           return {
             ...prevSongData,
             tags: [e.target.value],
-          };
+          } as Song;
         });
       }
       e.target.value = "";
@@ -73,7 +74,7 @@ export default function SongDetails({
           borderColor: e.target.dataset.bordercolor,
           activeColor: e.target.dataset.activecolor,
         },
-      };
+      } as Version;
     });
   }
 

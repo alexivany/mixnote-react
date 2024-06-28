@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { Song } from "../types";
 
 interface TagProps {
   currentSong: Song;
-  setCurrentSong: (prevSongData: Song | object) => void;
+  setCurrentSong: Dispatch<SetStateAction<Song | undefined>>;
   tag: string;
   i: number;
 }
 
 export default function Tag({ tag, i, setCurrentSong, currentSong }: TagProps) {
-  const [tagCrossToggle, setTagCrossToggle] = useState(false);
+  const [tagCrossToggle, setTagCrossToggle] = useState<boolean>(false);
 
   function handleTagCrossToggle() {
     setTagCrossToggle((prevState) => !prevState);
@@ -27,7 +27,7 @@ export default function Tag({ tag, i, setCurrentSong, currentSong }: TagProps) {
       return {
         ...prevSongData,
         tags: (tagArray[1] as string[]).filter((prevTag) => prevTag !== tag),
-      };
+      } as Song;
     });
   }
 

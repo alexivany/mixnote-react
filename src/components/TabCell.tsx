@@ -8,8 +8,8 @@ export default function TabCell({
   index,
   row,
 }) {
-  const [showInput, setShowInput] = useState(false);
-  const [inputValue, setInputValue] = useState("");
+  const [showInput, setShowInput] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState<string>("");
 
   const [tabValue, setTabValue] = useState(value);
 
