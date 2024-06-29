@@ -8,8 +8,8 @@ interface SidebarSettings {
 }
 
 export default function SidebarSettings({ setSongs }: SidebarSettings) {
-  const [showSongModal, setShowSongModal] = useState(false);
-  const [songModalInput, setSongModalInput] = useState("");
+  const [showSongModal, setShowSongModal] = useState<boolean>(false);
+  const [songModalInput, setSongModalInput] = useState<string>("");
 
   // const [showSettingsModal, setShowSettingsModal] = useState(false);
 

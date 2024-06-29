@@ -5,9 +5,10 @@ export default function InstrumentSection({
   currentVersion,
   setCurrentVersion,
 }) {
-  const [newInstrumentInput, setNewInstrumentInput] = useState("");
-  const [duplicateInstrumentWarning, setDuplicateInstrumentWarning] =
-    useState(false);
+  const [newInstrumentInput, setNewInstrumentInput] = useState<string>("");
+  const [instrumentWarning, setInstrumentWarning] = useState<boolean>(false);
+  const [instrumentWarningText, setInstrumentWarningText] =
+    useState<string>("");
 
   function handleNewInstrument() {
     const duplicateCheck = Object.entries(currentVersion).find(
@@ -15,10 +16,21 @@ export default function InstrumentSection({
     );
 
     if (duplicateCheck) {
-      setDuplicateInstrumentWarning(true);
+      setInstrumentWarningText("Instrument already exists!");
+      setInstrumentWarning(true);
       setTimeout(() => {
-        setDuplicateInstrumentWarning(false);
+        setInstrumentWarning(false);
       }, 2000);
+      return;
+    }
+
+    if (newInstrumentInput === "") {
+      setInstrumentWarningText("Instrument must have a name!");
+      setInstrumentWarning(true);
+      setTimeout(() => {
+        setInstrumentWarning(false);
+      }, 2000);
+      return;
       return;
     }
 
@@ -48,6 +60,16 @@ E|------------------------------------------------------------------------------
             label: newInstrumentInput,
             notes: "",
             tabs: template,
+          },
+        };
+      } else if (newInstrumentInput === "Vocals") {
+        return {
+          ...prevVersionData,
+          [newInstrumentInput]: {
+            instrument: newInstrumentInput,
+            label: newInstrumentInput,
+            notes: "",
+            lyrics: "",
           },
         };
       } else {
@@ -95,9 +117,9 @@ E|------------------------------------------------------------------------------
         >
           Add Instrument
         </button>
-        {duplicateInstrumentWarning && (
+        {instrumentWarning && (
           <span className="font-semibold text-md ml-2">
-            Instrument already exists!
+            {instrumentWarningText}
           </span>
         )}
         <datalist id="instruments">

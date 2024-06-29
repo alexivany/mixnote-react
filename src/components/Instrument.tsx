@@ -1,4 +1,8 @@
-// import { useState, useEffect } from "react";
+import { useRef, useState } from "react";
+
+import { useOnClickOutside } from "usehooks-ts";
+
+import LyricModal from "./LyricModal";
 
 // import InstrumentTabs from "./InstrumentTabs";
 
@@ -7,6 +11,10 @@ export default function Instrument({
   setCurrentVersion,
   instrumentObject,
 }) {
+  const [showLyricModal, setShowLyricModal] = useState<boolean>(false);
+
+  const modalRef = useRef<HTMLDivElement>(null);
+
   const currentInstrument = currentVersion[instrumentObject.instrument];
 
   function handleInstrumentChange(e) {
@@ -24,15 +32,26 @@ export default function Instrument({
   function handleDeleteInstrument() {
     const filteredVersion = Object.entries(currentVersion).filter(
       ([key, value]) => {
-        key !== instrumentObject.instrument;
-        console.log(value);
+        if (key !== instrumentObject.instrument) {
+          return [key, value];
+        }
       }
     );
-
     const newVersionObject = Object.fromEntries(filteredVersion);
-
     setCurrentVersion(newVersionObject);
   }
+
+  function handleLyricModal() {
+    setShowLyricModal((prevState) => !prevState);
+  }
+
+  // useEffect(() => {
+  //   if (modalRef) {
+  //     modalRef.current?.scrollIntoView();
+  //   }
+  // });
+
+  useOnClickOutside(modalRef, handleLyricModal);
 
   return (
     <div className="flex flex-col gap-4">
@@ -80,11 +99,21 @@ export default function Instrument({
             placeholder="Enter lyrics here..."
           />
           <button
+            onClick={handleLyricModal}
             className={`absolute right-5 bottom-4 text-md rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold cursor-pointer`}
           >
             Suggest Lyrics...
           </button>
         </div>
+      )}
+
+      {showLyricModal && (
+        <LyricModal
+          modalRef={modalRef}
+          handleLyricModal={handleLyricModal}
+          setCurrentVersion={setCurrentVersion}
+          instrumentObject={instrumentObject}
+        />
       )}
     </div>
   );

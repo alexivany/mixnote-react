@@ -9,7 +9,7 @@ interface BaseVersion {
   };
 }
 
-interface InstrumentData {
+export interface InstrumentData {
   instrument: string;
   notes: string;
   label: string;
@@ -32,4 +32,12 @@ export type Song = {
   tags?: string[];
 } & {
   [version: string]: Version;
+};
+
+export type Modal = {
+  about: string;
+  lines: number;
+  section: string;
+  mood: string;
+  poetic: number;
 };
