@@ -22,6 +22,10 @@ export default function SongDetails({
     useState<boolean>(false);
 
   function handleTagKeyPress(e) {
+    if (e.key === " ") {
+      e.preventDefault();
+      e.target.value += " ";
+    }
     if (e.key === "Enter") {
       if (currentSong?.tags) {
         const duplicateCheck = currentSong.tags.some(
@@ -29,6 +33,10 @@ export default function SongDetails({
         );
         if (duplicateCheck) {
           setDuplicateTagWarning(true);
+          return;
+        }
+        if (e.target.value === "" || !/^[a-zA-Z0-9]+$/.test(e.target.value)) {
+          setTagInputToggle(false);
           return;
         }
         setCurrentSong((prevSongData) => {

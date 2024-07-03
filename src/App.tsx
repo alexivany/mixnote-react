@@ -5,6 +5,7 @@ import SongView from "./components/SongView";
 import { v4 as uuidv4 } from "uuid";
 
 import { Song, Version } from "./types";
+import { ApiContextProvider } from "./contexts/api-context";
 
 const PLACEHOLDER_LOCAL_SONGS: Song[] = [
   {
@@ -86,11 +87,7 @@ export default function App() {
         });
         setSongs(newSongArray);
         localStorage.setItem("songapp-songs", JSON.stringify(newSongArray));
-        console.log("SET");
       }
-      // } else {
-      //   setSongs([...songs, currentSong]);
-      // }
     }
   }, [currentSong, songs]);
 
@@ -118,19 +115,21 @@ export default function App() {
     <div className="">
       {songs && currentSong && currentVersion && (
         <>
-          <Sidebar
-            songs={songs}
-            setCurrentSong={setCurrentSong}
-            currentSong={currentSong}
-            setSongs={setSongs}
-            setCurrentVersion={setCurrentVersion}
-          />
-          <SongView
-            currentSong={currentSong}
-            setCurrentSong={setCurrentSong}
-            currentVersion={currentVersion}
-            setCurrentVersion={setCurrentVersion}
-          />
+          <ApiContextProvider>
+            <Sidebar
+              songs={songs}
+              setCurrentSong={setCurrentSong}
+              currentSong={currentSong}
+              setSongs={setSongs}
+              setCurrentVersion={setCurrentVersion}
+            />
+            <SongView
+              currentSong={currentSong}
+              setCurrentSong={setCurrentSong}
+              currentVersion={currentVersion}
+              setCurrentVersion={setCurrentVersion}
+            />
+          </ApiContextProvider>
         </>
       )}
     </div>

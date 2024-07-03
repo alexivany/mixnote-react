@@ -63,13 +63,15 @@ export default function Sidebar({
 
     localStorage.setItem("songapp-songs", JSON.stringify(newSongArray));
     setSongs(newSongArray);
-    setCurrentSong(newSongArray[0]);
+    console.log(newSongArray[0]);
     setCurrentVersion(
       () =>
         Object.values(newSongArray[0]).find(
           (value) => typeof value === "object" && Array.isArray(value) === false
         ) as Version
     );
+    setCurrentSong(newSongArray[0]);
+
     // songRef.current.get(newSongArray[0].id).click();
     console.log(songRef.current?.get(newSongArray[0].id));
   }

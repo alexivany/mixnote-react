@@ -24,13 +24,15 @@ export default function InstrumentSection({
       return;
     }
 
-    if (newInstrumentInput === "") {
+    if (
+      newInstrumentInput === "" ||
+      !/^[a-zA-Z0-9]+$/.test(newInstrumentInput)
+    ) {
       setInstrumentWarningText("Instrument must have a name!");
       setInstrumentWarning(true);
       setTimeout(() => {
         setInstrumentWarning(false);
       }, 2000);
-      return;
       return;
     }
 
