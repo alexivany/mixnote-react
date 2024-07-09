@@ -7,6 +7,9 @@ export default {
         sans: ["Inter", "sans-serif"],
         mono: ["monospace"],
       },
+      gridTemplateColumns: {
+        16: "repeat(17, minmax(0, 1fr))",
+      },
       borderWidth: {
         3: "3px",
       },

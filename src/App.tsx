@@ -5,7 +5,16 @@ import SongView from "./components/SongView";
 import { v4 as uuidv4 } from "uuid";
 
 import { Song, Version } from "./types";
+
 import { ApiContextProvider } from "./contexts/api-context";
+import {
+  CurrentVersionContextProvider,
+  useCurrentVersionContext,
+} from "./contexts/currentversion-context";
+import {
+  CurrentSongContextProvider,
+  useCurrentSongContext,
+} from "./contexts/currentsong-context";
 
 const PLACEHOLDER_LOCAL_SONGS: Song[] = [
   {
@@ -26,9 +35,13 @@ const PLACEHOLDER_LOCAL_SONGS: Song[] = [
 export default function App() {
   const [songs, setSongs] = useState<Song[]>();
 
-  const [currentSong, setCurrentSong] = useState<Song>();
+  // const [currentSong, setCurrentSong] = useState<Song>();
 
-  const [currentVersion, setCurrentVersion] = useState<Version | undefined>();
+  const { currentSong, setCurrentSong } = useCurrentSongContext();
+
+  // const [currentVersion, setCurrentVersion] = useState<Version | undefined>();
+
+  const { currentVersion, setCurrentVersion } = useCurrentVersionContext();
 
   useEffect(() => {
     const localSongs = JSON.parse(
@@ -65,11 +78,10 @@ export default function App() {
   useEffect(() => {
     const date = new Date();
     if (currentSong && songs) {
-      currentSong.updated = `${date.toDateString()} ${date.toLocaleTimeString()}`;
-
       const existingSong = songs.find((song) => song.id === currentSong.id);
 
       if (existingSong && currentSong !== existingSong) {
+        currentSong.updated = `${date.toDateString()} ${date.toLocaleTimeString()}`;
         const existingIndex = songs.findIndex(
           (song) => song.id === currentSong.id
         );
@@ -85,6 +97,7 @@ export default function App() {
           const dateB = new Date(b.updated ?? "Mon Jan 1 2000 12:00:00 AM");
           return dateA > dateB ? -1 : 1;
         });
+        console.log("SETTING SONGS");
         setSongs(newSongArray);
         localStorage.setItem("songapp-songs", JSON.stringify(newSongArray));
       }
@@ -109,7 +122,7 @@ export default function App() {
         });
       }
     }
-  }, [currentVersion, currentSong]);
+  }, [currentVersion, currentSong, setCurrentSong]);
 
   return (
     <div className="">
@@ -118,8 +131,6 @@ export default function App() {
           <ApiContextProvider>
             <Sidebar
               songs={songs}
-              setCurrentSong={setCurrentSong}
-              currentSong={currentSong}
               setSongs={setSongs}
               setCurrentVersion={setCurrentVersion}
             />

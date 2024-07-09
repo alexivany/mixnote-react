@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { useOnClickOutside } from "usehooks-ts";
 
 import LyricModal from "./LyricModal";
+import DrumMachine from "./DrumMachine/DrumMachine";
 
 // import InstrumentTabs from "./InstrumentTabs";
 
@@ -114,6 +115,10 @@ export default function Instrument({
           setCurrentVersion={setCurrentVersion}
           instrumentObject={instrumentObject}
         />
+      )}
+
+      {currentInstrument.instrument === "Drums" && (
+        <DrumMachine currentVersion={currentVersion} />
       )}
     </div>
   );

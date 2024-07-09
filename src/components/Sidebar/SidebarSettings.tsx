@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 
 import { useOnClickOutside } from "usehooks-ts";
 import { v4 as uuidv4 } from "uuid";
+
 import { useApiContext } from "../../contexts/api-context";
 
 interface SidebarSettings {
@@ -111,7 +112,7 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
           ref={settingsModalRef}
           className="bg-white fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 w-2/5 flex flex-col justify-between border border-gray-300 rounded-xl z-10 py-6 px-6"
         >
-          <span className="text-xl">User OpenAI Api Key</span>
+          <span className="text-xl">User OpenAI API Key</span>
           <input
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
