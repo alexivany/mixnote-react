@@ -4,8 +4,7 @@ import { useOnClickOutside } from "usehooks-ts";
 
 import LyricModal from "./LyricModal";
 import DrumMachine from "./DrumMachine/DrumMachine";
-
-// import InstrumentTabs from "./InstrumentTabs";
+import InstrumentTabs from "./InstrumentTabs";
 
 export default function Instrument({
   currentVersion,
@@ -80,14 +79,10 @@ export default function Instrument({
         placeholder="Enter notes here..."
       />
 
-      {/* {(currentInstrument.instrument === "Guitar" ||
+      {(currentInstrument.instrument === "Guitar" ||
         currentInstrument.instrument === "Bass") && (
-        <InstrumentTabs
-          instrumentToTab={currentInstrument.instrument}
-          currentVersion={currentVersion}
-          setCurrentVersion={setCurrentVersion}
-        />
-      )} */}
+        <InstrumentTabs instrumentToTab={currentInstrument.instrument} />
+      )}
 
       {currentInstrument.instrument === "Vocals" && (
         <div className="relative flex">

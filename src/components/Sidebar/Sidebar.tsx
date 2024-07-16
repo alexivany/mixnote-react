@@ -46,11 +46,11 @@ export default function Sidebar({
     if (currentSong) {
       const newSongArray = songs.filter((song) => song.id !== currentSong.id);
 
-      console.log(newSongArray);
-      console.log(songs);
+      // console.log(newSongArray);
+      // console.log(songs);
       localStorage.setItem("songapp-songs", JSON.stringify(newSongArray));
       setSongs(newSongArray);
-      console.log(newSongArray[0].id);
+      // console.log(newSongArray[0].id);
       setCurrentSong(newSongArray[0]);
       // setCurrentVersion(
       //   () =>
@@ -61,7 +61,7 @@ export default function Sidebar({
 
       // songRef.current.get(newSongArray[0].id).click();
       const selectedSong = songRef.current.get(newSongArray[0].id);
-      console.log(selectedSong);
+      // console.log(selectedSong);
       selectedSong.click();
       // selectedSong.dispatchEvent(new Event("click"));
       // songRef.current.get(newSongArray[0].id).click();
@@ -69,7 +69,7 @@ export default function Sidebar({
     }
   }
 
-  console.log(currentSong);
+  // console.log(currentSong);
 
   return (
     <div className="p-4 bg-white border-r flex flex-col border-gray-300 gap-4 fixed w-64 inset-y-0 z-10">

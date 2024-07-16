@@ -5,6 +5,7 @@ import InstrumentSection from "./InstrumentSection";
 
 import { Song, Version } from "../types";
 import { Dispatch, SetStateAction } from "react";
+import NovelEditor from "./NovelEditor";
 
 interface SongViewProps {
   currentSong: Song;
@@ -50,6 +51,7 @@ export default function SongView({
         handleChange={handleSongChange}
         setCurrentVersion={setCurrentVersion}
       />
+      {/* <NovelEditor /> */}
       <GeneralNotes
         handleChange={handleVersionChange}
         currentVersion={currentVersion}
