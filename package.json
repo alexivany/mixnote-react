@@ -12,6 +12,7 @@
   "dependencies": {
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.406.0",
     "luxon": "^3.4.4",
     "novel": "^0.4.3",

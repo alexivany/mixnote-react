@@ -15,6 +15,7 @@ import {
   CurrentSongContextProvider,
   useCurrentSongContext,
 } from "./contexts/currentsong-context";
+import { CurrentTagContextProvider } from "./contexts/tag-context";
 
 const PLACEHOLDER_LOCAL_SONGS: Song[] = [
   {
@@ -128,19 +129,21 @@ export default function App() {
     <div className="">
       {songs && currentSong && currentVersion && (
         <>
-          <ApiContextProvider>
-            <Sidebar
-              songs={songs}
-              setSongs={setSongs}
-              setCurrentVersion={setCurrentVersion}
-            />
-            <SongView
-              currentSong={currentSong}
-              setCurrentSong={setCurrentSong}
-              currentVersion={currentVersion}
-              setCurrentVersion={setCurrentVersion}
-            />
-          </ApiContextProvider>
+          <CurrentTagContextProvider>
+            <ApiContextProvider>
+              <Sidebar
+                songs={songs}
+                setSongs={setSongs}
+                setCurrentVersion={setCurrentVersion}
+              />
+              <SongView
+                currentSong={currentSong}
+                setCurrentSong={setCurrentSong}
+                currentVersion={currentVersion}
+                setCurrentVersion={setCurrentVersion}
+              />
+            </ApiContextProvider>
+          </CurrentTagContextProvider>
         </>
       )}
     </div>

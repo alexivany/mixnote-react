@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useRef } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 
 import SidebarSettings from "./SidebarSettings";
 import SidebarSong from "./SidebarSong";
@@ -6,6 +6,7 @@ import SidebarSong from "./SidebarSong";
 import { Song, Version } from "../../types";
 
 import { useCurrentSongContext } from "../../contexts/currentsong-context";
+import { useCurrentTagContext } from "@/contexts/tag-context";
 
 interface SidebarProps {
   songs: Song[];
@@ -20,7 +21,7 @@ export default function Sidebar({
 }: SidebarProps) {
   const { currentSong, setCurrentSong } = useCurrentSongContext();
 
-  const songRef = useRef(new Map());
+  const { currentTag, showSearch } = useCurrentTagContext();
 
   function handleSongClick(song) {
     setCurrentSong(() => songs.find((newSong) => song.id === newSong.id));
@@ -32,44 +33,25 @@ export default function Sidebar({
     );
   }
 
-  const songList = songs.map((song) => (
-    <SidebarSong
-      key={song.id}
-      song={song}
-      songRef={songRef}
-      handleSongClick={handleSongClick}
-      handleDeleteSong={handleDeleteSong}
-    />
-  ));
-
   function handleDeleteSong() {
     if (currentSong) {
       const newSongArray = songs.filter((song) => song.id !== currentSong.id);
 
-      // console.log(newSongArray);
-      // console.log(songs);
       localStorage.setItem("songapp-songs", JSON.stringify(newSongArray));
       setSongs(newSongArray);
-      // console.log(newSongArray[0].id);
-      setCurrentSong(newSongArray[0]);
-      // setCurrentVersion(
-      //   () =>
-      //     Object.values(newSongArray[0]).find(
-      //       (value) => typeof value === "object" && Array.isArray(value) === false
-      //     ) as Version
-      // );
-
-      // songRef.current.get(newSongArray[0].id).click();
-      const selectedSong = songRef.current.get(newSongArray[0].id);
-      // console.log(selectedSong);
-      selectedSong.click();
-      // selectedSong.dispatchEvent(new Event("click"));
-      // songRef.current.get(newSongArray[0].id).click();
-      // console.log(songRef.current?.get(newSongArray[0].id));
     }
   }
 
-  // console.log(currentSong);
+  useEffect(() => {
+    if (currentSong) {
+      const existingSong = songs.find((song) => song.id === currentSong.id);
+      if (songs && songs.length > 0 && existingSong) {
+        return;
+      } else if (songs && songs.length > 0) {
+        handleSongClick(songs[0]);
+      }
+    }
+  }, [songs]);
 
   return (
     <div className="p-4 bg-white border-r flex flex-col border-gray-300 gap-4 fixed w-64 inset-y-0 z-10">
@@ -85,7 +67,34 @@ export default function Sidebar({
         </div>
       </div>
       <div>
-        <div className="flex flex-col gap-4">{songList}</div>
+        <div className="flex flex-col gap-4">
+          {!showSearch &&
+            songs.map((song) => (
+              <SidebarSong
+                key={song.id}
+                song={song}
+                handleSongClick={handleSongClick}
+                handleDeleteSong={handleDeleteSong}
+              />
+            ))}
+          {showSearch && (
+            <span>
+              Searched for <span className="font-semibold">{currentTag}</span>
+            </span>
+          )}
+          {showSearch &&
+            currentTag &&
+            songs
+              .filter((song) => song?.tags?.includes(currentTag))
+              .map((filteredSong) => (
+                <SidebarSong
+                  key={filteredSong.id}
+                  song={filteredSong}
+                  handleSongClick={handleSongClick}
+                  handleDeleteSong={handleDeleteSong}
+                />
+              ))}
+        </div>
         <SidebarSettings setSongs={setSongs} />
       </div>
     </div>

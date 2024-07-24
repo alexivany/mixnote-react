@@ -10,8 +10,6 @@ import { v4 as uuidv4 } from "uuid";
 export default function InstrumentTabs({ instrumentToTab }) {
   const { currentVersion, setCurrentVersion } = useCurrentVersionContext();
 
-  // const [tabString, setTabString] = useState<string>("");
-
   const [tabArray, setTabArray] = useState<[string, string[]][]>([]);
 
   const tabDivRef = useRef<HTMLDivElement>(null);
@@ -49,25 +47,10 @@ D|------------------------------------------------------------------------------
   ));
 
   function handleClearTab() {
-    // setTimeout(() => {
-
-    // }, 1000);
-
-    // setCurrentVersion((prevVersion) => {
-    //   return {
-    //     ...prevVersion,
-    //     [instrumentToTab]: {
-    //       ...prevVersion?.[instrumentToTab],
-    //       tabs: guitarTemplate,
-    //     },
-    //   } as Version;
-    // });
     let newString;
     if (instrumentToTab === "Guitar") {
-      // setTabString(guitarTemplate);
       newString = guitarTemplate;
     } else if (instrumentToTab === "Bass") {
-      // setTabString(bassTemplate);
       newString = bassTemplate;
     }
 
@@ -84,32 +67,15 @@ D|------------------------------------------------------------------------------
     });
 
     setTabArray(tabArrayToSet);
-    // setTabArray(tabArrayToSet);
-    // const tabArrayRows = guitarTemplate.trim().split("\n");
-    // const tabArrayToSet: [string, string[]][] = [];
-
-    // tabArrayRows.forEach((row) => {
-    //   const columns = row.split("|").filter((column) => column.trim() !== "");
-    //   const notes = columns[1].split("");
-
-    //   const newArray: [string, string[]] = [columns[0], notes];
-
-    //   tabArrayToSet.push(newArray);
-    // });
-
-    // setTabArray(tabArrayToSet);
   }
 
   useEffect(() => {
     let newString;
     if (currentVersion) {
-      // setTabString(currentVersion?.[instrumentToTab].tabs);
       newString = currentVersion?.[instrumentToTab].tabs;
     } else if (instrumentToTab === "Guitar") {
-      // setTabString(guitarTemplate);
       newString = guitarTemplate;
     } else if (instrumentToTab === "Bass") {
-      // setTabString(bassTemplate);
       newString = guitarTemplate;
     }
 
@@ -127,24 +93,6 @@ D|------------------------------------------------------------------------------
 
     setTabArray(tabArrayToSet);
   }, []);
-
-  // useEffect(() => {
-  //   if (tabString) {
-  //     const tabArrayRows = tabString.trim().split("\n");
-  //     const tabArrayToSet: [string, string[]][] = [];
-
-  //     tabArrayRows.forEach((row) => {
-  //       const columns = row.split("|").filter((column) => column.trim() !== "");
-  //       const notes = columns[1].split("");
-
-  //       const newArray: [string, string[]] = [columns[0], notes];
-
-  //       tabArrayToSet.push(newArray);
-  //     });
-
-  //     setTabArray(tabArrayToSet);
-  //   }
-  // }, [tabString]);
 
   useEffect(() => {
     const newRows = tabArray.map((subarray) => {

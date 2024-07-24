@@ -5,12 +5,16 @@ import { useOnClickOutside } from "usehooks-ts";
 import LyricModal from "./LyricModal";
 import DrumMachine from "./DrumMachine/DrumMachine";
 import InstrumentTabs from "./InstrumentTabs";
+import { useCurrentSongContext } from "@/contexts/currentsong-context";
 
 export default function Instrument({
   currentVersion,
   setCurrentVersion,
   instrumentObject,
 }) {
+  const { currentSong } = useCurrentSongContext();
+
+  const [showDeleteWarning, setShowDeleteWarning] = useState<boolean>(false);
   const [showLyricModal, setShowLyricModal] = useState<boolean>(false);
 
   const modalRef = useRef<HTMLDivElement>(null);
@@ -63,12 +67,39 @@ export default function Instrument({
           value={currentInstrument.label}
           onChange={handleInstrumentChange}
         />
-        <img
-          src="./src/assets/SVG/cross.svg"
-          alt=""
-          className="w-6 m-0 p-0"
-          onClick={handleDeleteInstrument}
-        />
+        <div className="flex gap-2 justify-center items-center">
+          {showDeleteWarning && (
+            <>
+              <span className="text-sm font-semibold">
+                Are you sure you want to delete this instrument?
+              </span>
+              <button
+                onClick={handleDeleteInstrument}
+                className={`border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-2 py-1 font-semibold text-sm cursor-pointer`}
+              >
+                Yes
+              </button>
+              <button
+                onClick={() => setShowDeleteWarning(false)}
+                className={`border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-2 py-1 font-semibold text-sm cursor-pointer`}
+              >
+                No
+              </button>
+            </>
+          )}
+
+          <img
+            src="./src/assets/SVG/cross.svg"
+            alt=""
+            className="w-6 m-0 p-0"
+            onClick={() => {
+              setShowDeleteWarning(true);
+              setTimeout(() => {
+                setShowDeleteWarning(false);
+              }, 4000);
+            }}
+          />
+        </div>
       </div>
       <textarea
         value={currentInstrument.notes}
@@ -112,9 +143,11 @@ export default function Instrument({
         />
       )}
 
-      {currentInstrument.instrument === "Drums" && (
-        <DrumMachine currentVersion={currentVersion} />
-      )}
+      {currentInstrument.instrument === "Drums" &&
+        currentSong &&
+        currentVersion && (
+          <DrumMachine instrumentToTab={currentInstrument.instrument} />
+        )}
     </div>
   );
 }

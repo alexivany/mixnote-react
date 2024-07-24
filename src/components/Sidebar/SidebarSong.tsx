@@ -4,14 +4,12 @@ import { Song } from "../../types";
 
 interface SidebarSongProps {
   song: Song;
-  songRef: React.MutableRefObject<Map<unknown, unknown>>;
   handleSongClick(song: Song): void;
   handleDeleteSong(): void;
 }
 
 export default function SidebarSong({
   song,
-  songRef,
   handleSongClick,
   handleDeleteSong,
 }: SidebarSongProps) {
@@ -27,13 +25,6 @@ export default function SidebarSong({
         }
         onClick={() => {
           handleSongClick(song);
-        }}
-        ref={(el) => {
-          if (el) {
-            songRef.current.set(song.id, el);
-          } else {
-            songRef.current.delete(song.id);
-          }
         }}
       >
         {song.title}

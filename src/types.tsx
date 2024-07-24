@@ -28,7 +28,7 @@ export type Song = {
   title: string;
   updated?: string;
   key?: string;
-  bpm?: string;
+  bpm?: number;
   tags?: string[];
 } & {
   [version: string]: Version;
@@ -40,4 +40,10 @@ export type Modal = {
   section: string;
   mood: string;
   poetic: number;
+};
+
+export type DrumSeq = {
+  sound: string;
+  note: string;
+  isActive: boolean;
 };

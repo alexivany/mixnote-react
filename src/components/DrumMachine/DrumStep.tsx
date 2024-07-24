@@ -1,18 +1,35 @@
-import { useState } from "react";
+import { useCurrentVersionContext } from "@/contexts/currentversion-context";
+import { useEffect, useMemo, useState } from "react";
 
-export default function DrumStep({ currentVersion }) {
-  const [stepToggle, setStepToggle] = useState<boolean>(false);
+export default function DrumStep({ index, soundRow, setDrumSeqArray, active }) {
+  const { currentVersion } = useCurrentVersionContext();
+  const [stepActive, setStepActive] = useState<boolean>(false);
 
   function handleToggle() {
-    setStepToggle((prevState) => !prevState);
+    setStepActive((prevState) => !prevState);
   }
+
+  useMemo(() => {
+    setStepActive(active);
+  }, [active]);
+
+  useEffect(() => {
+    setDrumSeqArray((prevState) => {
+      const newState = [...prevState];
+
+      newState[soundRow][index].isActive = stepActive;
+
+      return newState;
+    });
+  }, [stepActive]);
+
   return (
-    <div
+    <button
       className={
         `border-2 rounded-lg ${currentVersion?.theme?.borderColor} ` +
-        (stepToggle && `${currentVersion?.theme?.bgColor}`)
+        (stepActive && `${currentVersion?.theme?.bgColor}`)
       }
       onClick={handleToggle}
-    ></div>
+    ></button>
   );
 }

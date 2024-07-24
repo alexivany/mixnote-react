@@ -8,7 +8,7 @@ export default function GeneralNotes({ handleChange, currentVersion }) {
       ? currentVersion.generalNotes
       : "";
     setGeneralNotesValue(newNotes);
-  }, [currentVersion]);
+  }, []);
   return (
     <div className="flex flex-col gap-4">
       <label className="font-semibold" htmlFor="song-general">
