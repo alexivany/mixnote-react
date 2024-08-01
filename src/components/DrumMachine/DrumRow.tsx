@@ -19,8 +19,10 @@ export default function DrumRow({ label, drumSeqArray, setDrumSeqArray }) {
   }, [label]);
 
   return (
-    <div className="grid grid-cols-16 gap-1">
-      <span className="col-span-1 font-semibold">{rowLabel}</span>
+    <div className="grid grid-cols-16 whitespace-nowrap gap-1">
+      <span className="col-span-1 text-xs lg:text-sm font-semibold">
+        {rowLabel}
+      </span>
       {drumSeqArray &&
         drumSeqArray.map((rows, rowIndex) => {
           if (label === rowIndex) {

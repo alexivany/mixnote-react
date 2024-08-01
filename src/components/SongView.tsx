@@ -1,10 +1,13 @@
 import SongHeader from "./SongHeader";
 import SongDetails from "./SongDetails";
 import GeneralNotes from "./GeneralNotes";
-import InstrumentSection from "./InstrumentSection";
+import InstrumentSection from "./Instrument/InstrumentSection";
+import GenerativeUI from "./GenerativeUI";
+import TextEditor from "./TextEditor";
 
 import { Song, Version } from "../types";
 import { Dispatch, SetStateAction } from "react";
+import { useThemeContext } from "@/contexts/theme-context";
 // import NovelEditor from "./NovelEditor";
 
 interface SongViewProps {
@@ -20,6 +23,8 @@ export default function SongView({
   currentVersion,
   setCurrentVersion,
 }: SongViewProps) {
+  const { currentTheme } = useThemeContext();
+
   function handleSongChange(e) {
     setCurrentSong((prevSongData) => {
       return {
@@ -37,7 +42,14 @@ export default function SongView({
     });
   }
   return (
-    <div className="absolute w-vw ml-64 left-0 right-0 p-4">
+    <div
+      className={
+        "lg:absolute w-vw lg:ml-64 lg:left-0 lg:right-0 p-4 pt-1 lg:pt-4 h-max md:flex md:flex-col " +
+        (currentTheme === "Light" ? "bg-white" : "bg-neutral-800 text-white")
+      }
+    >
+      {/* <GenerativeUI /> */}
+
       <SongHeader
         currentSong={currentSong}
         setCurrentSong={setCurrentSong}

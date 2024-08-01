@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Sidebar from "./components/Sidebar/Sidebar";
 import SongView from "./components/SongView";
 
@@ -7,15 +7,11 @@ import { v4 as uuidv4 } from "uuid";
 import { Song, Version } from "./types";
 
 import { ApiContextProvider } from "./contexts/api-context";
-import {
-  CurrentVersionContextProvider,
-  useCurrentVersionContext,
-} from "./contexts/currentversion-context";
-import {
-  CurrentSongContextProvider,
-  useCurrentSongContext,
-} from "./contexts/currentsong-context";
+import { useCurrentVersionContext } from "./contexts/currentversion-context";
+import { useCurrentSongContext } from "./contexts/currentsong-context";
 import { CurrentTagContextProvider } from "./contexts/tag-context";
+import { useThemeContext } from "./contexts/theme-context";
+import { useSidebarListContext } from "./contexts/sidebarlist-context";
 
 const PLACEHOLDER_LOCAL_SONGS: Song[] = [
   {
@@ -36,13 +32,13 @@ const PLACEHOLDER_LOCAL_SONGS: Song[] = [
 export default function App() {
   const [songs, setSongs] = useState<Song[]>();
 
-  // const [currentSong, setCurrentSong] = useState<Song>();
-
   const { currentSong, setCurrentSong } = useCurrentSongContext();
 
-  // const [currentVersion, setCurrentVersion] = useState<Version | undefined>();
-
   const { currentVersion, setCurrentVersion } = useCurrentVersionContext();
+
+  const { currentTheme, setCurrentTheme } = useThemeContext();
+
+  const { setShowSidebarList } = useSidebarListContext();
 
   useEffect(() => {
     const localSongs = JSON.parse(
@@ -64,7 +60,36 @@ export default function App() {
     if (defaultVersion) {
       setCurrentVersion(defaultVersion);
     }
+
+    const savedTheme = JSON.parse(
+      localStorage.getItem("songapp-theme") as string
+    );
+    if (savedTheme !== "" && savedTheme) {
+      setCurrentTheme(savedTheme);
+    } else {
+      setCurrentTheme("Light");
+    }
   }, []);
+
+  const handleBodyResize = useCallback(
+    (node: HTMLDivElement) => {
+      const resizeObserver = new ResizeObserver(() => {
+        if (node.clientWidth >= 1012) {
+          setShowSidebarList(true);
+        }
+      });
+      if (node) {
+        resizeObserver.observe(node);
+      }
+    },
+    [setShowSidebarList]
+  );
+
+  useEffect(() => {
+    if (currentTheme) {
+      localStorage.setItem("songapp-theme", JSON.stringify(currentTheme));
+    }
+  }, [currentTheme]);
 
   // const defaultVersion = useMemo(() => {
   //   if (currentSong) {
@@ -126,7 +151,10 @@ export default function App() {
   }, [currentVersion, currentSong, setCurrentSong]);
 
   return (
-    <div className="">
+    <div
+      ref={handleBodyResize}
+      className="h-full w-full overflow-x-clip absolute bg-neutral-800"
+    >
       {songs && currentSong && currentVersion && (
         <>
           <CurrentTagContextProvider>

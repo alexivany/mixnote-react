@@ -1,10 +1,13 @@
 import { useState } from "react";
 import Instrument from "./Instrument";
+import { useThemeContext } from "@/contexts/theme-context";
 
 export default function InstrumentSection({
   currentVersion,
   setCurrentVersion,
 }) {
+  const { currentTheme } = useThemeContext();
+
   const [newInstrumentInput, setNewInstrumentInput] = useState<string>("");
   const [instrumentWarning, setInstrumentWarning] = useState<boolean>(false);
   const [instrumentWarningText, setInstrumentWarningText] =
@@ -108,14 +111,19 @@ E|------------------------------------------------------------------------------
           value={newInstrumentInput}
           onChange={(e) => setNewInstrumentInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleNewInstrument()}
-          className="border border-gray-300 rounded-lg p-2"
+          className={
+            "border rounded-lg p-2 " +
+            (currentTheme === "Light"
+              ? "border-gray-300 "
+              : "bg-neutral-800 border-neutral-600")
+          }
           list="instruments"
           id="add-instrument-input"
           name="add-instrument-input"
         />
         <button
           onClick={handleNewInstrument}
-          className={`border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold cursor-pointer`}
+          className={`border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold text-sm lg:text-base cursor-pointer`}
         >
           Add Instrument
         </button>

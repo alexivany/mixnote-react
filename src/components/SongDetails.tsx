@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import Tag from "./Tag";
 
 import { Song, Version } from "../types";
+import { useThemeContext } from "@/contexts/theme-context";
 
 interface SongDetailsProps {
   currentSong: Song;
@@ -17,6 +18,8 @@ export default function SongDetails({
   handleChange,
   setCurrentVersion,
 }: SongDetailsProps) {
+  const { currentTheme } = useThemeContext();
+
   const [tagInputToggle, setTagInputToggle] = useState<boolean>(false);
   const [duplicateTagWarning, setDuplicateTagWarning] =
     useState<boolean>(false);
@@ -35,7 +38,10 @@ export default function SongDetails({
           setDuplicateTagWarning(true);
           return;
         }
-        if (e.target.value === "" || !/^[a-zA-Z0-9]+$/.test(e.target.value)) {
+        if (
+          e.target.value === "" ||
+          !/^(?=.*[a-zA-Z0-9])[a-zA-Z0-9 ]+$/.test(e.target.value)
+        ) {
           setTagInputToggle(false);
           return;
         }
@@ -87,19 +93,24 @@ export default function SongDetails({
   }
 
   return (
-    <div className="flex justify-between my-2">
+    <div className="flex flex-col gap-2 pt-1 lg:pt-0 justify-between my-2">
       <div className="flex items-center">
-        <div className="flex">{tagElements}</div>
+        <div className="flex md:text-xs whitespace-nowrap">{tagElements}</div>
         <button
           onClick={handleTagInput}
           id="tag-add-button"
-          className="border-2 border-gray-100 rounded-2xl py-1 px-2 text-xs font-semibold text-gray-400 cursor-pointer"
+          className="border-2 border-gray-400 rounded-2xl py-1 px-2 text-xs  whitespace-nowrap font-semibold text-gray-400 cursor-pointer"
         >
           {tagInputToggle ? (
             <input
               onKeyDown={handleTagKeyPress}
               onBlur={handleTagInput}
-              className="text-black border-b-2 outline-none"
+              className={
+                "border-b-2 outline-none  " +
+                (currentTheme === "Light"
+                  ? "text-black bg-white"
+                  : "bg-neutral-800 text-white")
+              }
               autoFocus
             />
           ) : (
@@ -123,7 +134,10 @@ export default function SongDetails({
               id="key"
               placeholder="Key"
               maxLength={8}
-              className="text-gray-400 border-0 w-16 font-semibold focus:outline-none focus:border-b-2 focus:border-gray-400"
+              className={
+                "text-gray-400 border-0 w-16 font-semibold focus:outline-none focus:border-b-2 focus:border-gray-400 " +
+                (currentTheme === "Light" ? "" : "bg-neutral-800")
+              }
             />
           </div>
           <div>
@@ -135,7 +149,10 @@ export default function SongDetails({
               id="bpm"
               placeholder="BPM"
               maxLength={6}
-              className="text-gray-400 border-0 w-12 font-semibold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:outline-none focus:border-b-2 focus:border-gray-400"
+              className={
+                "text-gray-400 border-0 w-12 font-semibold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:outline-none focus:border-b-2 focus:border-gray-400 " +
+                (currentTheme === "Light" ? "bg-white" : "bg-neutral-800")
+              }
             />
           </div>
         </div>
@@ -144,7 +161,7 @@ export default function SongDetails({
             id="red-blob"
             src="./src/assets/SVG/blobs/red-blob.svg"
             alt=""
-            className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
+            className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             data-bgcolor="bg-red-500"
             data-textcolor="text-white"
             data-activecolor="text-red-500"
@@ -155,7 +172,7 @@ export default function SongDetails({
             id="orange-blob"
             src="./src/assets/SVG/blobs/orange-blob.svg"
             alt=""
-            className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
+            className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             data-bgcolor="bg-orange-500"
             data-textcolor="text-white"
             data-activecolor="text-orange-500"
@@ -166,7 +183,7 @@ export default function SongDetails({
             id="yellow-blob"
             src="./src/assets/SVG/blobs/yellow-blob.svg"
             alt=""
-            className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
+            className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             data-bgcolor="bg-yellow-400"
             data-textcolor="text-white"
             data-activecolor="text-yellow-400"
@@ -177,7 +194,7 @@ export default function SongDetails({
             id="green-blob"
             src="./src/assets/SVG/blobs/green-blob.svg"
             alt=""
-            className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
+            className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             data-bgcolor="bg-green-500"
             data-textcolor="text-white"
             data-activecolor="text-green-500"
@@ -188,7 +205,7 @@ export default function SongDetails({
             id="teal-blob"
             src="./src/assets/SVG/blobs/teal-blob.svg"
             alt=""
-            className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
+            className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             data-bgcolor="bg-teal-500"
             data-textcolor="text-white"
             data-activecolor="text-teal-500"
@@ -199,7 +216,7 @@ export default function SongDetails({
             id="cyan-blob"
             src="./src/assets/SVG/blobs/cyan-blob.svg"
             alt=""
-            className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
+            className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             data-bgcolor="bg-cyan-500"
             data-textcolor="text-white"
             data-activecolor="text-cyan-500"
@@ -210,7 +227,7 @@ export default function SongDetails({
             id="blue-blob"
             src="./src/assets/SVG/blobs/blue-blob.svg"
             alt=""
-            className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
+            className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             data-bgcolor="bg-blue-500"
             data-textcolor="text-white"
             data-activecolor="text-blue-500"
@@ -221,7 +238,7 @@ export default function SongDetails({
             id="purple-blob"
             src="./src/assets/SVG/blobs/purple-blob.svg"
             alt=""
-            className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
+            className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             data-bgcolor="bg-purple-500"
             data-textcolor="text-white"
             data-activecolor="text-purple-500"
@@ -232,7 +249,7 @@ export default function SongDetails({
             id="pink-blob"
             src="./src/assets/SVG/blobs/pink-blob.svg"
             alt=""
-            className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
+            className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             data-bgcolor="bg-pink-500"
             data-textcolor="text-white"
             data-activecolor="text-pink-500"
@@ -247,7 +264,7 @@ export default function SongDetails({
             data-textcolor="text-black"
             data-activecolor="text-black"
             data-bordercolor="border-gray-100"
-            className="w-6 cursor-pointer transition-width duration-200 hover:w-7"
+            className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             onClick={handleColorChange}
           />
         </div>

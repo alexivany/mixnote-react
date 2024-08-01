@@ -26,6 +26,10 @@ module.exports = {
           to: { height: 0 },
         },
       },
+      margin: {
+        negrem3: "-3rem",
+        negrem1: "-0.5rem",
+      },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",

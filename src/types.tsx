@@ -47,3 +47,11 @@ export type DrumSeq = {
   note: string;
   isActive: boolean;
 };
+
+export type LyricModalInput = {
+  about: string;
+  lines: number;
+  section: string;
+  mood: string;
+  poetic: number;
+};

@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 
 import { Song } from "../types";
 import { useCurrentTagContext } from "@/contexts/tag-context";
+import { useThemeContext } from "@/contexts/theme-context";
 
 interface TagProps {
   currentSong: Song;
@@ -11,6 +12,8 @@ interface TagProps {
 }
 
 export default function Tag({ tag, i, setCurrentSong, currentSong }: TagProps) {
+  const { currentTheme } = useThemeContext();
+
   const { setCurrentTag, setShowSearch } = useCurrentTagContext();
 
   const [tagCrossToggle, setTagCrossToggle] = useState<boolean>(false);
@@ -40,7 +43,10 @@ export default function Tag({ tag, i, setCurrentSong, currentSong }: TagProps) {
     <button
       name={tag}
       key={i}
-      className="border-2 flex items-center border-gray-400 mr-2 rounded-2xl py-1 px-2 text-xs font-semibold text-black cursor-pointer"
+      className={
+        "border-2 flex items-center mr-2 border-gray-400 rounded-2xl py-1 px-2 text-xs font-semibold cursor-pointer " +
+        (currentTheme === "Light" ? "text-black" : "text-white")
+      }
       onClick={handleTagSelection}
       onBlur={() => {
         setTagCrossToggle(false);
@@ -53,7 +59,7 @@ export default function Tag({ tag, i, setCurrentSong, currentSong }: TagProps) {
         <img
           src="./src/assets/SVG/cross.svg"
           alt=""
-          className="w-4"
+          className={"w-4 " + (currentTheme === "Dark" && "grayscale invert")}
           onClick={() => handleDeleteTag(tag)}
         />
       )}

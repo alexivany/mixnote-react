@@ -1,9 +1,11 @@
 import { Dispatch, SetStateAction, useState } from "react";
 
+// import { wrapOpenAI } from "langsmith/wrappers";
 import OpenAI from "openai";
 
-import { Modal, Version, InstrumentData } from "../types";
-import { useApiContext } from "../contexts/api-context";
+import { Modal, Version, InstrumentData } from "../../types";
+import { useApiContext } from "../../contexts/api-context";
+import { useThemeContext } from "@/contexts/theme-context";
 
 interface LyricModalProps {
   modalRef: React.RefObject<HTMLDivElement>;
@@ -18,6 +20,8 @@ export default function LyricModal({
   setCurrentVersion,
   instrumentObject,
 }: LyricModalProps) {
+  const { currentTheme } = useThemeContext();
+
   const [lyricModalInput, setLyricModalInput] = useState<Modal>({
     about: "",
     lines: 1,
@@ -52,6 +56,7 @@ export default function LyricModal({
         apiKey: apiKey,
         dangerouslyAllowBrowser: true,
       });
+
       setModalWarningText("Generating lyrics...");
       setModalWarning(true);
 
@@ -102,7 +107,12 @@ export default function LyricModal({
   return (
     <div
       ref={modalRef}
-      className="bg-white absolute left-0 gap-4 font-semibold m-auto right-0 w-4/5 flex flex-col justify-between border border-gray-300 rounded-xl z-10 py-6 px-6"
+      className={
+        "absolute left-0 gap-4 font-semibold m-auto right-0 w-4/5 flex flex-col justify-between border rounded-xl z-10 py-6 px-6 " +
+        (currentTheme === "Light"
+          ? "border-gray-300 bg-white"
+          : "bg-neutral-800 border-neutral-600")
+      }
     >
       <span className="text-xl">What is your song about?</span>
       <input
@@ -112,7 +122,12 @@ export default function LyricModal({
         // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
         type="text"
         name="about"
-        className="max-w-full font-normal mb-2 border border-gray-300 px-2 rounded-lg"
+        className={
+          "max-w-full font-normal mb-2 border px-2 rounded-lg " +
+          (currentTheme === "Light"
+            ? "bg-white border-gray-300"
+            : "bg-neutral-800 border-neutral-600")
+        }
       ></input>
       <div className="grid grid-cols-4 grid-rows-1 gap-6 items-end">
         <div className="flex flex-col gap-2">
@@ -125,7 +140,12 @@ export default function LyricModal({
             name="lines"
             min="1"
             max="99"
-            className="max-w-full font-normal mb-2 border border-gray-300 px-2 rounded-lg"
+            className={
+              "max-w-full font-normal mb-2 border px-2 rounded-lg " +
+              (currentTheme === "Light"
+                ? "bg-white border-gray-300"
+                : "bg-neutral-800 border-neutral-600")
+            }
           ></input>
         </div>
         <div className="flex flex-col gap-2">
@@ -139,7 +159,12 @@ export default function LyricModal({
             type="text"
             list="sections"
             name="section"
-            className="max-w-full font-normal mb-2 border border-gray-300 px-2 rounded-lg"
+            className={
+              "max-w-full font-normal mb-2 border px-2 rounded-lg " +
+              (currentTheme === "Light"
+                ? "bg-white border-gray-300"
+                : "bg-neutral-800 border-neutral-600")
+            }
           ></input>
         </div>
         <div className="flex flex-col gap-2">
@@ -152,7 +177,12 @@ export default function LyricModal({
             // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
             type="text"
             name="mood"
-            className="max-w-full font-normal mb-2 border border-gray-300 px-2 rounded-lg"
+            className={
+              "max-w-full font-normal mb-2 border px-2 rounded-lg " +
+              (currentTheme === "Light"
+                ? "bg-white border-gray-300"
+                : "bg-neutral-800 border-neutral-600")
+            }
           ></input>
         </div>
         <div className="flex flex-col gap-2">
@@ -167,7 +197,12 @@ export default function LyricModal({
             name="poetic"
             min="0"
             max="10"
-            className="max-w-full font-normal mb-2 border border-gray-300 px-2 rounded-lg"
+            className={
+              "max-w-full font-normal mb-2 border px-2 rounded-lg " +
+              (currentTheme === "Light"
+                ? "bg-white border-gray-300"
+                : "bg-neutral-800 border-neutral-600")
+            }
           ></input>
         </div>
       </div>
@@ -181,7 +216,12 @@ export default function LyricModal({
         name="api-key"
         min="1"
         max="99"
-        className="max-w-full font-normal mb-2 border border-gray-300 px-2 rounded-lg"
+        className={
+          "max-w-full font-normal mb-2 border  px-2 rounded-lg " +
+          (currentTheme === "Light"
+            ? "bg-white border-gray-300"
+            : "bg-neutral-800 border-neutral-600")
+        }
       ></input>
 
       <div className="flex gap-4 justify-end items-center">
@@ -190,13 +230,23 @@ export default function LyricModal({
         )}
         <button
           onClick={generateLyrics}
-          className="bg-gray-100 border-2  border-gray-100 py-2 px-4 rounded-2xl cursor-pointer"
+          className={
+            "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
+            (currentTheme === "Light"
+              ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
+              : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
+          }
         >
           Generate
         </button>
         <button
           onClick={handleLyricModal}
-          className="bg-gray-100 border-2  border-gray-100 py-2 px-4 rounded-2xl cursor-pointer"
+          className={
+            "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
+            (currentTheme === "Light"
+              ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
+              : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
+          }
         >
           Cancel
         </button>

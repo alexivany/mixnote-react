@@ -1,3 +1,4 @@
+import { useThemeContext } from "@/contexts/theme-context";
 import { useCurrentSongContext } from "../../contexts/currentsong-context";
 
 import { Song } from "../../types";
@@ -15,13 +16,16 @@ export default function SidebarSong({
 }: SidebarSongProps) {
   const { currentSong } = useCurrentSongContext();
 
+  const { currentTheme } = useThemeContext();
+
   return (
     currentSong && (
       <button
         className={
           "text-left flex justify-between items-center text-xl " +
           (currentSong.id === song.id &&
-            "bg-gray-100 rounded-2xl outline outline-4 outline-gray-100 font-semibold")
+            "bg-gray-100 rounded-2xl outline outline-4 outline-gray-100 font-semibold ") +
+          (currentTheme === "Dark" && "text-black")
         }
         onClick={() => {
           handleSongClick(song);

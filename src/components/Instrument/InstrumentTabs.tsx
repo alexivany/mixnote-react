@@ -5,9 +5,10 @@ import TabCell from "./TabCell";
 import { useCurrentVersionContext } from "@/contexts/currentversion-context";
 import { Version } from "@/types";
 
-import { v4 as uuidv4 } from "uuid";
+import { useThemeContext } from "@/contexts/theme-context";
 
 export default function InstrumentTabs({ instrumentToTab }) {
+  const { currentTheme } = useThemeContext();
   const { currentVersion, setCurrentVersion } = useCurrentVersionContext();
 
   const [tabArray, setTabArray] = useState<[string, string[]][]>([]);
@@ -26,9 +27,10 @@ B|------------------------------------------------------------------------------
 G|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 D|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|`;
 
-  const tabsHTML = tabArray.map(([note, line]) => (
-    <div key={uuidv4()}>
-      <span id="#tab-cell">{note}</span>|
+  const tabsHTML = tabArray.map(([note, line], tabIndex) => (
+    <div key={`tab-${tabIndex}`}>
+      <span id="#tab-cell">{note}</span>
+      {note !== "_" && "|"}
       {line.map((e, i) => {
         if (e === "-" || e.match(/[0-9+a-gA-G]/)) {
           return (
@@ -37,11 +39,16 @@ D|------------------------------------------------------------------------------
               setTabArray={setTabArray}
               index={i}
               note={note}
-              key={uuidv4()}
+              key={`tab-${tabIndex}-${i}`}
               value={e}
             />
           );
-        } else return <span id="#tab-cell">{e}</span>;
+        } else
+          return (
+            <span id="#tab-cell" key={`span-${tabIndex}-${i}`}>
+              {e}
+            </span>
+          );
       })}
     </div>
   ));
@@ -67,6 +74,32 @@ D|------------------------------------------------------------------------------
     });
 
     setTabArray(tabArrayToSet);
+  }
+
+  function handleAddRow() {
+    let newString;
+    if (instrumentToTab === "Guitar") {
+      newString = guitarTemplate;
+    } else if (instrumentToTab === "Bass") {
+      newString = bassTemplate;
+    }
+
+    const tabArrayRows = newString.trim().split("\n");
+    // const tabArrayToSet: [string, string[]][] = [];
+    const lineBreak = [..."_", Array.from({ length: 165 }, (_) => "_")] as [
+      string,
+      string[]
+    ];
+
+    setTabArray((prevState) => [...prevState, lineBreak]);
+
+    tabArrayRows.forEach((row) => {
+      const columns = row.split("|").filter((column) => column.trim() !== "");
+      const notes = columns[1].split("");
+
+      const newArray: [string, string[]] = [columns[0], notes];
+      setTabArray((prevState) => [...prevState, newArray]);
+    });
   }
 
   useEffect(() => {
@@ -121,25 +154,32 @@ D|------------------------------------------------------------------------------
     <>
       <div className="flex gap-2 items-center">
         <button
-          className={`border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold cursor-pointer`}
+          onClick={handleAddRow}
+          className={`border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold  text-sm lg:text-md cursor-pointer`}
         >
           Add Row
         </button>
         <button
           onClick={handleClearTab}
-          className={`border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold cursor-pointer`}
+          className={`border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold text-sm lg:text-md cursor-pointer`}
         >
           Clear
         </button>
         <a
-          className={`border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold cursor-pointer`}
+          className={`border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold text-sm lg:text-md cursor-pointer`}
         >
           Download
         </a>
       </div>
       <div
         ref={tabDivRef}
-        className="border font-mono border-gray-300 rounded-lg p-2 text-sm whitespace-pre display-inline overflow-auto"
+        id="tab-div"
+        className={
+          "border font-mono rounded-lg p-2 text-sm whitespace-pre display-inline overflow-auto " +
+          (currentTheme === "Light"
+            ? "border-gray-300 "
+            : " border-neutral-600")
+        }
       >
         {tabsHTML}
       </div>

@@ -3,6 +3,7 @@ import { useState, useRef, Dispatch, SetStateAction } from "react";
 import { useOnClickOutside } from "usehooks-ts";
 
 import { Song, Version } from "../types";
+import { useThemeContext } from "@/contexts/theme-context";
 
 interface SongHeaderProps {
   currentSong: Song;
@@ -19,6 +20,8 @@ export default function SongHeader({
   currentVersion,
   setCurrentVersion,
 }: SongHeaderProps) {
+  const { currentTheme } = useThemeContext();
+
   const [showTitleCross, setShowTitleCross] = useState<boolean>(false);
 
   const [showVersionModal, setShowVersionModal] = useState<boolean>(false);
@@ -33,10 +36,13 @@ export default function SongHeader({
         <div
           key={key}
           className={
-            `h-9 font-semibold p-2 rounded-t-2xl flex justify-center items-start ` +
+            `h-9 font-semibold text-xs lg:text-base p-2 rounded-t-2xl flex justify-center items-center ` +
             (currentVersion?.version === key
-              ? `bg-hidden pr-1 border-x-3 border-t-3 ${value?.theme?.borderColor} ${value?.theme?.activeColor}`
-              : `border ${value?.theme?.borderColor} ${value?.theme?.bgColor} ${value?.theme?.textColor}`)
+              ? `bg-hidden pr-1 border-x-3 border-t-3 ${value?.theme?.borderColor} ${value?.theme?.activeColor} `
+              : `border ${value?.theme?.borderColor} ${value?.theme?.bgColor} ${value?.theme?.textColor} `) +
+            (currentTheme === "Dark" &&
+              value?.theme?.textColor === "text-black" &&
+              "text-white")
           }
         >
           <button onClick={handleVersionChange} value={key}>
@@ -47,7 +53,9 @@ export default function SongHeader({
               src="./src/assets/SVG/cross.svg"
               id="song-title-cross"
               alt=""
-              className="w-6 m-0 p-0 "
+              className={
+                "w-6 m-0 p-0 " + (currentTheme === "Dark" && "grayscale invert")
+              }
               onClick={handleDeleteVersion}
             />
           )}
@@ -156,8 +164,8 @@ export default function SongHeader({
   useOnClickOutside(versionModalRef, handleVersionModal);
 
   return (
-    <div className="flex gap-4 justify-between items-center">
-      <div className="flex gap-1">
+    <div className="flex flex-col lg:gap-4 gap-2 lg:flex-row lg:justify-between lg:items-center">
+      <div className="flex flex-col-reverse gap-2 lg:flex-row gap-1">
         <div className="flex">
           <input
             value={currentSong.title}
@@ -168,14 +176,19 @@ export default function SongHeader({
             type="text"
             id="song-title"
             name="title"
-            className="w-64 text-3xl font-semibold focus:outline-none focus:border-b-2 focus:border-black"
+            className={
+              "w-64 text-3xl font-semibold focus:outline-none focus:border-b-2 focus:border-black " +
+              (currentTheme === "Light" ? "bg-white" : "bg-neutral-800")
+            }
           />
           {showTitleCross && (
             <img
               src="./src/assets/SVG/cross.svg"
               id="song-title-cross"
               alt=""
-              className="w-6"
+              className={
+                "w-6 " + (currentTheme === "Dark" && "grayscale invert")
+              }
               onClick={handleClearTitle}
             />
           )}
@@ -203,13 +216,13 @@ export default function SongHeader({
         <div className="flex justify-between gap-2 items-center font-semibold text-xs">
           <a
             onClick={handleSongDownload}
-            className={`font-bold ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.bgColor} border-2 ${currentVersion?.theme?.borderColor} py-2 px-4 rounded-2xl cursor-pointer`}
+            className={`font-bold ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.bgColor} border-2 ${currentVersion?.theme?.borderColor} py-1 px-2 lg:py-2 lg:px-4 rounded-2xl cursor-pointer`}
             id="download-button"
           >
             Download
           </a>
           <label
-            className={`font-bold ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.bgColor} border-2 ${currentVersion?.theme?.borderColor} py-2 px-4 rounded-2xl cursor-pointer`}
+            className={`font-bold ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.bgColor} border-2 ${currentVersion?.theme?.borderColor} py-1 px-2 lg:py-2 lg:px-4 rounded-2xl cursor-pointer`}
             htmlFor="file-upload"
             id="file-upload-label"
           >
@@ -225,12 +238,19 @@ export default function SongHeader({
           />
         </div>
 
-        <p className="font-bold text-xs ml-2">{currentSong.updated}</p>
+        <p className="font-bold whitespace-nowrap text-xs ml-2">
+          {currentSong.updated}
+        </p>
       </div>
       {showVersionModal && (
         <div
           ref={versionModalRef}
-          className="bg-white fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 w-2/5 flex flex-col justify-between border border-gray-300 rounded-xl z-10 py-6 px-6"
+          className={
+            "fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 w-2/5 flex flex-col justify-between border rounded-xl z-10 py-6 px-6 " +
+            (currentTheme === "Light"
+              ? "bg-white text-black border-gray-300"
+              : "bg-neutral-800 text-white border-neutral-600")
+          }
         >
           <span className="text-xl">Enter new version name</span>
           <input
@@ -239,18 +259,31 @@ export default function SongHeader({
             onChange={(e) => setVersionModalInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && addNewVersion()}
             type="text"
-            className="max-w-full mb-2 px-2 font-normal border border-gray-300 rounded-lg"
+            className={
+              "max-w-full font-normal mb-2 border border-gray-300 px-2 rounded-lg " +
+              (currentTheme === "Light" ? "bg-white" : "bg-neutral-800")
+            }
           ></input>
           <div className="flex gap-4 justify-end">
             <button
               onClick={addNewVersion}
-              className="bg-gray-100 border-2  border-gray-100 py-2 px-4 rounded-2xl cursor-pointer"
+              className={
+                "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
+                (currentTheme === "Light"
+                  ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
+                  : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
+              }
             >
               OK
             </button>
             <button
               onClick={handleVersionModal}
-              className="bg-gray-100 border-2  border-gray-100 py-2 px-4 rounded-2xl cursor-pointer"
+              className={
+                "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
+                (currentTheme === "Light"
+                  ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
+                  : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
+              }
             >
               Cancel
             </button>
