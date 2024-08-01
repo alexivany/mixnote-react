@@ -108,7 +108,7 @@ export default function LyricModal({
     <div
       ref={modalRef}
       className={
-        "absolute left-0 gap-4 font-semibold m-auto right-0 w-4/5 flex flex-col justify-between border rounded-xl z-10 py-6 px-6 " +
+        "absolute top-1/2 gap-4  self-center font-semibold m-auto w-4/5 flex flex-col justify-between border rounded-xl z-10 p-6 " +
         (currentTheme === "Light"
           ? "border-gray-300 bg-white"
           : "bg-neutral-800 border-neutral-600")

@@ -1,6 +1,8 @@
 import * as Tone from "tone";
 
-import { useEffect, useRef, useState } from "react";
+import { ReactP5Wrapper } from "@p5-wrapper/react";
+
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useCurrentVersionContext } from "@/contexts/currentversion-context";
 
@@ -24,6 +26,7 @@ export default function DrumMachine({ instrumentToTab }) {
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [drumSeqArray, setDrumSeqArray] = useState<DrumSeq[][]>();
+  const [waveformWidth, setWaveformWidth] = useState<number>(256);
 
   const seqRef = useRef<Tone.Sequence | null>(null);
   const drumMachineRef = useRef<Tone.Sampler | null>(null);
@@ -63,6 +66,81 @@ export default function DrumMachine({ instrumentToTab }) {
     console.log("cleared");
     setDrumSeqArray(DEFAULT_DRUM_ARRAY);
   };
+
+  const colorSwitch = (themeColor) => {
+    switch (themeColor) {
+      case "bg-red-500":
+        return "#ef4444";
+      case "bg-orange-500":
+        return "#f97316";
+      case "bg-yellow-400":
+        return "#facc15";
+      case "bg-green-500":
+        return "#22c55e";
+      case "bg-teal-500":
+        return "#14b8a6";
+      case "bg-cyan-500":
+        return "#06b6d4";
+      case "bg-blue-500":
+        return "#3b82f6";
+      case "bg-purple-500":
+        return "#a855f7";
+      case "bg-pink-500":
+        return "#ec4899";
+      case "bg-gray-100":
+        return null;
+    }
+  };
+
+  function sketch(p5) {
+    let analyser;
+    let fillColor;
+    p5.setup = () => {
+      const audSrc = Tone.getDestination();
+      analyser = new Tone.Analyser({
+        type: "waveform",
+        size: 1024,
+        smoothing: 1,
+      });
+      audSrc.connect(analyser);
+      p5.createCanvas(waveformWidth, 64);
+      fillColor = colorSwitch(currentVersion?.theme?.bgColor);
+    };
+
+    p5.draw = () => {
+      currentTheme === "Light" ? p5.background(255) : p5.background(38);
+      if (fillColor) {
+        p5.fill(fillColor);
+      } else {
+        currentTheme === "Light"
+          ? p5.fill(p5.color(38))
+          : p5.fill(p5.color(255));
+      }
+
+      currentTheme === "Light" ? p5.stroke(255) : p5.stroke(38);
+      analyser.getValue().forEach(function (v, idx) {
+        p5.circle(idx / 2, (p5.height * (-1 * v + 1)) / 2, 5);
+      });
+    };
+  }
+
+  const handleDrumMachineResize = useCallback(
+    (node: HTMLDivElement) => {
+      const resizeObserver = new ResizeObserver(() => {
+        if (node.clientWidth <= 782 && node.clientHeight <= 220) {
+          setWaveformWidth(128);
+        } else if (node.clientWidth >= 1024) {
+          setWaveformWidth(500);
+        } else {
+          setWaveformWidth(256);
+        }
+      });
+      if (node) {
+        resizeObserver.observe(node);
+      }
+    },
+    [setWaveformWidth]
+  );
 
   useEffect(() => {
     drumMachineRef.current = new Tone.Sampler({
@@ -134,6 +212,7 @@ export default function DrumMachine({ instrumentToTab }) {
   return (
     <>
       <div
+        ref={handleDrumMachineResize}
         className={
           "flex flex-col gap-2 w-full h-full overflow-auto border rounded-lg p-2 py-4 text-sm " +
           (currentTheme === "Light"
@@ -159,7 +238,12 @@ export default function DrumMachine({ instrumentToTab }) {
                     }}
                   ></input>
                   <div
-                    className={` w-4 h-4 rounded-2xl ${currentVersion?.theme?.bgColor} border-4 ${currentVersion?.theme?.borderColor} peer-checked:bg-white`}
+                    className={
+                      ` w-4 h-4 rounded-2xl border-4 peer-checked:bg-white ` +
+                      (currentVersion?.theme?.bgColor === "bg-gray-100"
+                        ? "bg-gray-300 border-gray-300 "
+                        : `${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.borderColor}`)
+                    }
                   ></div>
                 </label>
               );
@@ -176,43 +260,46 @@ export default function DrumMachine({ instrumentToTab }) {
               />
             );
           })}
-        <div className="flex gap-2 items-center justify-end">
-          <div className="flex gap-2">
-            <label htmlFor="bpm-slider" className="font-semibold">
-              BPM:
-            </label>
-            <input
-              type="range"
-              name="bpm-slider"
-              id="bpm-slider"
-              min="20"
-              max="200"
-              value={currentSong?.bpm as number}
-              onChange={(e) => handleBpmSlider(e)}
-            ></input>
-          </div>
-          <div className="flex p-2 gap-2">
-            <button
-              className={
-                `text-sm lg:text-md rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 cursor-pointer ` +
-                (isPlaying ? "font-bold" : "font-semibold")
-              }
-              onClick={playSeq}
-            >
-              Play
-            </button>
-            <button
-              onClick={stopSeq}
-              className={` text-sm lg:text-md rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold cursor-pointer`}
-            >
-              Stop
-            </button>
-            <button
-              onClick={clearSeq}
-              className={`text-sm lg:text-md rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold cursor-pointer`}
-            >
-              Clear
-            </button>
+        <div className="flex gap-2 items-center justify-between">
+          <ReactP5Wrapper sketch={sketch} />
+          <div className="flex justify-end items-center">
+            <div className="flex gap-2">
+              <label htmlFor="bpm-slider" className="font-semibold">
+                BPM:
+              </label>
+              <input
+                type="range"
+                name="bpm-slider"
+                id="bpm-slider"
+                min="20"
+                max="200"
+                value={currentSong?.bpm as number}
+                onChange={(e) => handleBpmSlider(e)}
+              ></input>
+            </div>
+            <div className="flex p-2 gap-2">
+              <button
+                className={
+                  `text-sm lg:text-md rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 cursor-pointer ` +
+                  (isPlaying ? "font-bold" : "font-semibold")
+                }
+                onClick={playSeq}
+              >
+                Play
+              </button>
+              <button
+                onClick={stopSeq}
+                className={` text-sm lg:text-md rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold cursor-pointer`}
+              >
+                Stop
+              </button>
+              <button
+                onClick={clearSeq}
+                className={`text-sm lg:text-md rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold cursor-pointer`}
+              >
+                Clear
+              </button>
+            </div>
           </div>
         </div>
       </div>

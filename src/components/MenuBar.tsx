@@ -27,6 +27,12 @@ export default function MenuBar({ editor }: { editor: Editor }) {
       isActive: () => editor.isActive("strike"),
     },
     {
+      icon: "underline",
+      title: "Underline",
+      action: () => editor.chain().focus().toggleUnderline().run(),
+      isActive: () => editor.isActive("underline"),
+    },
+    {
       icon: "code-view",
       title: "Code",
       action: () => editor.chain().focus().toggleCode().run(),
@@ -85,25 +91,6 @@ export default function MenuBar({ editor }: { editor: Editor }) {
     },
     {
       type: "divider",
-    },
-    {
-      icon: "double-quotes-l",
-      title: "Blockquote",
-      action: () => editor.chain().focus().toggleBlockquote().run(),
-      isActive: () => editor.isActive("blockquote"),
-    },
-    {
-      icon: "separator",
-      title: "Horizontal Rule",
-      action: () => editor.chain().focus().setHorizontalRule().run(),
-    },
-    {
-      type: "divider",
-    },
-    {
-      icon: "text-wrap",
-      title: "Hard Break",
-      action: () => editor.chain().focus().setHardBreak().run(),
     },
     {
       icon: "format-clear",

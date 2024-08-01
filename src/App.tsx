@@ -67,7 +67,7 @@ export default function App() {
     if (savedTheme !== "" && savedTheme) {
       setCurrentTheme(savedTheme);
     } else {
-      setCurrentTheme("Light");
+      setCurrentTheme("Dark");
     }
   }, []);
 

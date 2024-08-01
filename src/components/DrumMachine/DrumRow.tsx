@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import DrumStep from "./DrumStep";
 
-import { v4 as uuidv4 } from "uuid";
-
 export default function DrumRow({ label, drumSeqArray, setDrumSeqArray }) {
   const [rowLabel, setRowLabel] = useState<string>();
 

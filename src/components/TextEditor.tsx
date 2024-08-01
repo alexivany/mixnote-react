@@ -2,6 +2,7 @@
 
 import CharacterCount from "@tiptap/extension-character-count";
 import Highlight from "@tiptap/extension-highlight";
+import Underline from "@tiptap/extension-underline";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
 import { EditorContent, useEditor } from "@tiptap/react";
@@ -25,7 +26,7 @@ export default function TextEditor({ objectKey, noteToLoad }) {
 
   const { currentVersion, setCurrentVersion } = useCurrentVersionContext();
 
-  const { currentSong, setCurrentSong } = useCurrentSongContext();
+  const { currentSong } = useCurrentSongContext();
 
   const [showMenuBar, setShowMenuBar] = useState<boolean>(false);
 
@@ -60,12 +61,12 @@ export default function TextEditor({ objectKey, noteToLoad }) {
       }
     },
     content: getValueFromPath(currentVersion, noteToLoad),
-    immediatelyRender: true,
     extensions: [
       StarterKit.configure(),
       Placeholder.configure({
         placeholder: "Enter your notes here…",
       }),
+      Underline,
       Highlight,
       TaskList,
       TaskItem,

@@ -27,7 +27,10 @@ export default function DrumStep({ index, soundRow, setDrumSeqArray, active }) {
     <button
       className={
         `border-2 rounded-lg ${currentVersion?.theme?.borderColor} ` +
-        (stepActive && `${currentVersion?.theme?.bgColor}`)
+        (stepActive &&
+          (currentVersion?.theme?.bgColor === "bg-gray-100"
+            ? `bg-gray-300`
+            : `${currentVersion?.theme?.bgColor}`))
       }
       onClick={handleToggle}
     ></button>
