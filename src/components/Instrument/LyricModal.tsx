@@ -12,6 +12,7 @@ interface LyricModalProps {
   handleLyricModal: () => void;
   setCurrentVersion: Dispatch<SetStateAction<Version | undefined>>;
   instrumentObject: InstrumentData;
+  aiOptionType: "edit" | "auto";
 }
 
 export default function LyricModal({
@@ -19,6 +20,7 @@ export default function LyricModal({
   handleLyricModal,
   setCurrentVersion,
   instrumentObject,
+  aiOptionType,
 }: LyricModalProps) {
   const { currentTheme } = useThemeContext();
 
@@ -61,9 +63,10 @@ export default function LyricModal({
       setModalWarning(true);
 
       const response = await openai.chat.completions.create({
-        model: "gpt-4",
+        model: "gpt-4o-mini",
         temperature: 1,
         max_tokens: 256,
+        stream: true,
         messages: [
           {
             role: "system",
@@ -75,32 +78,53 @@ export default function LyricModal({
           },
         ],
       });
-
-      if (response) {
+      handleLyricModal();
+      setModalWarning(false);
+      for await (const chunk of response) {
         setCurrentVersion((prevVersionData) => {
           if (prevVersionData) {
+            if (!chunk.choices[0]?.delta?.content) {
+              return {
+                ...prevVersionData,
+                [instrumentObject.instrument]: {
+                  ...prevVersionData[instrumentObject.instrument],
+                  lyrics: `${
+                    prevVersionData[instrumentObject.instrument].lyrics
+                  }`,
+                },
+              } as Version;
+            }
+            if (!chunk.choices[0]?.delta?.content.match(/[.,]/)) {
+              return {
+                ...prevVersionData,
+                [instrumentObject.instrument]: {
+                  ...prevVersionData[instrumentObject.instrument],
+                  lyrics:
+                    `${prevVersionData[instrumentObject.instrument].lyrics}` +
+                    `${chunk.choices[0]?.delta?.content}`,
+                },
+              } as Version;
+            }
             return {
               ...prevVersionData,
               [instrumentObject.instrument]: {
                 ...prevVersionData[instrumentObject.instrument],
                 lyrics:
-                  `${prevVersionData[instrumentObject.instrument].lyrics} \n` +
-                  `${response.choices[0].message.content}`,
+                  `${prevVersionData[instrumentObject.instrument].lyrics}` +
+                  `${chunk.choices[0]?.delta?.content?.trimEnd()}`,
               },
             } as Version;
           }
         });
-
-        handleLyricModal();
-        setModalWarning(false);
       }
-    } else {
-      setModalWarningText("One or more inputs are empty!");
-      setModalWarning(true);
-      setTimeout(() => {
-        setModalWarning(false);
-      }, 2000);
-      return;
+      if (!response) {
+        setModalWarningText("One or more inputs are empty!");
+        setModalWarning(true);
+        setTimeout(() => {
+          setModalWarning(false);
+        }, 2000);
+        return;
+      }
     }
   };
 
@@ -114,51 +138,16 @@ export default function LyricModal({
           : "bg-neutral-800 border-neutral-600")
       }
     >
-      <span className="text-xl">What is your song about?</span>
-      <input
-        autoFocus
-        value={lyricModalInput.about}
-        onChange={handleModalInputChange}
-        // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
-        type="text"
-        name="about"
-        className={
-          "max-w-full font-normal mb-2 border px-2 rounded-lg " +
-          (currentTheme === "Light"
-            ? "bg-white border-gray-300"
-            : "bg-neutral-800 border-neutral-600")
-        }
-      ></input>
-      <div className="grid grid-cols-4 grid-rows-1 gap-6 items-end">
-        <div className="flex flex-col gap-2">
-          <span className="text-md">How many lines do you want generated?</span>
+      {aiOptionType === "edit" && (
+        <>
+          <span className="text-xl">What is your song about?</span>
           <input
-            value={lyricModalInput.lines}
-            onChange={handleModalInputChange}
-            // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
-            type="number"
-            name="lines"
-            min="1"
-            max="99"
-            className={
-              "max-w-full font-normal mb-2 border px-2 rounded-lg " +
-              (currentTheme === "Light"
-                ? "bg-white border-gray-300"
-                : "bg-neutral-800 border-neutral-600")
-            }
-          ></input>
-        </div>
-        <div className="flex flex-col gap-2">
-          <span className="text-md">
-            What section of your song is this for?
-          </span>
-          <input
-            value={lyricModalInput.section}
+            autoFocus
+            value={lyricModalInput.about}
             onChange={handleModalInputChange}
             // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
             type="text"
-            list="sections"
-            name="section"
+            name="about"
             className={
               "max-w-full font-normal mb-2 border px-2 rounded-lg " +
               (currentTheme === "Light"
@@ -166,46 +155,87 @@ export default function LyricModal({
                 : "bg-neutral-800 border-neutral-600")
             }
           ></input>
-        </div>
-        <div className="flex flex-col gap-2">
-          <span className="text-md">
-            What is the feeling or mood of the song?
-          </span>
-          <input
-            value={lyricModalInput.mood}
-            onChange={handleModalInputChange}
-            // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
-            type="text"
-            name="mood"
-            className={
-              "max-w-full font-normal mb-2 border px-2 rounded-lg " +
-              (currentTheme === "Light"
-                ? "bg-white border-gray-300"
-                : "bg-neutral-800 border-neutral-600")
-            }
-          ></input>
-        </div>
-        <div className="flex flex-col gap-2">
-          <span className="text-md">
-            How poetic should the lyrics be? (10 being the most poetic)
-          </span>
-          <input
-            value={lyricModalInput.poetic}
-            onChange={handleModalInputChange}
-            // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
-            type="number"
-            name="poetic"
-            min="0"
-            max="10"
-            className={
-              "max-w-full font-normal mb-2 border px-2 rounded-lg " +
-              (currentTheme === "Light"
-                ? "bg-white border-gray-300"
-                : "bg-neutral-800 border-neutral-600")
-            }
-          ></input>
-        </div>
-      </div>
+          <div className="grid grid-cols-4 grid-rows-1 gap-6 items-end">
+            <div className="flex flex-col gap-2">
+              <span className="text-md">
+                How many lines do you want generated?
+              </span>
+              <input
+                value={lyricModalInput.lines}
+                onChange={handleModalInputChange}
+                // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
+                type="number"
+                name="lines"
+                min="1"
+                max="99"
+                className={
+                  "max-w-full font-normal mb-2 border px-2 rounded-lg " +
+                  (currentTheme === "Light"
+                    ? "bg-white border-gray-300"
+                    : "bg-neutral-800 border-neutral-600")
+                }
+              ></input>
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-md">
+                What section of your song is this for?
+              </span>
+              <input
+                value={lyricModalInput.section}
+                onChange={handleModalInputChange}
+                // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
+                type="text"
+                list="sections"
+                name="section"
+                className={
+                  "max-w-full font-normal mb-2 border px-2 rounded-lg " +
+                  (currentTheme === "Light"
+                    ? "bg-white border-gray-300"
+                    : "bg-neutral-800 border-neutral-600")
+                }
+              ></input>
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-md">
+                What is the feeling or mood of the song?
+              </span>
+              <input
+                value={lyricModalInput.mood}
+                onChange={handleModalInputChange}
+                // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
+                type="text"
+                name="mood"
+                className={
+                  "max-w-full font-normal mb-2 border px-2 rounded-lg " +
+                  (currentTheme === "Light"
+                    ? "bg-white border-gray-300"
+                    : "bg-neutral-800 border-neutral-600")
+                }
+              ></input>
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-md">
+                How poetic should the lyrics be? (10 being the most poetic)
+              </span>
+              <input
+                value={lyricModalInput.poetic}
+                onChange={handleModalInputChange}
+                // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
+                type="number"
+                name="poetic"
+                min="0"
+                max="10"
+                className={
+                  "max-w-full font-normal mb-2 border px-2 rounded-lg " +
+                  (currentTheme === "Light"
+                    ? "bg-white border-gray-300"
+                    : "bg-neutral-800 border-neutral-600")
+                }
+              ></input>
+            </div>
+          </div>
+        </>
+      )}
 
       <span className="text-lg">Please enter your OpenAI API Key</span>
       <input
@@ -229,7 +259,18 @@ export default function LyricModal({
           <span className="font-semibold text-md ml-2">{modalWarningText}</span>
         )}
         <button
-          onClick={generateLyrics}
+          onClick={(e) => {
+            if (aiOptionType === "auto") {
+              setLyricModalInput({
+                about: "A catchy pop song",
+                lines: 8,
+                section: "Verse",
+                mood: "Neutral",
+                poetic: 6,
+              });
+            }
+            generateLyrics(e);
+          }}
           className={
             "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
             (currentTheme === "Light"

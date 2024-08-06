@@ -155,18 +155,42 @@ D|------------------------------------------------------------------------------
       <div className="flex gap-2 items-center">
         <button
           onClick={handleAddRow}
-          className={`border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold  text-sm lg:text-md cursor-pointer`}
+          className={
+            `border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor}  ${currentVersion?.theme?.hoverColor} px-4 py-2 font-semibold  text-sm lg:text-md cursor-pointer ` +
+            (currentTheme === "Dark"
+              ? " hover:bg-neutral-800 "
+              : " hover:bg-white ") +
+            (currentVersion?.theme?.textColor === "text-black" &&
+              currentTheme === "Dark" &&
+              " hover:text-white ")
+          }
         >
           Add Row
         </button>
         <button
           onClick={handleClearTab}
-          className={`border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold text-sm lg:text-md cursor-pointer`}
+          className={
+            `border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor} px-4 py-2 font-semibold text-sm lg:text-md cursor-pointer ` +
+            (currentTheme === "Dark"
+              ? " hover:bg-neutral-800 "
+              : " hover:bg-white ") +
+            (currentVersion?.theme?.textColor === "text-black" &&
+              currentTheme === "Dark" &&
+              " hover:text-white ")
+          }
         >
           Clear
         </button>
         <a
-          className={`border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold text-sm lg:text-md cursor-pointer`}
+          className={
+            `border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor} px-4 py-2 font-semibold text-sm lg:text-md cursor-pointer ` +
+            (currentTheme === "Dark"
+              ? " hover:bg-neutral-800 "
+              : " hover:bg-white ") +
+            (currentVersion?.theme?.textColor === "text-black" &&
+              currentTheme === "Dark" &&
+              " hover:text-white ")
+          }
         >
           Download
         </a>

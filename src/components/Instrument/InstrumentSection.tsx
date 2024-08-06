@@ -123,7 +123,15 @@ E|------------------------------------------------------------------------------
         />
         <button
           onClick={handleNewInstrument}
-          className={`border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold text-sm lg:text-base cursor-pointer`}
+          className={
+            `border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor} px-4 py-2 font-semibold text-sm lg:text-base cursor-pointer ` +
+            (currentTheme === "Dark"
+              ? " hover:bg-neutral-800 "
+              : " hover:bg-white ") +
+            (currentVersion?.theme?.textColor === "text-black" &&
+              currentTheme === "Dark" &&
+              " hover:text-white ")
+          }
         >
           Add Instrument
         </button>

@@ -46,6 +46,7 @@ export default function DrumMachine({ instrumentToTab }) {
         bpm: e.target.value,
       } as Song;
     });
+    transport.bpm.value = e.target.value;
   };
 
   const playSeq = async () => {
@@ -185,7 +186,7 @@ export default function DrumMachine({ instrumentToTab }) {
 
   useEffect(() => {
     if (currentVersion) {
-      if (currentVersion?.[instrumentToTab].drumSeq) {
+      if (currentVersion?.[instrumentToTab].drumSeq !== drumSeqArray) {
         setDrumSeqArray(currentVersion?.[instrumentToTab].drumSeq);
       } else if (currentVersion?.[instrumentToTab]) {
         setDrumSeqArray(DEFAULT_DRUM_ARRAY);
@@ -208,6 +209,12 @@ export default function DrumMachine({ instrumentToTab }) {
       }
     }
   }, [drumSeqArray]);
+
+  // useEffect(() => {
+  //   // if (drumSeqArray !== currentVersion?.[instrumentToTab].drumSeq) {
+  //   //   setDrumSeqArray(currentVersion?.[instrumentToTab].drumSeq);
+  //   // }
+  // }, [currentSong]);
 
   return (
     <>
@@ -280,8 +287,13 @@ export default function DrumMachine({ instrumentToTab }) {
             <div className="flex p-2 gap-2">
               <button
                 className={
-                  `text-sm lg:text-md rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 cursor-pointer ` +
-                  (isPlaying ? "font-bold" : "font-semibold")
+                  ` text-sm lg:text-md rounded-2xl border-2 ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor}  px-3 py-2 font-semibold cursor-pointer ` +
+                  (currentTheme === "Dark"
+                    ? " hover:bg-neutral-800 "
+                    : " hover:bg-white ") +
+                  (currentVersion?.theme?.textColor === "text-black" &&
+                    currentTheme === "Dark" &&
+                    " hover:text-white ")
                 }
                 onClick={playSeq}
               >
@@ -289,13 +301,29 @@ export default function DrumMachine({ instrumentToTab }) {
               </button>
               <button
                 onClick={stopSeq}
-                className={` text-sm lg:text-md rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold cursor-pointer`}
+                className={
+                  ` text-sm lg:text-md rounded-2xl border-2 ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor}  px-3 py-2 font-semibold cursor-pointer ` +
+                  (currentTheme === "Dark"
+                    ? " hover:bg-neutral-800 "
+                    : " hover:bg-white ") +
+                  (currentVersion?.theme?.textColor === "text-black" &&
+                    currentTheme === "Dark" &&
+                    " hover:text-white ")
+                }
               >
                 Stop
               </button>
               <button
                 onClick={clearSeq}
-                className={`text-sm lg:text-md rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold cursor-pointer`}
+                className={
+                  ` text-sm lg:text-md rounded-2xl border-2 ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor}  px-3 py-2 font-semibold cursor-pointer ` +
+                  (currentTheme === "Dark"
+                    ? " hover:bg-neutral-800 "
+                    : " hover:bg-white ") +
+                  (currentVersion?.theme?.textColor === "text-black" &&
+                    currentTheme === "Dark" &&
+                    " hover:text-white ")
+                }
               >
                 Clear
               </button>

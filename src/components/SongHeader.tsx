@@ -216,13 +216,29 @@ export default function SongHeader({
         <div className="flex justify-between gap-2 items-center font-semibold text-xs">
           <a
             onClick={handleSongDownload}
-            className={`font-bold ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.bgColor} border-2 ${currentVersion?.theme?.borderColor} py-1 px-2 lg:py-2 lg:px-4 rounded-2xl cursor-pointer`}
+            className={
+              `font-bold ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.bgColor} border-2 ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.hoverColor}  py-1 px-2 lg:py-2 lg:px-4 rounded-2xl cursor-pointer ` +
+              (currentTheme === "Dark"
+                ? " hover:bg-neutral-800 "
+                : " hover:bg-white ") +
+              (currentVersion?.theme?.textColor === "text-black" &&
+                currentTheme === "Dark" &&
+                " hover:text-white ")
+            }
             id="download-button"
           >
             Download
           </a>
           <label
-            className={`font-bold ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.bgColor} border-2 ${currentVersion?.theme?.borderColor} py-1 px-2 lg:py-2 lg:px-4 rounded-2xl cursor-pointer`}
+            className={
+              `font-bold ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.bgColor} border-2 ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.hoverColor}  py-1 px-2 lg:py-2 lg:px-4 rounded-2xl cursor-pointer ` +
+              (currentTheme === "Dark"
+                ? " hover:bg-neutral-800 "
+                : " hover:bg-white ") +
+              (currentVersion?.theme?.textColor === "text-black" &&
+                currentTheme === "Dark" &&
+                " hover:text-white ")
+            }
             htmlFor="file-upload"
             id="file-upload-label"
           >

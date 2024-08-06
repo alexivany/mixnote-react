@@ -8,7 +8,7 @@ import TaskList from "@tiptap/extension-task-list";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
-import "../texteditor.scss";
+import "@/texteditor.scss";
 
 import MenuBar from "./MenuBar";
 
@@ -30,6 +30,10 @@ export default function TextEditor({ objectKey, noteToLoad }) {
 
   const [showMenuBar, setShowMenuBar] = useState<boolean>(false);
 
+  const [placeholder, setPlaceholder] = useState<string>(
+    "Enter your notes here…"
+  );
+
   const editorRef = useRef<HTMLDivElement>(null);
 
   const getValueFromPath = (obj, path) => {
@@ -39,32 +43,48 @@ export default function TextEditor({ objectKey, noteToLoad }) {
 
   const editor = useEditor({
     onUpdate({ editor }) {
-      const noteshtml = editor.getHTML();
-      // The content has changed.
-      if (objectKey === "generalNotes") {
-        setCurrentVersion((prevVersionData) => {
-          return {
-            ...prevVersionData,
-            [objectKey]: noteshtml,
-          } as Version;
-        });
-      } else {
-        setCurrentVersion((prevVersionData) => {
-          return {
-            ...prevVersionData,
-            [objectKey]: {
-              ...prevVersionData[objectKey],
-              notes: noteshtml,
-            },
-          } as Version;
-        });
+      if (currentVersion) {
+        const noteshtml = editor.getHTML();
+        // The content has changed.
+        if (objectKey === "generalNotes") {
+          setCurrentVersion((prevVersionData) => {
+            return {
+              ...prevVersionData,
+              [objectKey]: noteshtml,
+            } as Version;
+          });
+        } else if (noteToLoad === "Vocals.lyrics") {
+          setCurrentVersion((prevVersionData) => {
+            if (prevVersionData) {
+              return {
+                ...prevVersionData,
+                [objectKey]: {
+                  ...prevVersionData[objectKey],
+                  lyrics: noteshtml,
+                },
+              } as Version;
+            }
+          });
+        } else {
+          setCurrentVersion((prevVersionData) => {
+            if (prevVersionData) {
+              return {
+                ...prevVersionData,
+                [objectKey]: {
+                  ...prevVersionData[objectKey],
+                  notes: noteshtml,
+                },
+              } as Version;
+            }
+          });
+        }
       }
     },
     content: getValueFromPath(currentVersion, noteToLoad),
     extensions: [
       StarterKit.configure(),
       Placeholder.configure({
-        placeholder: "Enter your notes here…",
+        placeholder: placeholder,
       }),
       Underline,
       Highlight,
@@ -79,6 +99,14 @@ export default function TextEditor({ objectKey, noteToLoad }) {
   function handleMenuClickOutside() {
     setShowMenuBar(false);
   }
+
+  useEffect(() => {
+    setPlaceholder(
+      noteToLoad === "Vocals.lyrics"
+        ? "Enter your lyrics here…"
+        : "Enter your notes here…"
+    );
+  }, []);
 
   useEffect(() => {
     if (editor?.isFocused) {
@@ -102,7 +130,7 @@ export default function TextEditor({ objectKey, noteToLoad }) {
     <div
       ref={editorRef}
       className={
-        "resize-none relative gap-2 border rounded-lg p-2 text-sm " +
+        "resize-none relative gap-2 border rounded-lg p-2 text-sm min-w-full " +
         (currentTheme === "Light"
           ? "border-gray-300 "
           : "bg-neutral-800 border-neutral-600 ") +

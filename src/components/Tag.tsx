@@ -45,7 +45,9 @@ export default function Tag({ tag, i, setCurrentSong, currentSong }: TagProps) {
       key={i}
       className={
         "border-2 flex items-center mr-2 border-gray-400 rounded-2xl py-1 px-2 text-xs font-semibold cursor-pointer " +
-        (currentTheme === "Light" ? "text-black" : "text-white")
+        (currentTheme === "Light"
+          ? "text-black hover:text-white hover:bg-neutral-800 hover:border-neutral-800 "
+          : "text-white hover:text-black hover:bg-white hover:border-white ")
       }
       onClick={handleTagSelection}
       onBlur={() => {
@@ -59,7 +61,10 @@ export default function Tag({ tag, i, setCurrentSong, currentSong }: TagProps) {
         <img
           src="./src/assets/SVG/cross.svg"
           alt=""
-          className={"w-4 " + (currentTheme === "Dark" && "grayscale invert")}
+          className={
+            "w-4 hover:invert " +
+            (currentTheme === "Dark" && "grayscale invert hover:invert-0")
+          }
           onClick={() => handleDeleteTag(tag)}
         />
       )}

@@ -153,7 +153,10 @@ export default function App() {
   return (
     <div
       ref={handleBodyResize}
-      className="h-full w-full overflow-x-clip absolute bg-neutral-800"
+      className={
+        "h-full w-full overflow-x-clip absolute " +
+        (currentTheme === "Dark" ? "bg-neutral-800" : "bg-white")
+      }
     >
       {songs && currentSong && currentVersion && (
         <>

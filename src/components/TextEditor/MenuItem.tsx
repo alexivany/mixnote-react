@@ -2,7 +2,7 @@
 
 import remixiconUrl from "remixicon/fonts/remixicon.symbol.svg";
 
-import "../menuitem.scss";
+import "@/menuitem.scss";
 
 export default function MenuItem({
   icon,

@@ -6,6 +6,7 @@ interface BaseVersion {
     bgColor: string;
     borderColor: string;
     textColor: string;
+    hoverColor: string;
   };
 }
 

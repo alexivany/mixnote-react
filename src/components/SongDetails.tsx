@@ -87,6 +87,7 @@ export default function SongDetails({
           textColor: e.target.dataset.textcolor,
           borderColor: e.target.dataset.bordercolor,
           activeColor: e.target.dataset.activecolor,
+          hoverColor: e.target.dataset.hovercolor,
         },
       } as Version;
     });
@@ -165,6 +166,7 @@ export default function SongDetails({
             data-bgcolor="bg-red-500"
             data-textcolor="text-white"
             data-activecolor="text-red-500"
+            data-hovercolor="hover:text-red-500"
             data-bordercolor="border-red-500"
             onClick={handleColorChange}
           />
@@ -176,6 +178,7 @@ export default function SongDetails({
             data-bgcolor="bg-orange-500"
             data-textcolor="text-white"
             data-activecolor="text-orange-500"
+            data-hovercolor="hover:text-orange-500"
             data-bordercolor="border-orange-500"
             onClick={handleColorChange}
           />
@@ -187,6 +190,7 @@ export default function SongDetails({
             data-bgcolor="bg-yellow-400"
             data-textcolor="text-white"
             data-activecolor="text-yellow-400"
+            data-hovercolor="hover:text-yellow-500"
             data-bordercolor="border-yellow-400"
             onClick={handleColorChange}
           />
@@ -198,6 +202,7 @@ export default function SongDetails({
             data-bgcolor="bg-green-500"
             data-textcolor="text-white"
             data-activecolor="text-green-500"
+            data-hovercolor="hover:text-green-500"
             data-bordercolor="border-green-500"
             onClick={handleColorChange}
           />
@@ -209,6 +214,7 @@ export default function SongDetails({
             data-bgcolor="bg-teal-500"
             data-textcolor="text-white"
             data-activecolor="text-teal-500"
+            data-hovercolor="hover:text-teal-500"
             data-bordercolor="border-teal-500"
             onClick={handleColorChange}
           />
@@ -220,6 +226,7 @@ export default function SongDetails({
             data-bgcolor="bg-cyan-500"
             data-textcolor="text-white"
             data-activecolor="text-cyan-500"
+            data-hovercolor="hover:text-cyan-500"
             data-bordercolor="border-cyan-500"
             onClick={handleColorChange}
           />
@@ -231,6 +238,7 @@ export default function SongDetails({
             data-bgcolor="bg-blue-500"
             data-textcolor="text-white"
             data-activecolor="text-blue-500"
+            data-hovercolor="hover:text-blue-500"
             data-bordercolor="border-blue-500"
             onClick={handleColorChange}
           />
@@ -242,6 +250,7 @@ export default function SongDetails({
             data-bgcolor="bg-purple-500"
             data-textcolor="text-white"
             data-activecolor="text-purple-500"
+            data-hovercolor="hover:text-purple-500"
             data-bordercolor="border-purple-500"
             onClick={handleColorChange}
           />
@@ -253,6 +262,7 @@ export default function SongDetails({
             data-bgcolor="bg-pink-500"
             data-textcolor="text-white"
             data-activecolor="text-pink-500"
+            data-hovercolor="hover:text-pink-500"
             data-bordercolor="border-pink-500"
             onClick={handleColorChange}
           />
@@ -263,6 +273,7 @@ export default function SongDetails({
             data-bgcolor="bg-gray-100"
             data-textcolor="text-black"
             data-activecolor="text-black"
+            data-hovercolor="hover:text-black"
             data-bordercolor="border-gray-100"
             className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             onClick={handleColorChange}

@@ -3,7 +3,7 @@ import SongDetails from "./SongDetails";
 import GeneralNotes from "./GeneralNotes";
 import InstrumentSection from "./Instrument/InstrumentSection";
 import GenerativeUI from "./GenerativeUI";
-import TextEditor from "./TextEditor";
+import TextEditor from "./TextEditor/TextEditor";
 
 import { Song, Version } from "../types";
 import { Dispatch, SetStateAction } from "react";
@@ -48,7 +48,7 @@ export default function SongView({
         (currentTheme === "Light" ? "bg-white" : "bg-neutral-800 text-white")
       }
     >
-      {/* <GenerativeUI /> */}
+      <GenerativeUI />
 
       <SongHeader
         currentSong={currentSong}
@@ -64,10 +64,7 @@ export default function SongView({
         setCurrentVersion={setCurrentVersion}
       />
       {/* <NovelEditor /> */}
-      <GeneralNotes
-        handleChange={handleVersionChange}
-        currentVersion={currentVersion}
-      />
+      <GeneralNotes />
       <InstrumentSection
         currentVersion={currentVersion}
         setCurrentVersion={setCurrentVersion}
