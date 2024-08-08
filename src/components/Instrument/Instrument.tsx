@@ -118,6 +118,15 @@ export default function Instrument({
           )}
 
           <img
+            src="./src/assets/SVG/function-add-fill.svg"
+            alt=""
+            className={
+              "w-6 m-0 p-0 " + (currentTheme === "Dark" && "grayscale invert")
+            }
+            onClick={() => {}}
+          />
+
+          <img
             src={
               showInstrumentNotes
                 ? "./src/assets/SVG/arrow-drop-up-line.svg"
@@ -125,7 +134,7 @@ export default function Instrument({
             }
             alt=""
             className={
-              "w-7 m-0 p-0" + (currentTheme === "Dark" && "grayscale invert")
+              "w-7 m-0 p-0  " + (currentTheme === "Dark" && "grayscale invert")
             }
             onClick={() => {
               setShowInstrumentNotes((prevState) => !prevState);
@@ -136,7 +145,7 @@ export default function Instrument({
             src="./src/assets/SVG/cross.svg"
             alt=""
             className={
-              "w-6 m-0 p-0" + (currentTheme === "Dark" && "grayscale invert")
+              "w-6 m-0 p-0 " + (currentTheme === "Dark" && "grayscale invert")
             }
             onClick={() => {
               setShowDeleteWarning(true);

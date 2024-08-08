@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 
 import { useOnClickOutside } from "usehooks-ts";
-import { v4 as uuidv4 } from "uuid";
 
 import { useApiContext } from "../../contexts/api-context";
 import { useThemeContext } from "@/contexts/theme-context";
+import SidebarNewSongModal from "./SidebarNewSongModal";
 
 interface SidebarSettings {
   setSongs: (newSongArray) => void;
@@ -14,7 +14,6 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
   const { currentTheme, setCurrentTheme } = useThemeContext();
 
   const [showSongModal, setShowSongModal] = useState<boolean>(false);
-  const [songModalInput, setSongModalInput] = useState<string>("");
 
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
 
@@ -22,12 +21,10 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
 
   const [themeCheckbox, setThemeCheckBox] = useState<boolean>();
 
-  const songModalRef = useRef(null);
   const settingsModalRef = useRef(null);
 
   function handleSongModal() {
     setShowSongModal((prevState) => !prevState);
-    setSongModalInput("");
   }
 
   function handleSettingsModal() {
@@ -43,29 +40,6 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
     }
   }
 
-  function addNewSong() {
-    setSongs((prevSongs) => {
-      return [
-        ...prevSongs,
-        {
-          title: songModalInput,
-          id: uuidv4(),
-          ["Demo"]: {
-            version: "Demo",
-            generalNotes: "",
-            theme: {
-              activeColor: "text-black",
-              bgColor: "bg-gray-100",
-              borderColor: "border-gray-100",
-              textColor: "text-black",
-            },
-          },
-        },
-      ];
-    });
-    handleSongModal();
-  }
-
   useEffect(() => {
     if (currentTheme === "Dark") {
       currentTheme === "Dark" && setThemeCheckBox(true);
@@ -74,7 +48,6 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
     }
   }, [currentTheme]);
 
-  useOnClickOutside(songModalRef, handleSongModal);
   useOnClickOutside(settingsModalRef, handleSettingsModal);
   return (
     <div
@@ -134,52 +107,10 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
         About
       </button>
       {showSongModal && (
-        <div
-          ref={songModalRef}
-          className={
-            "fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 w-2/5 flex flex-col justify-between border  rounded-xl z-10 py-6 px-6 " +
-            (currentTheme === "Light"
-              ? "bg-white text-black border-gray-300"
-              : "bg-neutral-800 text-white border-neutral-600")
-          }
-        >
-          <span className="text-xl">Enter new song name</span>
-          <input
-            autoFocus
-            value={songModalInput}
-            onChange={(e) => setSongModalInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && addNewSong()}
-            type="text"
-            className={
-              "max-w-full font-normal mb-2 border border-gray-300 px-2 rounded-lg " +
-              (currentTheme === "Light" ? "bg-white" : "bg-neutral-800")
-            }
-          ></input>
-          <div className="flex gap-4 justify-end">
-            <button
-              onClick={addNewSong}
-              className={
-                "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
-                (currentTheme === "Light"
-                  ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
-                  : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
-              }
-            >
-              OK
-            </button>
-            <button
-              onClick={handleSongModal}
-              className={
-                "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
-                (currentTheme === "Light"
-                  ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
-                  : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
-              }
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
+        <SidebarNewSongModal
+          handleSongModal={handleSongModal}
+          setSongs={setSongs}
+        />
       )}
 
       {showSettingsModal && (

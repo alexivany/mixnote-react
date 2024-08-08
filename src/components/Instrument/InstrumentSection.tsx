@@ -27,10 +27,7 @@ export default function InstrumentSection({
       return;
     }
 
-    if (
-      newInstrumentInput === "" ||
-      !/^[a-zA-Z0-9]+$/.test(newInstrumentInput)
-    ) {
+    if (newInstrumentInput === "" || newInstrumentInput.match(/^\s*$/)) {
       setInstrumentWarningText("Instrument must have a name!");
       setInstrumentWarning(true);
       setTimeout(() => {

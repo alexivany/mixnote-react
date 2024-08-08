@@ -59,6 +59,10 @@ export default function App() {
 
     if (defaultVersion) {
       setCurrentVersion(defaultVersion);
+    } else {
+      setCurrentVersion({
+        version: "Demo",
+      } as Version);
     }
 
     const savedTheme = JSON.parse(

@@ -157,7 +157,7 @@ export default function SongDetails({
             />
           </div>
         </div>
-        <div className="flex">
+        <div className="flex h-7">
           <img
             id="red-blob"
             src="./src/assets/SVG/blobs/red-blob.svg"

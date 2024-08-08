@@ -25,6 +25,7 @@ export default function SongHeader({
   const [showTitleCross, setShowTitleCross] = useState<boolean>(false);
 
   const [showVersionModal, setShowVersionModal] = useState<boolean>(false);
+  const [modalWarning, setModalWarning] = useState<boolean>(false);
   const [versionModalInput, setVersionModalInput] = useState<string>("");
 
   const versionModalRef = useRef(null);
@@ -38,11 +39,11 @@ export default function SongHeader({
           className={
             `h-9 font-semibold text-xs lg:text-base p-2 rounded-t-2xl flex justify-center items-center ` +
             (currentVersion?.version === key
-              ? `bg-hidden pr-1 border-x-3 border-t-3 ${value?.theme?.borderColor} ${value?.theme?.activeColor} `
-              : `border ${value?.theme?.borderColor} ${value?.theme?.bgColor} ${value?.theme?.textColor} `) +
-            (currentTheme === "Dark" &&
-              value?.theme?.textColor === "text-black" &&
-              "text-white")
+              ? `bg-hidden pr-1 border-x-3 border-t-3 ${value?.theme?.borderColor} ${value?.theme?.activeColor} ` +
+                (currentTheme === "Dark" &&
+                  value?.theme?.textColor === "text-black" &&
+                  "text-white")
+              : `border ${value?.theme?.borderColor} ${value?.theme?.bgColor} ${value?.theme?.textColor} `)
           }
         >
           <button onClick={handleVersionChange} value={key}>
@@ -98,6 +99,13 @@ export default function SongHeader({
   }
 
   function addNewVersion() {
+    if (versionModalInput.match(/^\s*$/)) {
+      setModalWarning(true);
+      setTimeout(() => {
+        setModalWarning(false);
+      }, 2000);
+      return;
+    }
     setCurrentSong((prevSongData) => {
       return {
         ...prevSongData,
@@ -281,6 +289,11 @@ export default function SongHeader({
             }
           ></input>
           <div className="flex gap-4 justify-end">
+            {modalWarning && (
+              <span className="font-semibold text-md ml-2">
+                Version must have a name!
+              </span>
+            )}
             <button
               onClick={addNewVersion}
               className={

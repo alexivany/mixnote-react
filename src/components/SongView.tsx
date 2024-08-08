@@ -2,8 +2,6 @@ import SongHeader from "./SongHeader";
 import SongDetails from "./SongDetails";
 import GeneralNotes from "./GeneralNotes";
 import InstrumentSection from "./Instrument/InstrumentSection";
-import GenerativeUI from "./GenerativeUI";
-import TextEditor from "./TextEditor/TextEditor";
 
 import { Song, Version } from "../types";
 import { Dispatch, SetStateAction } from "react";
@@ -33,14 +31,14 @@ export default function SongView({
       } as Song;
     });
   }
-  function handleVersionChange(e) {
-    setCurrentVersion((prevVersionData) => {
-      return {
-        ...prevVersionData,
-        [e.target.name]: e.target.value,
-      } as Version;
-    });
-  }
+  // function handleVersionChange(e) {
+  //   setCurrentVersion((prevVersionData) => {
+  //     return {
+  //       ...prevVersionData,
+  //       [e.target.name]: e.target.value,
+  //     } as Version;
+  //   });
+  // }
   return (
     <div
       className={
@@ -48,8 +46,6 @@ export default function SongView({
         (currentTheme === "Light" ? "bg-white" : "bg-neutral-800 text-white")
       }
     >
-      <GenerativeUI />
-
       <SongHeader
         currentSong={currentSong}
         setCurrentSong={setCurrentSong}
