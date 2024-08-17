@@ -118,7 +118,7 @@ export default function TextEditor({ objectKey, noteToLoad }) {
     if (editor?.getHTML() !== getValueFromPath(currentVersion, noteToLoad)) {
       editor?.commands.setContent(getValueFromPath(currentVersion, noteToLoad));
     }
-  }, [currentSong]);
+  }, [currentSong, currentVersion]);
 
   useOnClickOutside(editorRef, handleMenuClickOutside);
 

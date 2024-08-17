@@ -43,8 +43,13 @@ export default function Sidebar({
     if (currentSong) {
       const newSongArray = songs.filter((song) => song.id !== currentSong.id);
 
-      localStorage.setItem("songapp-songs", JSON.stringify(newSongArray));
-      setSongs(newSongArray);
+      if (newSongArray.length >= 1) {
+        localStorage.setItem("songapp-songs", JSON.stringify(newSongArray));
+        setSongs(newSongArray);
+      } else {
+        console.log("cant delete songs");
+        return;
+      }
     }
   }
 

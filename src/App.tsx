@@ -13,20 +13,24 @@ import { CurrentTagContextProvider } from "./contexts/tag-context";
 import { useThemeContext } from "./contexts/theme-context";
 import { useSidebarListContext } from "./contexts/sidebarlist-context";
 
+import _ from "lodash";
+
 const PLACEHOLDER_LOCAL_SONGS: Song[] = [
   {
     id: uuidv4(),
     title: "My First Song",
-    Demo: {
-      version: "Demo",
+    ["Verse"]: {
+      version: "Verse",
       generalNotes: "",
       theme: {
         activeColor: "text-black",
         bgColor: "bg-gray-100",
         borderColor: "border-gray-100",
         textColor: "text-black",
+        hoverColor: "hover:text-black",
       },
-    },
+      versionId: uuidv4(),
+    } as Version,
   },
 ];
 export default function App() {
@@ -41,16 +45,20 @@ export default function App() {
   const { setShowSidebarList } = useSidebarListContext();
 
   useEffect(() => {
-    const localSongs = JSON.parse(
+    let localSongs = JSON.parse(
       localStorage.getItem("songapp-songs") as string
     );
-    if (localSongs !== "" && localSongs) {
+    if (localSongs === undefined || !localSongs || localSongs.length === 0) {
+      localSongs = localStorage.setItem(
+        "songapp-songs",
+        JSON.stringify(PLACEHOLDER_LOCAL_SONGS)
+      );
+      setSongs(PLACEHOLDER_LOCAL_SONGS);
+    } else if (localSongs) {
       setSongs(localSongs);
-      if (localSongs && localSongs.length > 0) {
+      if (localSongs && localSongs.length >= 1) {
         setCurrentSong(localSongs[0]);
       }
-    } else {
-      setSongs(PLACEHOLDER_LOCAL_SONGS);
     }
 
     const defaultVersion = Object.values(localSongs[0]).find(
@@ -140,6 +148,7 @@ export default function App() {
         !currentSong[currentVersion.version] ||
         currentSong[currentVersion.version] !== currentVersion
       ) {
+        console.log("SETTING VERSION");
         setCurrentSong((prevSongData) => {
           if (!prevSongData) {
             return prevSongData;

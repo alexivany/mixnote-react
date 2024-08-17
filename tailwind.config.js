@@ -44,6 +44,9 @@ module.exports = {
       borderWidth: {
         3: "3px",
       },
+      transitionDuration: {
+        50: "50ms",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

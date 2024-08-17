@@ -8,6 +8,7 @@ interface BaseVersion {
     textColor: string;
     hoverColor: string;
   };
+  versionId: string;
 }
 
 export interface InstrumentData {
@@ -32,7 +33,7 @@ export type Song = {
   bpm?: number;
   tags?: string[];
 } & {
-  [version: string]: Version;
+  [version: string]: Version | string;
 };
 
 export type Modal = {

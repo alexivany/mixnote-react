@@ -1,3 +1,4 @@
+import { useThemeContext } from "@/contexts/theme-context";
 import { Dispatch, SetStateAction, useState } from "react";
 
 interface TabCellProps {
@@ -6,6 +7,7 @@ interface TabCellProps {
   value: string;
   index: number;
   note: string;
+  lineIndex: number;
 }
 
 export default function TabCell({
@@ -14,7 +16,9 @@ export default function TabCell({
   value,
   index,
   note,
+  lineIndex,
 }: TabCellProps) {
+  const { currentTheme } = useThemeContext();
   const [showInput, setShowInput] = useState<boolean>(false);
 
   const [tabValue, setTabValue] = useState<string>(value);
@@ -30,8 +34,8 @@ export default function TabCell({
   function handleInputBlur(b) {
     if (b.target.value !== "" && b.target.value !== "-") {
       const newValue = b.target.value.replace(/[\s-]/g, "");
-      const newArray = tabArray.map((subarray) => {
-        if (subarray[0] === note) {
+      const newArray = tabArray.map((subarray, i) => {
+        if (subarray[0] === note && i === lineIndex) {
           if (subarray[1]) {
             subarray[1] = subarray[1].map((t, i) => {
               if (i === index) {
@@ -69,7 +73,10 @@ export default function TabCell({
           onBlur={handleInputBlur}
           onKeyDown={(e) => e.key === "Enter" && handleInputBlur(e)}
           autoFocus
-          className="h-3.5 w-3.5 outline-1 outline-bg-black focus:outline-1 focus:border-0"
+          className={
+            `h-3.5 w-3.5 outline-1 outline-bg-black focus:outline-1 focus:border-0 ` +
+            (currentTheme === "Dark" && `text-black`)
+          }
         />
       )}
     </span>

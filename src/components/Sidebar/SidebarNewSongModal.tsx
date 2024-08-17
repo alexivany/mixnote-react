@@ -9,6 +9,10 @@ import { useOnClickOutside } from "usehooks-ts";
 import { v4 as uuidv4 } from "uuid";
 
 import { OpenAI } from "openai";
+import { zodResponseFormat } from "openai/helpers/zod";
+
+import { z } from "zod";
+import { useCurrentSongContext } from "@/contexts/currentsong-context";
 
 interface SidebarNewSongModalProps {
   handleSongModal(): void;
@@ -20,6 +24,8 @@ export default function SidebarNewSongModal({
   setSongs,
 }: SidebarNewSongModalProps) {
   const { currentTheme } = useThemeContext();
+
+  const { setCurrentSong } = useCurrentSongContext();
 
   const { apiKey, setApiKey } = useApiContext();
 
@@ -58,6 +64,7 @@ export default function SidebarNewSongModal({
               borderColor: "border-gray-100",
               textColor: "text-black",
             },
+            versionId: uuidv4(),
           },
         },
       ] as Song[];
@@ -160,6 +167,7 @@ export default function SidebarNewSongModal({
   //                 },
   //               },
   //             },
+  //             required: [""],
   //           },
   //         },
   //       },
@@ -167,6 +175,39 @@ export default function SidebarNewSongModal({
   //     },
   //   },
   // ];
+
+  const uiOutputSchema = z.object({
+    title: z.string().optional(),
+    bpm: z.number().optional(),
+    key: z.string().optional(),
+    sections: z
+      .array(
+        z.object({
+          section: z.string(),
+          generalNotes: z.string().optional(),
+          theme: z
+            .object({
+              activeColor: z.string().optional(),
+              bgColor: z.string().optional(),
+              borderColor: z.string().optional(),
+              textColor: z.string().optional(),
+            })
+            .optional(),
+          instruments: z
+            .array(
+              z.object({
+                instrument: z.string().optional(),
+                label: z.string().optional(),
+                notes: z.string().optional(),
+                tabs: z.string().optional(),
+                lyrics: z.string().optional(),
+              })
+            )
+            .optional(),
+        })
+      )
+      .optional(),
+  });
 
   async function generateUI() {
     const openai = new OpenAI({
@@ -177,97 +218,118 @@ export default function SidebarNewSongModal({
     setModalWarningText("Generating song...");
     setModalWarning(true);
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      temperature: 1,
-      response_format: { type: "json_object" },
+    const response = await openai.beta.chat.completions.parse({
+      model: "gpt-4o-2024-08-06",
+      temperature: 0.4,
       messages: [
         {
           role: "system",
           content: `You are creating a new song template project based off of the following prompt. Please extract as much of the following information from the given text as possible and return it as a JSON object: 
-          Title, General Notes, Instruments, Sections, Key, BPM, Colour Theme, Guitar Tab, Bass Tab, Drum Pattern, Lyrics as a string`,
+          Title as a string, General Notes as a string, Instruments as an array of strings, Sections as an array of strings, Key as a string, BPM as a number, Instrument Guitar Tab as a guitar tab formatted multi-line string with each line being 165 characters long that starts with "e|" and ends with "|" (empty spaces should be filled with a hyphen), Instrument Bass Tab as a bass tab formatted multi-line string with each line being 165 characters long that starts with "G|" and ends with "|" (empty spaces should be filled with a hyphen), Drum Pattern, Lyrics as a string`,
         },
         {
           role: "user",
           content: `${aiInput}`,
         },
       ],
+      response_format: zodResponseFormat(uiOutputSchema, "uiOutputSchema"),
       // functions: tools,
       // function_call: { name: "generate_song" },
     });
 
+    console.log(response);
     if (response) {
       console.log(response);
-      const jsonObject = JSON.parse(
-        response.choices[0].message.content as string
-      );
+
+      const message = response.choices[0]?.message;
+      const jsonObject = message?.parsed;
+      // const jsonObject = JSON.parse(
+      //   response.choices[0].message.content as string
+      // );
 
       console.log(jsonObject);
 
-      const newSong = {
-        title: jsonObject.Title,
-        bpm: jsonObject.BPM,
-        key: jsonObject.Key,
-        id: uuidv4(),
-      };
-
-      const instruments = Object.values(jsonObject.Instruments);
-
-      jsonObject.Sections.forEach((section) => {
-        newSong[section] = {
-          version: section,
-          generalNotes: jsonObject["General Notes"] || "",
-          theme: {
-            activeColor: "text-black",
-            bgColor: "bg-gray-100",
-            borderColor: "border-gray-100",
-            textColor: "text-black",
-          },
+      if (jsonObject) {
+        const newSong = {
+          title: jsonObject.title || "My First Song",
+          bpm: jsonObject.bpm || 120,
+          key: jsonObject.key || "C Maj",
+          id: uuidv4(),
         };
 
-        instruments.forEach((instrument) => {
-          newSong[section][instrument] = {
-            instrument: instrument,
-            label: instrument,
-            notes: "",
+        jsonObject.sections?.forEach((section) => {
+          console.log(section);
+        });
+
+        jsonObject.sections?.forEach((section) => {
+          newSong[section.section] = {
+            version: section.section,
+            generalNotes: section.generalNotes || "",
+            theme: {
+              activeColor: "text-black",
+              bgColor: "bg-gray-100",
+              borderColor: "border-gray-100",
+              textColor: "text-black",
+            },
+            versionId: uuidv4(),
           };
 
-          if (instrument === "Guitar") {
-            newSong[section][
-              instrument
-            ].tabs = `e|---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+          section.instruments?.forEach((instrument) => {
+            newSong[section.section][instrument.instrument] = {
+              instrument: instrument.instrument,
+              label: instrument.instrument,
+              notes: instrument.notes || "",
+            };
+
+            if (
+              instrument.instrument?.match(/(electric|acoustic)?\s*guitar/i)
+            ) {
+              let guitarTab;
+              if (instrument.tabs?.match(/^\s*$/)) {
+                guitarTab = `e|---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 B|---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 G|---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 D|---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 A|---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 E|---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-`;
-          }
+  `;
+              } else {
+                guitarTab = instrument.tabs;
+              }
+              newSong[section.section][instrument.instrument].tabs = guitarTab;
+            }
 
-          if (instrument === "Bass") {
-            newSong[section][
-              instrument
-            ].tabs = `G|---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            if (instrument.instrument?.match(/bass\s*(guitar)?/i)) {
+              let bassTab;
+              if (instrument.tabs?.match(/^\s*$/)) {
+                bassTab = `G|---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 D|---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 A|---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 E|---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-`;
-          }
+  `;
+              } else {
+                bassTab = instrument.tabs;
+              }
+              newSong[section.section][instrument.instrument].tabs = bassTab;
+            }
 
-          if (instrument === "Vocals") {
-            newSong[section][instrument].lyrics = jsonObject.Lyrics || "";
-          }
+            if (instrument.instrument?.match(/vocals?/i)) {
+              newSong[section.section][instrument.instrument].lyrics =
+                instrument.lyrics || "";
+            }
+          });
         });
-      });
 
-      console.log(instruments);
-      console.log(newSong);
+        console.log(newSong);
 
-      setSongs((prevSongs) => {
-        return [...(prevSongs ?? []), newSong] as Song[];
-      });
+        setSongs((prevSongs) => {
+          return [...(prevSongs ?? []), newSong] as Song[];
+        });
+        setCurrentSong(newSong as Song);
+      }
     }
     setModalWarning(false);
+    handleSongModalReset();
   }
 
   useOnClickOutside(songModalRef, handleSongModalReset);
@@ -351,9 +413,19 @@ E|------------------------------------------------------------------------------
 
         <div className="flex gap-4">
           {modalWarning && (
-            <span className="font-semibold text-md ml-2">
-              {modalWarningText}
-            </span>
+            <div className="flex gap-2 justify-between items-center">
+              <span className="font-semibold text-md ml-2">
+                {modalWarningText}
+              </span>
+              <img
+                src="./src/assets/SVG/loader-4-line.svg"
+                alt=""
+                className={
+                  "animate-spin w-6 m-0 p-0 " +
+                  (currentTheme === "Dark" && "grayscale invert")
+                }
+              />
+            </div>
           )}
           <button
             onClick={() => {

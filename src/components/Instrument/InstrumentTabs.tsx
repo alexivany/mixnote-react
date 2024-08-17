@@ -5,9 +5,11 @@ import TabCell from "./TabCell";
 import { useCurrentVersionContext } from "@/contexts/currentversion-context";
 import { Version } from "@/types";
 
+import { v4 as uuidv4 } from "uuid";
+
 import { useThemeContext } from "@/contexts/theme-context";
 
-export default function InstrumentTabs({ instrumentToTab }) {
+export default function InstrumentTabs({ instrumentToTab, tabToLoad }) {
   const { currentTheme } = useThemeContext();
   const { currentVersion, setCurrentVersion } = useCurrentVersionContext();
 
@@ -15,7 +17,7 @@ export default function InstrumentTabs({ instrumentToTab }) {
 
   const tabDivRef = useRef<HTMLDivElement>(null);
 
-  const guitarTemplate = `e|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+  const guitarTemplate = `e|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 B|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 G|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 D|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -28,7 +30,7 @@ G|------------------------------------------------------------------------------
 D|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|`;
 
   const tabsHTML = tabArray.map(([note, line], tabIndex) => (
-    <div key={`tab-${tabIndex}`}>
+    <div key={`tab-${tabIndex}-${uuidv4()}`}>
       <span id="#tab-cell">{note}</span>
       {note !== "_" && "|"}
       {line.map((e, i) => {
@@ -38,14 +40,15 @@ D|------------------------------------------------------------------------------
               tabArray={tabArray}
               setTabArray={setTabArray}
               index={i}
+              lineIndex={tabIndex}
               note={note}
-              key={`tab-${tabIndex}-${i}`}
+              key={`tab-${tabIndex}-${i}-${uuidv4()}`}
               value={e}
             />
           );
         } else
           return (
-            <span id="#tab-cell" key={`span-${tabIndex}-${i}`}>
+            <span id="#tab-cell" key={`span-${tabIndex}-${i}-${uuidv4()}`}>
               {e}
             </span>
           );
@@ -55,10 +58,10 @@ D|------------------------------------------------------------------------------
 
   function handleClearTab() {
     let newString;
-    if (instrumentToTab === "Guitar") {
-      newString = guitarTemplate;
-    } else if (instrumentToTab === "Bass") {
+    if (instrumentToTab.match(/bass\s*(guitar)?/i)) {
       newString = bassTemplate;
+    } else if (instrumentToTab.match(/(electric|acoustic)?\s*guitar/i)) {
+      newString = guitarTemplate;
     }
 
     const tabArrayRows = newString.trim().split("\n");
@@ -78,10 +81,10 @@ D|------------------------------------------------------------------------------
 
   function handleAddRow() {
     let newString;
-    if (instrumentToTab === "Guitar") {
-      newString = guitarTemplate;
-    } else if (instrumentToTab === "Bass") {
+    if (instrumentToTab.match(/bass\s*(guitar)?/i)) {
       newString = bassTemplate;
+    } else if (instrumentToTab.match(/(electric|acoustic)?\s*guitar/i)) {
+      newString = guitarTemplate;
     }
 
     const tabArrayRows = newString.trim().split("\n");
@@ -105,26 +108,48 @@ D|------------------------------------------------------------------------------
   useEffect(() => {
     let newString;
     if (currentVersion) {
-      newString = currentVersion?.[instrumentToTab].tabs;
-    } else if (instrumentToTab === "Guitar") {
-      newString = guitarTemplate;
-    } else if (instrumentToTab === "Bass") {
-      newString = guitarTemplate;
+      if (tabToLoad) {
+        newString = tabToLoad;
+      } else if (currentVersion?.[instrumentToTab].tabs) {
+        if (currentVersion?.[instrumentToTab].tabs.match(/^\s*$/)) {
+          if (instrumentToTab.match(/(electric|acoustic)?\s*guitar/i)) {
+            newString = guitarTemplate;
+          } else if (instrumentToTab.match(/bass\s*(guitar)?/i)) {
+            newString = bassTemplate;
+          }
+        } else {
+          newString = currentVersion?.[instrumentToTab].tabs;
+        }
+      } else if (
+        instrumentToTab.match(/bass\s*(guitar)?/i) ||
+        currentVersion?.[instrumentToTab]?.addedFeatures?.includes("bassTab")
+      ) {
+        newString = bassTemplate;
+      } else if (
+        instrumentToTab.match(/(electric|acoustic)?\s*guitar/i) ||
+        currentVersion?.[instrumentToTab]?.addedFeatures?.includes("guitarTab")
+      ) {
+        newString = guitarTemplate;
+      }
+
+      const tabArrayRows = newString.trim().split("\n");
+      const tabArrayToSet: [string, string[]][] = [];
+
+      tabArrayRows.forEach((row) => {
+        const columns = row.split("|").filter((column) => column.trim() !== "");
+        const notes = columns[1].split("");
+
+        const newArray: [string, string[]] = [columns[0], notes];
+
+        tabArrayToSet.push(newArray);
+      });
+
+      console.log(`currentVersion: ${currentVersion?.version}
+tabArrayToSet: ${tabArrayToSet}
+ONMOUNT`);
+
+      setTabArray(tabArrayToSet);
     }
-
-    const tabArrayRows = newString.trim().split("\n");
-    const tabArrayToSet: [string, string[]][] = [];
-
-    tabArrayRows.forEach((row) => {
-      const columns = row.split("|").filter((column) => column.trim() !== "");
-      const notes = columns[1].split("");
-
-      const newArray: [string, string[]] = [columns[0], notes];
-
-      tabArrayToSet.push(newArray);
-    });
-
-    setTabArray(tabArrayToSet);
   }, []);
 
   useEffect(() => {
@@ -148,6 +173,9 @@ D|------------------------------------------------------------------------------
         } as Version;
       });
     }
+    console.log(`currentVersion: ${currentVersion?.version}
+newTabString: ${newTabString}
+tabArray`);
   }, [tabArray]);
 
   return (

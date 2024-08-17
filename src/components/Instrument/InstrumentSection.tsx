@@ -1,12 +1,13 @@
 import { useState } from "react";
 import Instrument from "./Instrument";
 import { useThemeContext } from "@/contexts/theme-context";
+import { useCurrentVersionContext } from "@/contexts/currentversion-context";
+import { Version } from "@/types";
 
-export default function InstrumentSection({
-  currentVersion,
-  setCurrentVersion,
-}) {
+export default function InstrumentSection({}) {
   const { currentTheme } = useThemeContext();
+
+  const { currentVersion, setCurrentVersion } = useCurrentVersionContext();
 
   const [newInstrumentInput, setNewInstrumentInput] = useState<string>("");
   const [instrumentWarning, setInstrumentWarning] = useState<boolean>(false);
@@ -14,7 +15,7 @@ export default function InstrumentSection({
     useState<string>("");
 
   function handleNewInstrument() {
-    const duplicateCheck = Object.entries(currentVersion).find(
+    const duplicateCheck = Object.entries(currentVersion as Version).find(
       ([key]) => key === newInstrumentInput
     );
 
@@ -50,11 +51,15 @@ E|------------------------------------------------------------------------------
 
     let template;
 
-    newInstrumentInput === "Guitar" && (template = guitarTemplate);
-    newInstrumentInput === "Bass" && (template = bassTemplate);
+    newInstrumentInput.match(/bass\s*(guitar)?/i) && (template = bassTemplate);
+    newInstrumentInput.match(/(electric|acoustic)?\s*guitar/i) &&
+      (template = guitarTemplate);
 
     setCurrentVersion((prevVersionData) => {
-      if (newInstrumentInput === "Guitar" || newInstrumentInput === "Bass") {
+      if (
+        newInstrumentInput.match(/bass\s*(guitar)?/i) ||
+        newInstrumentInput.match(/(electric|acoustic)?\s*guitar/i)
+      ) {
         return {
           ...prevVersionData,
           [newInstrumentInput]: {
@@ -63,8 +68,8 @@ E|------------------------------------------------------------------------------
             notes: "",
             tabs: template,
           },
-        };
-      } else if (newInstrumentInput === "Vocals") {
+        } as Version;
+      } else if (newInstrumentInput.match(/vocals?/i)) {
         return {
           ...prevVersionData,
           [newInstrumentInput]: {
@@ -73,7 +78,7 @@ E|------------------------------------------------------------------------------
             notes: "",
             lyrics: "",
           },
-        };
+        } as Version;
       } else {
         return {
           ...prevVersionData,
@@ -82,20 +87,18 @@ E|------------------------------------------------------------------------------
             label: newInstrumentInput,
             notes: "",
           },
-        };
+        } as Version;
       }
     });
     setNewInstrumentInput("");
   }
 
-  const instrumentElements = Object.entries(currentVersion).map(
+  const instrumentElements = Object.entries(currentVersion as Version).map(
     ([key, value]) =>
       typeof value === "object" &&
       key !== "theme" && (
         <Instrument
-          key={key}
-          currentVersion={currentVersion}
-          setCurrentVersion={setCurrentVersion}
+          key={`${key}-${currentVersion?.versionId}`}
           instrumentObject={value}
         />
       )

@@ -256,7 +256,19 @@ export default function LyricModal({
 
       <div className="flex gap-4 justify-end items-center">
         {modalWarning && (
-          <span className="font-semibold text-md ml-2">{modalWarningText}</span>
+          <div className="flex gap-2 justify-between items-center">
+            <span className="font-semibold text-md ml-2">
+              {modalWarningText}
+            </span>
+            <img
+              src="./src/assets/SVG/loader-4-line.svg"
+              alt=""
+              className={
+                "animate-spin w-6 m-0 p-0 " +
+                (currentTheme === "Dark" && "grayscale invert")
+              }
+            />
+          </div>
         )}
         <button
           onClick={(e) => {

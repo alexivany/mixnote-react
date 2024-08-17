@@ -52,7 +52,7 @@ export default function DrumMachine({ instrumentToTab }) {
   const playSeq = async () => {
     if (!isPlaying && currentSong && seqRef.current && drumMachineRef.current) {
       await Tone.start();
-      transport.bpm.value = currentSong.bpm as number;
+      transport.bpm.value = (currentSong.bpm as number) || 120;
       transport.start("+0.1");
       setIsPlaying(true);
     }
@@ -185,28 +185,29 @@ export default function DrumMachine({ instrumentToTab }) {
   }, [drumSeqArray]);
 
   useEffect(() => {
+    console.log("DRUMS MOUNTING");
+    let newDrums;
     if (currentVersion) {
-      if (currentVersion?.[instrumentToTab].drumSeq !== drumSeqArray) {
-        setDrumSeqArray(currentVersion?.[instrumentToTab].drumSeq);
-      } else if (currentVersion?.[instrumentToTab]) {
-        setDrumSeqArray(DEFAULT_DRUM_ARRAY);
+      if (currentVersion?.[instrumentToTab].drumSeq) {
+        newDrums = currentVersion?.[instrumentToTab].drumSeq;
+      } else {
+        newDrums = DEFAULT_DRUM_ARRAY;
       }
+      setDrumSeqArray(newDrums);
     }
   }, []);
 
   useEffect(() => {
-    if (currentVersion) {
-      if (currentVersion?.[instrumentToTab].drumSeq !== drumSeqArray) {
-        setCurrentVersion((prevVersion) => {
-          return {
-            ...prevVersion,
-            [instrumentToTab]: {
-              ...prevVersion?.[instrumentToTab],
-              drumSeq: drumSeqArray,
-            },
-          } as Version;
-        });
-      }
+    if (currentVersion?.[instrumentToTab].drumSeq !== drumSeqArray) {
+      setCurrentVersion((prevVersion) => {
+        return {
+          ...prevVersion,
+          [instrumentToTab]: {
+            ...prevVersion?.[instrumentToTab],
+            drumSeq: drumSeqArray,
+          },
+        } as Version;
+      });
     }
   }, [drumSeqArray]);
 
@@ -280,7 +281,7 @@ export default function DrumMachine({ instrumentToTab }) {
                 id="bpm-slider"
                 min="20"
                 max="200"
-                value={currentSong?.bpm as number}
+                value={(currentSong?.bpm as number) || 120}
                 onChange={(e) => handleBpmSlider(e)}
               ></input>
             </div>

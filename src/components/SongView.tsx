@@ -61,10 +61,7 @@ export default function SongView({
       />
       {/* <NovelEditor /> */}
       <GeneralNotes />
-      <InstrumentSection
-        currentVersion={currentVersion}
-        setCurrentVersion={setCurrentVersion}
-      />
+      <InstrumentSection />
     </div>
   );
 }

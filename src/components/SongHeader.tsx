@@ -5,6 +5,8 @@ import { useOnClickOutside } from "usehooks-ts";
 import { Song, Version } from "../types";
 import { useThemeContext } from "@/contexts/theme-context";
 
+import { v4 as uuidv4 } from "uuid";
+
 interface SongHeaderProps {
   currentSong: Song;
   setCurrentSong: Dispatch<SetStateAction<Song | undefined>>;
@@ -24,7 +26,12 @@ export default function SongHeader({
 
   const [showTitleCross, setShowTitleCross] = useState<boolean>(false);
 
+  const [emptyVersionWarning, setEmptyVersionWarning] =
+    useState<boolean>(false);
+
   const [showVersionModal, setShowVersionModal] = useState<boolean>(false);
+  // const [versionRenameToggle, setVersionRenameToggle] =
+  //   useState<boolean>(false);
   const [modalWarning, setModalWarning] = useState<boolean>(false);
   const [versionModalInput, setVersionModalInput] = useState<string>("");
 
@@ -38,7 +45,7 @@ export default function SongHeader({
           key={key}
           className={
             `h-9 font-semibold text-xs lg:text-base p-2 rounded-t-2xl flex justify-center items-center ` +
-            (currentVersion?.version === key
+            (currentVersion?.version === value.version
               ? `bg-hidden pr-1 border-x-3 border-t-3 ${value?.theme?.borderColor} ${value?.theme?.activeColor} ` +
                 (currentTheme === "Dark" &&
                   value?.theme?.textColor === "text-black" &&
@@ -46,16 +53,38 @@ export default function SongHeader({
               : `border ${value?.theme?.borderColor} ${value?.theme?.bgColor} ${value?.theme?.textColor} `)
           }
         >
-          <button onClick={handleVersionChange} value={key}>
-            {key}
+          {/* {versionRenameToggle && currentVersion?.version === value.version ? (
+            <input
+              onKeyDown={(e) => e.key === "Enter" && handleVersionRename(e)}
+              onBlur={handleVersionRename}
+              className={
+                "border-b-2 outline-none w-full " +
+                (currentTheme === "Light"
+                  ? "text-black bg-white"
+                  : "bg-neutral-800 text-white")
+              }
+              autoFocus
+            />
+          ) : ( */}
+          <button
+            onClick={handleVersionChange}
+            // onDoubleClick={() =>
+            //   setVersionRenameToggle((prevState) => !prevState)
+            // }
+            value={key}
+          >
+            {value.version}
           </button>
-          {currentVersion?.version === key && (
+          {/* )} */}
+
+          {currentVersion?.version === value.version && (
             <img
               src="./src/assets/SVG/cross.svg"
               id="song-title-cross"
               alt=""
               className={
-                "w-6 m-0 p-0 " + (currentTheme === "Dark" && "grayscale invert")
+                "w-6 m-0 p-0 cursor-pointer " +
+                (currentTheme === "Dark" && "grayscale invert")
               }
               onClick={handleDeleteVersion}
             />
@@ -63,6 +92,27 @@ export default function SongHeader({
         </div>
       )
   );
+
+  // function handleVersionRename(e) {
+  //   setVersionRenameToggle(false);
+  //   if (e.target.value === "" || e.target.value.match(/^\s*$/)) {
+  //     // setRenameWarningText("Version must have a name!");
+  //     // setRenameWarning(true);
+  //     // setTimeout(() => {
+  //     //   setRenameWarning(false);
+  //     // }, 2000);
+  //     return;
+  //   }
+
+  //   console.log(currentVersion);
+
+  //   setCurrentVersion((prevVersionData) => {
+  //     return {
+  //       ...prevVersionData,
+  //       version: e.target.value,
+  //     } as Version;
+  //   });
+  // }
 
   function handleVersionChange(e) {
     const newVersion = Object.entries(currentSong).find(
@@ -118,6 +168,7 @@ export default function SongHeader({
             borderColor: "border-gray-100",
             textColor: "text-black",
           },
+          versionId: uuidv4(),
         },
       } as Song;
     });
@@ -138,13 +189,22 @@ export default function SongHeader({
 
     const newSongObject = Object.fromEntries(concatSong) as Song;
 
-    setCurrentVersion(
-      () =>
-        Object.values(newSongObject).find(
-          (value) => typeof value === "object" && Array.isArray(value) === false
-        ) as Version
-    );
-    setCurrentSong(newSongObject);
+    if (filteredVersions.length >= 1) {
+      setCurrentVersion(
+        () =>
+          Object.values(newSongObject).find(
+            (value) =>
+              typeof value === "object" && Array.isArray(value) === false
+          ) as Version
+      );
+      setCurrentSong(newSongObject);
+    } else {
+      setEmptyVersionWarning(true);
+      setTimeout(() => {
+        setEmptyVersionWarning(false);
+      }, 2000);
+      return;
+    }
   }
 
   function handleSongDownload(e) {
@@ -218,6 +278,11 @@ export default function SongHeader({
               }
             />
           </button>
+          {emptyVersionWarning && (
+            <span className="ml-2 font-semibold">
+              Can't delete only version!
+            </span>
+          )}
         </div>
       </div>
       <div className="flex justify-between items-center gap-2 font-2xl">

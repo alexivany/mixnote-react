@@ -22,10 +22,12 @@ export default function SidebarSong({
     currentSong && (
       <button
         className={
-          "text-left flex justify-between items-center text-xl " +
+          "text-left flex justify-between px-2 py-0.5 items-center text-xl " +
           (currentSong.id === song.id &&
-            "bg-gray-100 rounded-2xl outline outline-4 outline-gray-100 font-semibold ") +
-          (currentTheme === "Dark" && "text-black")
+            "bg-gray-100 rounded-2xl border-3 border-gray-100 font-semibold ") +
+          (currentTheme === "Dark" && "text-black ") +
+          (currentSong.id !== song.id &&
+            "transition-all duration-50 delay-75 rounded-2xl hover:outline hover:outline-gray-100")
         }
         onClick={() => {
           handleSongClick(song);

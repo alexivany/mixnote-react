@@ -8,7 +8,7 @@ type ApiContext = {
 };
 
 export function ApiContextProvider({ children }) {
-  const [apiKey, setApiKey] = useState<string | undefined>(undefined);
+  const [apiKey, setApiKey] = useState<string | undefined>("");
 
   return (
     <ApiContext.Provider value={{ apiKey, setApiKey }}>
