@@ -47,6 +47,9 @@ module.exports = {
       transitionDuration: {
         50: "50ms",
       },
+      zIndex: {
+        neg10: "-10",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

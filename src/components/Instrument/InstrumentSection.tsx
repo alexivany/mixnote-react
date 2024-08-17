@@ -4,7 +4,7 @@ import { useThemeContext } from "@/contexts/theme-context";
 import { useCurrentVersionContext } from "@/contexts/currentversion-context";
 import { Version } from "@/types";
 
-export default function InstrumentSection({}) {
+export default function InstrumentSection() {
   const { currentTheme } = useThemeContext();
 
   const { currentVersion, setCurrentVersion } = useCurrentVersionContext();

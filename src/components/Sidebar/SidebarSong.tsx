@@ -6,13 +6,13 @@ import { Song } from "../../types";
 interface SidebarSongProps {
   song: Song;
   handleSongClick(song: Song): void;
-  handleDeleteSong(): void;
+  handleSongDeleteModal(): void;
 }
 
 export default function SidebarSong({
   song,
   handleSongClick,
-  handleDeleteSong,
+  handleSongDeleteModal,
 }: SidebarSongProps) {
   const { currentSong } = useCurrentSongContext();
 
@@ -27,7 +27,7 @@ export default function SidebarSong({
             "bg-gray-100 rounded-2xl border-3 border-gray-100 font-semibold ") +
           (currentTheme === "Dark" && "text-black ") +
           (currentSong.id !== song.id &&
-            "transition-all duration-50 delay-75 rounded-2xl hover:outline hover:outline-gray-100")
+            " delay-75 rounded-2xl hover:outline hover:outline-gray-100")
         }
         onClick={() => {
           handleSongClick(song);
@@ -40,7 +40,7 @@ export default function SidebarSong({
             id="song-title-cross"
             alt=""
             className="w-6 m-0 p-0"
-            onClick={handleDeleteSong}
+            onClick={handleSongDeleteModal}
           />
         )}
       </button>

@@ -185,7 +185,6 @@ export default function DrumMachine({ instrumentToTab }) {
   }, [drumSeqArray]);
 
   useEffect(() => {
-    console.log("DRUMS MOUNTING");
     let newDrums;
     if (currentVersion) {
       if (currentVersion?.[instrumentToTab].drumSeq) {

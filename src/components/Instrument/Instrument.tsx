@@ -7,7 +7,6 @@ import DrumMachine from "../DrumMachine/DrumMachine";
 import InstrumentTabs from "./InstrumentTabs";
 import TextEditor from "../TextEditor/TextEditor";
 
-import { useCurrentSongContext } from "@/contexts/currentsong-context";
 import { useThemeContext } from "@/contexts/theme-context";
 import FeatureDropdown from "./FeatureDropdown";
 import { useCurrentVersionContext } from "@/contexts/currentversion-context";
@@ -15,8 +14,6 @@ import { Version } from "@/types";
 
 export default function Instrument({ instrumentObject }) {
   const { currentTheme } = useThemeContext();
-
-  const { currentSong } = useCurrentSongContext();
 
   const { currentVersion, setCurrentVersion } = useCurrentVersionContext();
 
@@ -175,7 +172,7 @@ export default function Instrument({ instrumentObject }) {
             }
             alt=""
             className={
-              "w-7 m-0 p-0 cursor-pointer " +
+              "transition-transform w-7 m-0 p-0 cursor-pointer hover:scale-125 " +
               (currentTheme === "Dark" && "grayscale invert")
             }
             onClick={() => {
@@ -187,7 +184,7 @@ export default function Instrument({ instrumentObject }) {
             src="./src/assets/SVG/cross.svg"
             alt=""
             className={
-              "w-6 m-0 p-0 cursor-pointer " +
+              "transition-transform w-6 m-0 p-0 cursor-pointer hover:scale-125 " +
               (currentTheme === "Dark" && "grayscale invert")
             }
             onClick={() => {

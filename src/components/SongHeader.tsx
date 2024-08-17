@@ -1,4 +1,4 @@
-import { useState, useRef, Dispatch, SetStateAction } from "react";
+import { useState, useRef, Dispatch, SetStateAction, useEffect } from "react";
 
 import { useOnClickOutside } from "usehooks-ts";
 
@@ -24,18 +24,23 @@ export default function SongHeader({
 }: SongHeaderProps) {
   const { currentTheme } = useThemeContext();
 
+  const [titleWidth, setTitleWidth] = useState<number>(0);
   const [showTitleCross, setShowTitleCross] = useState<boolean>(false);
 
   const [emptyVersionWarning, setEmptyVersionWarning] =
     useState<boolean>(false);
 
   const [showVersionModal, setShowVersionModal] = useState<boolean>(false);
+  const [showDeleteVersionModal, setShowDeleteVersionModal] =
+    useState<boolean>(false);
   // const [versionRenameToggle, setVersionRenameToggle] =
   //   useState<boolean>(false);
   const [modalWarning, setModalWarning] = useState<boolean>(false);
   const [versionModalInput, setVersionModalInput] = useState<string>("");
 
+  const titleSpanRef = useRef<HTMLSpanElement>(null);
   const versionModalRef = useRef(null);
+  const deleteVersionModalRef = useRef<HTMLDivElement>(null);
 
   const versionElements = Object.entries(currentSong).map(
     ([key, value]) =>
@@ -86,7 +91,7 @@ export default function SongHeader({
                 "w-6 m-0 p-0 cursor-pointer " +
                 (currentTheme === "Dark" && "grayscale invert")
               }
-              onClick={handleDeleteVersion}
+              onClick={handleDeleteVersionModal}
             />
           )}
         </div>
@@ -148,6 +153,10 @@ export default function SongHeader({
     setVersionModalInput("");
   }
 
+  function handleDeleteVersionModal() {
+    setShowDeleteVersionModal((prevState) => !prevState);
+  }
+
   function addNewVersion() {
     if (versionModalInput.match(/^\s*$/)) {
       setModalWarning(true);
@@ -205,6 +214,7 @@ export default function SongHeader({
       }, 2000);
       return;
     }
+    setShowDeleteVersionModal(false);
   }
 
   function handleSongDownload(e) {
@@ -229,12 +239,25 @@ export default function SongHeader({
     });
   }
 
+  useEffect(() => {
+    if (titleSpanRef.current) {
+      setTitleWidth(titleSpanRef.current.offsetWidth);
+    }
+  }, [currentSong.title]);
   useOnClickOutside(versionModalRef, handleVersionModal);
+
+  useOnClickOutside(deleteVersionModalRef, handleDeleteVersionModal);
 
   return (
     <div className="flex flex-col lg:gap-4 gap-2 lg:flex-row lg:justify-between lg:items-center">
       <div className="flex flex-col-reverse gap-2 lg:flex-row gap-1">
         <div className="flex">
+          <span
+            ref={titleSpanRef}
+            className="text-3xl font-semibold pr-2 absolute z-neg10	opacity-0 "
+          >
+            {currentSong.title}
+          </span>
           <input
             value={currentSong.title}
             onChange={handleChange}
@@ -244,9 +267,12 @@ export default function SongHeader({
             type="text"
             id="song-title"
             name="title"
+            style={{ width: titleWidth }}
             className={
-              "w-64 text-3xl font-semibold focus:outline-none focus:border-b-2 focus:border-black " +
-              (currentTheme === "Light" ? "bg-white" : "bg-neutral-800")
+              "text-3xl font-semibold focus:outline-none focus:border-b-2  " +
+              (currentTheme === "Light"
+                ? "bg-white focus:border-black "
+                : "bg-neutral-800 focus:border-white ")
             }
           />
           {showTitleCross && (
@@ -262,7 +288,7 @@ export default function SongHeader({
           )}
         </div>
 
-        <div className="items-end flex gap-1">
+        <div className="items-end flex gap-1 w-max">
           {versionElements}
           <button
             onClick={handleVersionModal}
@@ -280,7 +306,7 @@ export default function SongHeader({
           </button>
           {emptyVersionWarning && (
             <span className="ml-2 font-semibold">
-              Can't delete only version!
+              Can't delete only section!
             </span>
           )}
         </div>
@@ -341,7 +367,7 @@ export default function SongHeader({
               : "bg-neutral-800 text-white border-neutral-600")
           }
         >
-          <span className="text-xl">Enter new version name</span>
+          <span className="text-xl">Enter new section name</span>
           <input
             autoFocus
             value={versionModalInput}
@@ -356,7 +382,7 @@ export default function SongHeader({
           <div className="flex gap-4 justify-end">
             {modalWarning && (
               <span className="font-semibold text-md ml-2">
-                Version must have a name!
+                Section must have a name!
               </span>
             )}
             <button
@@ -372,6 +398,46 @@ export default function SongHeader({
             </button>
             <button
               onClick={handleVersionModal}
+              className={
+                "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
+                (currentTheme === "Light"
+                  ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
+                  : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
+              }
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showDeleteVersionModal && (
+        <div
+          ref={deleteVersionModalRef}
+          className={
+            "fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 w-2/5 flex flex-col justify-between border rounded-xl z-10 py-6 px-6 " +
+            (currentTheme === "Light"
+              ? "bg-white text-black border-gray-300"
+              : "bg-neutral-800 text-white border-neutral-600")
+          }
+        >
+          <span className="text-xl">
+            Are you sure you want to delete the selected section?
+          </span>
+          <div className="flex gap-4 justify-end">
+            <button
+              onClick={handleDeleteVersion}
+              className={
+                "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
+                (currentTheme === "Light"
+                  ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
+                  : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
+              }
+            >
+              Yes
+            </button>
+            <button
+              onClick={handleDeleteVersionModal}
               className={
                 "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
                 (currentTheme === "Light"

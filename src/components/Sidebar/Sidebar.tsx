@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 import SidebarSettings from "./SidebarSettings";
 import SidebarSong from "./SidebarSong";
@@ -9,6 +9,7 @@ import { useCurrentSongContext } from "../../contexts/currentsong-context";
 import { useCurrentTagContext } from "@/contexts/tag-context";
 import { useThemeContext } from "@/contexts/theme-context";
 import { useSidebarListContext } from "@/contexts/sidebarlist-context";
+import { useOnClickOutside } from "usehooks-ts";
 
 interface SidebarProps {
   songs: Song[];
@@ -28,6 +29,11 @@ export default function Sidebar({
   const { currentTag, showSearch } = useCurrentTagContext();
 
   const { showSidebarList, setShowSidebarList } = useSidebarListContext();
+
+  const [showSongDeleteModal, setShowSongDeleteModal] =
+    useState<boolean>(false);
+
+  const deleteSongModalRef = useRef<HTMLDivElement>(null);
 
   function handleSongClick(song) {
     setCurrentSong(() => songs.find((newSong) => song.id === newSong.id));
@@ -51,6 +57,11 @@ export default function Sidebar({
         return;
       }
     }
+    setShowSongDeleteModal(false);
+  }
+
+  function handleSongDeleteModal() {
+    setShowSongDeleteModal((prevState) => !prevState);
   }
 
   useEffect(() => {
@@ -63,6 +74,8 @@ export default function Sidebar({
       }
     }
   }, [songs]);
+
+  useOnClickOutside(deleteSongModalRef, handleSongDeleteModal);
 
   return (
     <div
@@ -101,7 +114,7 @@ export default function Sidebar({
                   key={song.id}
                   song={song}
                   handleSongClick={handleSongClick}
-                  handleDeleteSong={handleDeleteSong}
+                  handleSongDeleteModal={handleSongDeleteModal}
                 />
               ))}
             {showSearch && (
@@ -118,11 +131,50 @@ export default function Sidebar({
                     key={filteredSong.id}
                     song={filteredSong}
                     handleSongClick={handleSongClick}
-                    handleDeleteSong={handleDeleteSong}
+                    handleSongDeleteModal={handleSongDeleteModal}
                   />
                 ))}
           </div>
           <SidebarSettings setSongs={setSongs} />
+        </div>
+      )}
+      {showSongDeleteModal && (
+        <div
+          ref={deleteSongModalRef}
+          className={
+            "fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 w-2/5 flex flex-col justify-between border rounded-xl z-10 py-6 px-6 " +
+            (currentTheme === "Light"
+              ? "bg-white text-black border-gray-300"
+              : "bg-neutral-800 text-white border-neutral-600")
+          }
+        >
+          <span className="text-xl">
+            Are you sure you want to delete the selected song?
+          </span>
+          <div className="flex gap-4 justify-end">
+            <button
+              onClick={handleDeleteSong}
+              className={
+                "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
+                (currentTheme === "Light"
+                  ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
+                  : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
+              }
+            >
+              Yes
+            </button>
+            <button
+              onClick={handleSongDeleteModal}
+              className={
+                "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
+                (currentTheme === "Light"
+                  ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
+                  : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
+              }
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       )}
     </div>

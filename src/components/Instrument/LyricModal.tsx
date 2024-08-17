@@ -128,6 +128,12 @@ export default function LyricModal({
     }
   };
 
+  modalRef.current?.scrollIntoView({
+    behavior: "smooth",
+    block: "center",
+    inline: "nearest",
+  });
+
   return (
     <div
       ref={modalRef}

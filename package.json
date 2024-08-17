@@ -17,7 +17,7 @@
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
     "framer-motion": "^11.3.19",
-    "langsmith": "^0.1.39",
+    "langsmith": "^0.1.41",
     "lodash": "^4.17.21",
     "lucide-react": "^0.406.0",
     "luxon": "^3.4.4",

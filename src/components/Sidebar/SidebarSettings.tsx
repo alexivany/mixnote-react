@@ -59,7 +59,7 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
       <button
         onClick={handleSongModal}
         className={
-          "flex gap-4 items-center hover:bg-gray-50 hover:rounded-2xl hover:outline hover:outline-4 hover:outline-gray-50 group " +
+          "flex gap-4 items-center hover:bg-gray-50 hover:font-semibold hover:rounded-2xl hover:outline hover:outline-4 hover:outline-gray-50 group " +
           (currentTheme === "Dark" && "hover:text-black")
         }
       >
@@ -76,7 +76,7 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
       <button
         onClick={handleSettingsModal}
         className={
-          "flex gap-4 items-center hover:bg-gray-50 hover:rounded-2xl hover:outline hover:outline-4 hover:outline-gray-50 group " +
+          "flex gap-4 items-center hover:bg-gray-50 hover:font-semibold hover:rounded-2xl hover:outline hover:outline-4 hover:outline-gray-50 group " +
           (currentTheme === "Dark" && "hover:text-black")
         }
       >
@@ -92,7 +92,7 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
       </button>
       <button
         className={
-          "flex gap-4 items-center hover:bg-gray-50 hover:rounded-2xl hover:outline hover:outline-4 hover:outline-gray-50 group " +
+          "flex gap-4 items-center hover:bg-gray-50 hover:font-semibold hover:rounded-2xl hover:outline hover:outline-4 hover:outline-gray-50 group " +
           (currentTheme === "Dark" && "hover:text-black")
         }
       >
