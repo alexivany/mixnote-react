@@ -2,17 +2,28 @@ import { useThemeContext } from "@/contexts/theme-context";
 import { useCurrentSongContext } from "../../contexts/currentsong-context";
 
 import { Song } from "../../types";
+import { Dispatch, SetStateAction } from "react";
 
 interface SidebarSongProps {
   song: Song;
   handleSongClick(song: Song): void;
   handleSongDeleteModal(): void;
+  sidebarRenameToggle: boolean;
+  setSidebarRenameToggle: Dispatch<SetStateAction<boolean>>;
+  handleSongRename(
+    e:
+      | React.KeyboardEvent<HTMLInputElement>
+      | React.FocusEvent<HTMLInputElement, Element>
+  ): void;
 }
 
 export default function SidebarSong({
   song,
   handleSongClick,
   handleSongDeleteModal,
+  sidebarRenameToggle,
+  setSidebarRenameToggle,
+  handleSongRename,
 }: SidebarSongProps) {
   const { currentSong } = useCurrentSongContext();
 
@@ -33,16 +44,36 @@ export default function SidebarSong({
           handleSongClick(song);
         }}
       >
-        {song.title}
-        {currentSong.id === song.id && (
-          <img
-            src="./src/assets/SVG/cross.svg"
-            id="song-title-cross"
-            alt=""
-            className="w-6 m-0 p-0"
-            onClick={handleSongDeleteModal}
+        {sidebarRenameToggle && currentSong.id === song.id ? (
+          <input
+            onKeyDown={(e) => e.key === "Enter" && handleSongRename(e)}
+            onBlur={handleSongRename}
+            className={"border-b-2 outline-none w-full bg-gray-100"}
+            autoFocus
           />
+        ) : (
+          song.title
         )}
+        <div className="flex">
+          {currentSong.id === song.id && (
+            <img
+              src="./src/assets/SVG/pencil-fill.svg"
+              id="song-title-edit"
+              alt=""
+              className={"w-4 ml-1 p-0 cursor-pointer "}
+              onClick={() => setSidebarRenameToggle((prevState) => !prevState)}
+            />
+          )}
+          {currentSong.id === song.id && (
+            <img
+              src="./src/assets/SVG/cross.svg"
+              id="song-title-cross"
+              alt=""
+              className="w-6 m-0 p-0"
+              onClick={handleSongDeleteModal}
+            />
+          )}
+        </div>
       </button>
     )
   );

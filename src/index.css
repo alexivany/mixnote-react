@@ -90,3 +90,9 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+iframe {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  text-align: left;
+}

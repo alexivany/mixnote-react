@@ -117,7 +117,7 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
         <div
           ref={settingsModalRef}
           className={
-            "fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 w-2/5 flex flex-col justify-between border rounded-xl z-10 py-6 px-6 " +
+            "fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 lg:w-2/5 w-4/5  flex flex-col justify-between border rounded-xl z-10 py-6 px-6 " +
             (currentTheme === "Light"
               ? "bg-white text-black border-gray-300"
               : "bg-neutral-800 text-white border-neutral-600")

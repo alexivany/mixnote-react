@@ -49,27 +49,27 @@ export default function SidebarNewSongModal({
       }, 2000);
       return;
     }
-    setSongs((prevSongs) => {
-      return [
-        ...(prevSongs ?? []),
-        {
-          title: songModalInput,
-          id: uuidv4(),
-          ["Demo"]: {
-            version: "Demo",
-            generalNotes: "",
-            theme: {
-              activeColor: "text-black",
-              bgColor: "bg-gray-100",
-              borderColor: "border-gray-100",
-              textColor: "text-black",
-            },
-            versionId: uuidv4(),
-          },
+    const newSong = {
+      title: songModalInput,
+      id: uuidv4(),
+      ["Demo"]: {
+        version: "Demo",
+        generalNotes: "",
+        theme: {
+          activeColor: "text-black",
+          bgColor: "bg-gray-100",
+          borderColor: "border-gray-100",
+          textColor: "text-black",
         },
-      ] as Song[];
+        versionId: uuidv4(),
+      },
+    };
+    setSongs((prevSongs) => {
+      return [...(prevSongs ?? []), newSong] as Song[];
     });
+
     handleSongModal();
+    console.log("SONG MODAL SET SONG");
   }
 
   function handleSongModalReset() {
@@ -77,104 +77,6 @@ export default function SidebarNewSongModal({
     setSongModalInput("");
     setShowSongAiOptions(false);
   }
-
-  // const tools = [
-  //   {
-  //     name: "generate_song",
-  //     description:
-  //       "Generate a new song object to save into localStorage. Call this whenever you are given a description of a song.",
-  //     parameters: {
-  //       type: "object",
-  //       properties: {
-  //         title: {
-  //           type: "string",
-  //           description: "The title of the song.",
-  //         },
-  //         bpm: {
-  //           type: "number",
-  //           description: "The beats per minute or tempo of the song.",
-  //         },
-  //         key: {
-  //           type: "string",
-  //           description: "The key of the song.",
-  //         },
-  //         id: {
-  //           type: "string",
-  //           description: "The unique identifier for the song.",
-  //         },
-  //         sections: {
-  //           type: "object",
-  //           description:
-  //             "An object where each key is a section name, and each value is the section details.",
-  //           additionalProperties: {
-  //             type: "object",
-  //             properties: {
-  //               version: { type: "string", description: "Section name." },
-  //               generalNotes: {
-  //                 type: "string",
-  //                 description: "Notes for the section.",
-  //               },
-  //               theme: {
-  //                 type: "object",
-  //                 properties: {
-  //                   activeColor: {
-  //                     type: "string",
-  //                     description: "The active color for the section.",
-  //                   },
-  //                   bgColor: {
-  //                     type: "string",
-  //                     description: "The background color for the section.",
-  //                   },
-  //                   borderColor: {
-  //                     type: "string",
-  //                     description: "The border color for the section.",
-  //                   },
-  //                   textColor: {
-  //                     type: "string",
-  //                     description: "The text color for the section.",
-  //                   },
-  //                 },
-  //               },
-  //               instruments: {
-  //                 type: "object",
-  //                 description:
-  //                   "An object where each key is an instrument name, and each value is the instrument details.",
-  //                 additionalProperties: {
-  //                   type: "object",
-  //                   properties: {
-  //                     instrument: {
-  //                       type: "string",
-  //                       description: "The instrument name.",
-  //                     },
-  //                     label: {
-  //                       type: "string",
-  //                       description: "The label for the instrument.",
-  //                     },
-  //                     notes: {
-  //                       type: "string",
-  //                       description: "Notes for the instrument.",
-  //                     },
-  //                     tabs: {
-  //                       type: "string",
-  //                       description:
-  //                         "Tablature for the instrument, if applicable.",
-  //                     },
-  //                     lyrics: {
-  //                       type: "string",
-  //                       description: "Lyrics for the vocals, if applicable.",
-  //                     },
-  //                   },
-  //                 },
-  //               },
-  //             },
-  //             required: [""],
-  //           },
-  //         },
-  //       },
-  //       additionalProperties: false,
-  //     },
-  //   },
-  // ];
 
   const uiOutputSchema = z.object({
     title: z.string().optional(),
@@ -226,6 +128,14 @@ export default function SidebarNewSongModal({
           role: "system",
           content: `You are creating a new song template project based off of the following prompt. Please extract as much of the following information from the given text as possible and return it as a JSON object: 
           Title as a string, General Notes as a string, Instruments as an array of strings, Sections as an array of strings, Key as a string, BPM as a number, Instrument Guitar Tab as a guitar tab formatted multi-line string with each line being 165 characters long that starts with "e|" and ends with "|" (empty spaces should be filled with a hyphen), Instrument Bass Tab as a bass tab formatted multi-line string with each line being 165 characters long that starts with "G|" and ends with "|" (empty spaces should be filled with a hyphen), Drum Pattern, Lyrics as a string`,
+        },
+        {
+          role: "user",
+          content: "",
+        },
+        {
+          role: "assistant",
+          content: "",
         },
         {
           role: "user",
@@ -337,7 +247,7 @@ E|------------------------------------------------------------------------------
     <div
       ref={songModalRef}
       className={
-        "fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 w-2/5 flex flex-col justify-between border  rounded-xl z-10 py-6 px-6 " +
+        "fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 lg:w-2/5 w-4/5 flex flex-col justify-between border  rounded-xl z-10 py-6 px-6 " +
         (currentTheme === "Light"
           ? "bg-white text-black border-gray-300"
           : "bg-neutral-800 text-white border-neutral-600")

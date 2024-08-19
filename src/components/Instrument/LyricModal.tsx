@@ -65,7 +65,6 @@ export default function LyricModal({
       const response = await openai.chat.completions.create({
         model: "gpt-4o-mini",
         temperature: 1,
-        max_tokens: 256,
         stream: true,
         messages: [
           {

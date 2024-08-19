@@ -28,7 +28,13 @@ export default function Sidebar({
 
   const { currentTag, showSearch } = useCurrentTagContext();
 
+  const [showWarning, setShowWarning] = useState<boolean>(false);
+  const [warningText, setWarningText] = useState<string>();
+
   const { showSidebarList, setShowSidebarList } = useSidebarListContext();
+
+  const [sidebarRenameToggle, setSidebarRenameToggle] =
+    useState<boolean>(false);
 
   const [showSongDeleteModal, setShowSongDeleteModal] =
     useState<boolean>(false);
@@ -45,6 +51,35 @@ export default function Sidebar({
     );
   }
 
+  function handleSongRename(e) {
+    setSidebarRenameToggle(false);
+    if (e.target.value === "" || e.target.value.match(/^\s*$/)) {
+      setWarningText("Song must have a name!");
+      setShowWarning(true);
+      setTimeout(() => {
+        setShowWarning(false);
+      }, 2000);
+      return;
+    }
+
+    if (currentSong) {
+      const newSongArray = songs.filter((song) => song.id !== currentSong.id);
+
+      const renamedSong = {
+        ...currentSong,
+        title: e.target.value,
+      };
+
+      const concatSongArray = [...newSongArray, renamedSong];
+
+      console.log(concatSongArray);
+
+      localStorage.setItem("songapp-songs", JSON.stringify(concatSongArray));
+      setSongs(concatSongArray);
+      setCurrentSong(renamedSong as Song);
+    }
+  }
+
   function handleDeleteSong() {
     if (currentSong) {
       const newSongArray = songs.filter((song) => song.id !== currentSong.id);
@@ -53,8 +88,11 @@ export default function Sidebar({
         localStorage.setItem("songapp-songs", JSON.stringify(newSongArray));
         setSongs(newSongArray);
       } else {
-        console.log("cant delete songs");
-        return;
+        setWarningText("Can't delete only song!");
+        setShowWarning(true);
+        setTimeout(() => {
+          setShowWarning(false);
+        }, 2000);
       }
     }
     setShowSongDeleteModal(false);
@@ -105,6 +143,7 @@ export default function Sidebar({
           />
         </div>
       </div>
+      {showWarning && <span className="ml-2 font-semibold">{warningText}</span>}
       {showSidebarList && (
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-4">
@@ -115,6 +154,9 @@ export default function Sidebar({
                   song={song}
                   handleSongClick={handleSongClick}
                   handleSongDeleteModal={handleSongDeleteModal}
+                  sidebarRenameToggle={sidebarRenameToggle}
+                  setSidebarRenameToggle={setSidebarRenameToggle}
+                  handleSongRename={handleSongRename}
                 />
               ))}
             {showSearch && (
@@ -132,6 +174,9 @@ export default function Sidebar({
                     song={filteredSong}
                     handleSongClick={handleSongClick}
                     handleSongDeleteModal={handleSongDeleteModal}
+                    sidebarRenameToggle={sidebarRenameToggle}
+                    setSidebarRenameToggle={setSidebarRenameToggle}
+                    handleSongRename={handleSongRename}
                   />
                 ))}
           </div>

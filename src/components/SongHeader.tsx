@@ -29,12 +29,15 @@ export default function SongHeader({
 
   const [emptyVersionWarning, setEmptyVersionWarning] =
     useState<boolean>(false);
+  const [versionWarningText, setVersionWarningText] = useState<string>();
 
   const [showVersionModal, setShowVersionModal] = useState<boolean>(false);
   const [showDeleteVersionModal, setShowDeleteVersionModal] =
     useState<boolean>(false);
-  // const [versionRenameToggle, setVersionRenameToggle] =
-  //   useState<boolean>(false);
+
+  const [versionRenameToggle, setVersionRenameToggle] =
+    useState<boolean>(false);
+
   const [modalWarning, setModalWarning] = useState<boolean>(false);
   const [versionModalInput, setVersionModalInput] = useState<string>("");
 
@@ -49,7 +52,7 @@ export default function SongHeader({
         <div
           key={key}
           className={
-            `h-9 font-semibold text-xs lg:text-base p-2 rounded-t-2xl flex justify-center items-center ` +
+            `h-9 font-semibold text-xs lg:text-base p-2 rounded-t-2xl flex justify-center items-center content-center ` +
             (currentVersion?.version === value.version
               ? `bg-hidden pr-1 border-x-3 border-t-3 ${value?.theme?.borderColor} ${value?.theme?.activeColor} ` +
                 (currentTheme === "Dark" &&
@@ -58,7 +61,7 @@ export default function SongHeader({
               : `border ${value?.theme?.borderColor} ${value?.theme?.bgColor} ${value?.theme?.textColor} `)
           }
         >
-          {/* {versionRenameToggle && currentVersion?.version === value.version ? (
+          {versionRenameToggle && currentVersion?.version === value.version ? (
             <input
               onKeyDown={(e) => e.key === "Enter" && handleVersionRename(e)}
               onBlur={handleVersionRename}
@@ -70,54 +73,89 @@ export default function SongHeader({
               }
               autoFocus
             />
-          ) : ( */}
-          <button
-            onClick={handleVersionChange}
-            // onDoubleClick={() =>
-            //   setVersionRenameToggle((prevState) => !prevState)
-            // }
-            value={key}
-          >
-            {value.version}
-          </button>
-          {/* )} */}
-
-          {currentVersion?.version === value.version && (
-            <img
-              src="./src/assets/SVG/cross.svg"
-              id="song-title-cross"
-              alt=""
-              className={
-                "w-6 m-0 p-0 cursor-pointer " +
-                (currentTheme === "Dark" && "grayscale invert")
+          ) : (
+            <button
+              onClick={handleVersionChange}
+              onDoubleClick={() =>
+                setVersionRenameToggle((prevState) => !prevState)
               }
-              onClick={handleDeleteVersionModal}
-            />
+              value={key}
+            >
+              {value.version}
+            </button>
           )}
+
+          <div className="flex">
+            {currentVersion?.version === value.version && (
+              <img
+                src="./src/assets/SVG/pencil-fill.svg"
+                id="song-title-edit"
+                alt=""
+                className={
+                  "w-4 ml-1 p-0 cursor-pointer " +
+                  (currentTheme === "Dark" && "grayscale invert")
+                }
+                onClick={() =>
+                  setVersionRenameToggle((prevState) => !prevState)
+                }
+              />
+            )}
+
+            {currentVersion?.version === value.version && (
+              <img
+                src="./src/assets/SVG/cross.svg"
+                id="song-title-cross"
+                alt=""
+                className={
+                  "w-6 m-0 p-0 cursor-pointer " +
+                  (currentTheme === "Dark" && "grayscale invert")
+                }
+                onClick={handleDeleteVersionModal}
+              />
+            )}
+          </div>
         </div>
       )
   );
 
-  // function handleVersionRename(e) {
-  //   setVersionRenameToggle(false);
-  //   if (e.target.value === "" || e.target.value.match(/^\s*$/)) {
-  //     // setRenameWarningText("Version must have a name!");
-  //     // setRenameWarning(true);
-  //     // setTimeout(() => {
-  //     //   setRenameWarning(false);
-  //     // }, 2000);
-  //     return;
-  //   }
+  function handleVersionRename(e) {
+    setVersionRenameToggle(false);
+    if (e.target.value === "" || e.target.value.match(/^\s*$/)) {
+      setVersionWarningText("Version must have a name!");
+      setEmptyVersionWarning(true);
+      setTimeout(() => {
+        setEmptyVersionWarning(false);
+      }, 2000);
+      return;
+    }
 
-  //   console.log(currentVersion);
+    if (currentSong && currentVersion) {
+      const filteredVersions = Object.entries(currentSong).filter(
+        ([key, value]) =>
+          typeof value === "object" &&
+          Array.isArray(value) === false &&
+          key !== currentVersion.version
+      );
+      const filteredSong = Object.entries(currentSong).filter(
+        ([_, value]) =>
+          typeof value !== "object" || Array.isArray(value) === true
+      );
+      const newVersion: [string, Version] = [
+        e.target.value as string,
+        {
+          ...currentVersion,
+          version: e.target.value,
+        },
+      ];
 
-  //   setCurrentVersion((prevVersionData) => {
-  //     return {
-  //       ...prevVersionData,
-  //       version: e.target.value,
-  //     } as Version;
-  //   });
-  // }
+      const concatSong = [...filteredSong, ...filteredVersions, newVersion];
+
+      const newSongObject = Object.fromEntries(concatSong) as Song;
+
+      setCurrentSong(newSongObject);
+      setCurrentVersion(newVersion[1]);
+    }
+  }
 
   function handleVersionChange(e) {
     const newVersion = Object.entries(currentSong).find(
@@ -208,11 +246,11 @@ export default function SongHeader({
       );
       setCurrentSong(newSongObject);
     } else {
+      setVersionWarningText("Section must have a name!");
       setEmptyVersionWarning(true);
       setTimeout(() => {
         setEmptyVersionWarning(false);
       }, 2000);
-      return;
     }
     setShowDeleteVersionModal(false);
   }
@@ -305,9 +343,7 @@ export default function SongHeader({
             />
           </button>
           {emptyVersionWarning && (
-            <span className="ml-2 font-semibold">
-              Can't delete only section!
-            </span>
+            <span className="ml-2 font-semibold">{versionWarningText}</span>
           )}
         </div>
       </div>

@@ -14,6 +14,7 @@ import { useThemeContext } from "./contexts/theme-context";
 import { useSidebarListContext } from "./contexts/sidebarlist-context";
 
 import _ from "lodash";
+import TutorialDialog from "./components/TutorialDialog";
 
 const PLACEHOLDER_LOCAL_SONGS: Song[] = [
   {
@@ -45,15 +46,26 @@ export default function App() {
   const { setShowSidebarList } = useSidebarListContext();
 
   useEffect(() => {
+    const savedTheme = JSON.parse(
+      localStorage.getItem("songapp-theme") as string
+    );
+    if (savedTheme !== "" && savedTheme) {
+      setCurrentTheme(savedTheme);
+    } else {
+      setCurrentTheme("Dark");
+    }
+
     let localSongs = JSON.parse(
       localStorage.getItem("songapp-songs") as string
     );
     if (localSongs === undefined || !localSongs || localSongs.length === 0) {
-      localSongs = localStorage.setItem(
-        "songapp-songs",
-        JSON.stringify(PLACEHOLDER_LOCAL_SONGS)
-      );
-      setSongs(PLACEHOLDER_LOCAL_SONGS);
+      // localSongs = localStorage.setItem(
+      //   "songapp-songs",
+      //   JSON.stringify(PLACEHOLDER_LOCAL_SONGS)
+      // );
+      // setSongs(PLACEHOLDER_LOCAL_SONGS);
+      setSongs([]);
+      return;
     } else if (localSongs) {
       setSongs(localSongs);
       if (localSongs && localSongs.length >= 1) {
@@ -71,15 +83,6 @@ export default function App() {
       setCurrentVersion({
         version: "Demo",
       } as Version);
-    }
-
-    const savedTheme = JSON.parse(
-      localStorage.getItem("songapp-theme") as string
-    );
-    if (savedTheme !== "" && savedTheme) {
-      setCurrentTheme(savedTheme);
-    } else {
-      setCurrentTheme("Dark");
     }
   }, []);
 
@@ -103,16 +106,6 @@ export default function App() {
     }
   }, [currentTheme]);
 
-  // const defaultVersion = useMemo(() => {
-  //   if (currentSong) {
-  //     Object.values(currentSong).find(
-  //       (value) => typeof value === "object" && Array.isArray(value) === false
-  //     );
-  //   }
-  // }, [currentSong]);
-
-  // TODO: Change currentSong, setCurrentSong, currentVersion, setCurrentVersion to context API
-
   useEffect(() => {
     const date = new Date();
     if (currentSong && songs) {
@@ -135,9 +128,20 @@ export default function App() {
           const dateB = new Date(b.updated ?? "Mon Jan 1 2000 12:00:00 AM");
           return dateA > dateB ? -1 : 1;
         });
-        console.log("SETTING SONGS");
         setSongs(newSongArray);
         localStorage.setItem("songapp-songs", JSON.stringify(newSongArray));
+      }
+    } else if (songs && songs.length !== 0) {
+      setCurrentSong(songs[0]);
+
+      localStorage.setItem("songapp-songs", JSON.stringify(songs));
+
+      const defaultVersion = Object.values(songs[0]).find(
+        (value) => typeof value === "object" && Array.isArray(value) === false
+      ) as Version;
+
+      if (defaultVersion) {
+        setCurrentVersion(defaultVersion);
       }
     }
   }, [currentSong, songs]);
@@ -171,10 +175,10 @@ export default function App() {
         (currentTheme === "Dark" ? "bg-neutral-800" : "bg-white")
       }
     >
-      {songs && currentSong && currentVersion && (
-        <>
-          <CurrentTagContextProvider>
-            <ApiContextProvider>
+      <CurrentTagContextProvider>
+        <ApiContextProvider>
+          {songs && currentSong && currentVersion && (
+            <>
               <Sidebar
                 songs={songs}
                 setSongs={setSongs}
@@ -186,10 +190,13 @@ export default function App() {
                 currentVersion={currentVersion}
                 setCurrentVersion={setCurrentVersion}
               />
-            </ApiContextProvider>
-          </CurrentTagContextProvider>
-        </>
-      )}
+            </>
+          )}
+          {(!songs || songs.length === 0) && (
+            <TutorialDialog setSongs={setSongs} />
+          )}
+        </ApiContextProvider>
+      </CurrentTagContextProvider>
     </div>
   );
 }
