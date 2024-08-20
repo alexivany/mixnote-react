@@ -53,7 +53,7 @@ export default function TextEditor({ objectKey, noteToLoad }) {
               [objectKey]: noteshtml,
             } as Version;
           });
-        } else if (noteToLoad === "Vocals.lyrics") {
+        } else if (noteToLoad.match(/\b\.lyrics\b/)) {
           setCurrentVersion((prevVersionData) => {
             if (prevVersionData) {
               return {

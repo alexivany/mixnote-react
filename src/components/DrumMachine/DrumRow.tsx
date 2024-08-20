@@ -17,8 +17,8 @@ export default function DrumRow({ label, drumSeqArray, setDrumSeqArray }) {
   }, [label]);
 
   return (
-    <div className="grid grid-cols-16 whitespace-nowrap gap-1">
-      <span className="col-span-1 text-xs lg:text-sm font-semibold">
+    <div className="grid grid-cols-9 lg:grid-cols-16 lg:grid-rows-1 grid-rows-2 whitespace-nowrap gap-1">
+      <span className="col-span-1 lg:row-span-1 row-span-3 text-xs lg:text-sm font-semibold">
         {rowLabel}
       </span>
       {drumSeqArray &&

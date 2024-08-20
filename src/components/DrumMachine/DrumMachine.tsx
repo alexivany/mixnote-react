@@ -132,6 +132,8 @@ export default function DrumMachine({ instrumentToTab }) {
           setWaveformWidth(128);
         } else if (node.clientWidth >= 1024) {
           setWaveformWidth(500);
+        } else if (node.clientWidth <= 782) {
+          setWaveformWidth(0);
         } else {
           setWaveformWidth(256);
         }
@@ -227,8 +229,8 @@ export default function DrumMachine({ instrumentToTab }) {
             : " border-neutral-600")
         }
       >
-        <div className="grid grid-cols-16 gap-1 justify-items-center items-center">
-          <span className="col-span-1 font-semibold"></span>
+        <div className="grid grid-cols-9 grid-rows-2 lg:grid-rows-1 lg:grid-cols-16 gap-3 lg:gap-1 justify-items-center items-center">
+          <span className="col-span-1 lg:row-span-1 row-span-3 font-semibold"></span>
           {indicators &&
             indicators.map((_, i) => {
               return (
@@ -246,10 +248,11 @@ export default function DrumMachine({ instrumentToTab }) {
                   ></input>
                   <div
                     className={
-                      ` w-4 h-4 rounded-2xl border-4 peer-checked:bg-white ` +
+                      ` w-4 h-4 rounded-2xl border-4  peer-checked:bg-white ` +
                       (currentVersion?.theme?.bgColor === "bg-gray-100"
                         ? "bg-gray-300 border-gray-300 "
-                        : `${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.borderColor}`)
+                        : `${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.borderColor} `) +
+                      (currentTheme === "Dark" && "bg-neutral-800")
                     }
                   ></div>
                 </label>
@@ -287,7 +290,7 @@ export default function DrumMachine({ instrumentToTab }) {
             <div className="flex p-2 gap-2">
               <button
                 className={
-                  ` text-sm lg:text-md rounded-2xl border-2 ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor}  px-3 py-2 font-semibold cursor-pointer ` +
+                  ` text-sm lg:text-md rounded-2xl border-2 ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor} p-1 lg:px-3 lg:py-2 font-semibold cursor-pointer ` +
                   (currentTheme === "Dark"
                     ? " hover:bg-neutral-800 "
                     : " hover:bg-white ") +
@@ -302,7 +305,7 @@ export default function DrumMachine({ instrumentToTab }) {
               <button
                 onClick={stopSeq}
                 className={
-                  ` text-sm lg:text-md rounded-2xl border-2 ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor}  px-3 py-2 font-semibold cursor-pointer ` +
+                  ` text-sm lg:text-md rounded-2xl border-2 ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor} p-1 lg:px-3 lg:py-2 font-semibold cursor-pointer ` +
                   (currentTheme === "Dark"
                     ? " hover:bg-neutral-800 "
                     : " hover:bg-white ") +
@@ -316,7 +319,7 @@ export default function DrumMachine({ instrumentToTab }) {
               <button
                 onClick={clearSeq}
                 className={
-                  ` text-sm lg:text-md rounded-2xl border-2 ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor}  px-3 py-2 font-semibold cursor-pointer ` +
+                  ` text-sm lg:text-md rounded-2xl border-2 ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor}  p-1 lg:px-3 lg:py-2 font-semibold cursor-pointer ` +
                   (currentTheme === "Dark"
                     ? " hover:bg-neutral-800 "
                     : " hover:bg-white ") +

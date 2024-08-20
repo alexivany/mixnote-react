@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { useApiContext } from "@/contexts/api-context";
 import { useThemeContext } from "@/contexts/theme-context";
 
-import { Song } from "@/types";
+import { Song, Version } from "@/types";
 
 import { useOnClickOutside } from "usehooks-ts";
 import { v4 as uuidv4 } from "uuid";
@@ -13,6 +13,7 @@ import { zodResponseFormat } from "openai/helpers/zod";
 
 import { z } from "zod";
 import { useCurrentSongContext } from "@/contexts/currentsong-context";
+import { useCurrentVersionContext } from "@/contexts/currentversion-context";
 
 interface SidebarNewSongModalProps {
   handleSongModal(): void;
@@ -24,6 +25,8 @@ export default function SidebarNewSongModal({
   setSongs,
 }: SidebarNewSongModalProps) {
   const { currentTheme } = useThemeContext();
+
+  const { setCurrentVersion } = useCurrentVersionContext();
 
   const { setCurrentSong } = useCurrentSongContext();
 
@@ -122,7 +125,7 @@ export default function SidebarNewSongModal({
 
     const response = await openai.beta.chat.completions.parse({
       model: "gpt-4o-2024-08-06",
-      temperature: 0.4,
+      temperature: 0.1,
       messages: [
         {
           role: "system",
@@ -131,11 +134,130 @@ export default function SidebarNewSongModal({
         },
         {
           role: "user",
-          content: "",
+          content: `I have a song named Loud Bark that is 120 bpm in A major with a 4/4 beat. I have a verse and a chorus with electric guitar, a distorted bass guitar, drums and vocals. The lyrics for the chorus are "oh yeah, oh yeah"`,
         },
         {
           role: "assistant",
-          content: "",
+          content: `{
+            title: "Loud Bark",
+            bpm: 120,
+            key: "A major",
+            sections: [
+              {
+                section: "Verse",
+                generalNotes:
+                  "The verse section features a driving rhythm with a focus on the electric guitar and bass.",
+                theme: {
+                  activeColor: "",
+                  bgColor: "",
+                  borderColor: "",
+                  textColor: "",
+                },
+                instruments: [
+                  {
+                    instrument: "Electric Guitar",
+                    label: "Electric Guitar",
+                    notes:
+                      "Play with a clean tone, focusing on rhythm and chord progression.",
+                    tabs: "e|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nB|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nG|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nD|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nA|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nE|-----------------------------------------------------------------------------------------------------------------------------------------------------|",
+                  },
+                  {
+                    instrument: "Distorted Bass Guitar",
+                    label: "Distorted Bass Guitar",
+                    notes:
+                      "Add a gritty, distorted tone to complement the electric guitar.",
+                    tabs: "G|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nD|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nA|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nE|-----------------------------------------------------------------------------------------------------------------------------------------------------|",
+                  },
+                  {
+                    instrument: "Drums",
+                    label: "Drums",
+                    notes:
+                      "Keep a steady 4/4 beat with a focus on snare and bass drum.",
+                  },
+                  {
+                    instrument: "Vocals",
+                    label: "Vocals",
+                    notes: "Focus on delivering the verse lyrics with energy.",
+                    lyrics: "",
+                  },
+                ],
+              },
+              {
+                section: "Chorus",
+                generalNotes:
+                  "The chorus is energetic with a catchy hook and emphasizes the lyrics.",
+                theme: {
+                  activeColor: "",
+                  bgColor: "",
+                  borderColor: "",
+                  textColor: "",
+                },
+                instruments: [
+                  {
+                    instrument: "Electric Guitar",
+                    label: "Electric Guitar",
+                    notes:
+                      "Switch to a more powerful, overdriven sound for the chorus.",
+                    tabs: "e|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nB|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nG|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nD|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nA|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nE|-----------------------------------------------------------------------------------------------------------------------------------------------------|",
+                  },
+                  {
+                    instrument: "Distorted Bass Guitar",
+                    label: "Distorted Bass Guitar",
+                    notes:
+                      "Continue with a heavy, distorted bass line to drive the chorus.",
+                    tabs: "G|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nD|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nA|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nE|-----------------------------------------------------------------------------------------------------------------------------------------------------|",
+                  },
+                  {
+                    instrument: "Drums",
+                    label: "Drums",
+                    notes:
+                      "Increase intensity with cymbal crashes and a strong backbeat.",
+                  },
+                  {
+                    instrument: "Vocals",
+                    label: "Vocals",
+                    notes:
+                      "Deliver the chorus with enthusiasm and emphasis on the repeated phrase.",
+                    lyrics: "oh yeah, oh yeah",
+                  },
+                ],
+              },
+            ],
+          }`,
+        },
+        {
+          role: "user",
+          content: "song is called Test Song",
+        },
+        {
+          role: "assistant",
+          content: `{
+            title: "Test Song",
+            bpm: 120,
+            key: "C Major",
+            sections: [
+              {
+                section: "Verse",
+                generalNotes: "",
+                theme: {
+                  activeColor: "",
+                  bgColor: "",
+                  borderColor: "",
+                  textColor: "",
+                },
+              },
+              {
+                section: "Chorus",
+                generalNotes: "",
+                theme: {
+                  activeColor: "",
+                  bgColor: "",
+                  borderColor: "",
+                  textColor: "",
+                },
+              },
+            ],
+          }`,
         },
         {
           role: "user",
@@ -148,6 +270,7 @@ export default function SidebarNewSongModal({
     });
 
     console.log(response);
+    console.log(response.choices[0]?.message);
     if (response) {
       console.log(response);
 
@@ -232,10 +355,15 @@ E|------------------------------------------------------------------------------
 
         console.log(newSong);
 
+        const newVersion = Object.values(newSong).find(
+          (value) => typeof value === "object" && Array.isArray(value) === false
+        ) as Version | undefined;
+
         setSongs((prevSongs) => {
           return [...(prevSongs ?? []), newSong] as Song[];
         });
         setCurrentSong(newSong as Song);
+        setCurrentVersion(newVersion as Version);
       }
     }
     setModalWarning(false);
@@ -262,7 +390,7 @@ E|------------------------------------------------------------------------------
             value={aiInput}
             onChange={(e) => setAiInput(e.target.value)}
             className={
-              "max-w-full font-normal mb-2 border border-gray-300 px-2 rounded-lg resize-none " +
+              "max-w-full h-24 font-normal mb-2 border border-gray-300 px-2 rounded-lg resize-none " +
               (currentTheme === "Light" ? "bg-white" : "bg-neutral-800")
             }
           ></textarea>

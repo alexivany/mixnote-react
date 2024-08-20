@@ -26,7 +26,7 @@ export default function DrumStep({ index, soundRow, setDrumSeqArray, active }) {
   return (
     <button
       className={
-        `border-2 rounded-lg ${currentVersion?.theme?.borderColor} ` +
+        `border-2 rounded-lg h-6 lg:h-full ${currentVersion?.theme?.borderColor} ` +
         (stepActive &&
           (currentVersion?.theme?.bgColor === "bg-gray-100"
             ? `bg-gray-300`

@@ -15,6 +15,8 @@ export default function InstrumentTabs({ instrumentToTab, tabToLoad }) {
 
   const [tabArray, setTabArray] = useState<[string, string[]][]>([]);
 
+  // const [showDelete, setShowDelete] = useState<boolean>(false);
+
   const tabDivRef = useRef<HTMLDivElement>(null);
 
   const guitarTemplate = `e|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -58,9 +60,15 @@ D|------------------------------------------------------------------------------
 
   function handleClearTab() {
     let newString;
-    if (instrumentToTab.match(/bass\s*(guitar)?/i)) {
+    if (
+      instrumentToTab.match(/bass\s*(guitar)?/i) ||
+      currentVersion?.[instrumentToTab]?.addedFeatures?.includes("bassTab")
+    ) {
       newString = bassTemplate;
-    } else if (instrumentToTab.match(/(electric|acoustic)?\s*guitar/i)) {
+    } else if (
+      instrumentToTab.match(/(electric|acoustic)?\s*guitar/i) ||
+      currentVersion?.[instrumentToTab]?.addedFeatures?.includes("guitarTab")
+    ) {
       newString = guitarTemplate;
     }
 
@@ -81,9 +89,15 @@ D|------------------------------------------------------------------------------
 
   function handleAddRow() {
     let newString;
-    if (instrumentToTab.match(/bass\s*(guitar)?/i)) {
+    if (
+      instrumentToTab.match(/bass\s*(guitar)?/i) ||
+      currentVersion?.[instrumentToTab]?.addedFeatures?.includes("bassTab")
+    ) {
       newString = bassTemplate;
-    } else if (instrumentToTab.match(/(electric|acoustic)?\s*guitar/i)) {
+    } else if (
+      instrumentToTab.match(/(electric|acoustic)?\s*guitar/i) ||
+      currentVersion?.[instrumentToTab]?.addedFeatures?.includes("guitarTab")
+    ) {
       newString = guitarTemplate;
     }
 
@@ -120,33 +134,41 @@ D|------------------------------------------------------------------------------
         } else {
           newString = currentVersion?.[instrumentToTab].tabs;
         }
-      } else if (
-        instrumentToTab.match(/bass\s*(guitar)?/i) ||
-        currentVersion?.[instrumentToTab]?.addedFeatures?.includes("bassTab")
-      ) {
+      } else if (instrumentToTab.match(/bass\s*(guitar)?/i)) {
+        console.log("setting bass");
         newString = bassTemplate;
+      } else if (instrumentToTab.match(/(electric|acoustic)?\s*guitar/i)) {
+        console.log("setting guitar");
+        newString = guitarTemplate;
       } else if (
-        instrumentToTab.match(/(electric|acoustic)?\s*guitar/i) ||
         currentVersion?.[instrumentToTab]?.addedFeatures?.includes("guitarTab")
       ) {
         newString = guitarTemplate;
+      } else if (
+        currentVersion?.[instrumentToTab]?.addedFeatures?.includes("bassTab")
+      ) {
+        newString = bassTemplate;
       }
 
-      const tabArrayRows = newString.trim().split("\n");
-      const tabArrayToSet: [string, string[]][] = [];
+      if (newString) {
+        const tabArrayRows = newString.trim().split("\n");
+        const tabArrayToSet: [string, string[]][] = [];
 
-      tabArrayRows.forEach((row) => {
-        const columns = row.split("|").filter((column) => column.trim() !== "");
-        const notes = columns[1].split("");
+        tabArrayRows.forEach((row) => {
+          const columns = row
+            .split("|")
+            .filter((column) => column.trim() !== "");
+          const notes = columns[1].split("");
 
-        const newArray: [string, string[]] = [columns[0], notes];
+          const newArray: [string, string[]] = [columns[0], notes];
 
-        tabArrayToSet.push(newArray);
-      });
+          tabArrayToSet.push(newArray);
+        });
 
-      setTabArray(tabArrayToSet);
+        setTabArray(tabArrayToSet);
+      }
     }
-  }, []);
+  }, [currentVersion?.[instrumentToTab].addedFeatures]);
 
   useEffect(() => {
     const newRows = tabArray.map((subarray) => {
@@ -217,16 +239,33 @@ D|------------------------------------------------------------------------------
         </a>
       </div>
       <div
+        // onMouseEnter={() => setShowDelete(true)}
+        // onMouseLeave={() => setShowDelete(false)}
         ref={tabDivRef}
         id="tab-div"
         className={
-          "border font-mono rounded-lg p-2 text-sm whitespace-pre display-inline overflow-auto " +
+          "border font-mono relative rounded-lg p-2 text-sm whitespace-pre display-inline overflow-auto " +
           (currentTheme === "Light"
             ? "border-gray-300 "
             : " border-neutral-600")
         }
       >
         {tabsHTML}
+        {/* {showDelete && (
+          <button
+            className={`absolute right-2 top-2 text-sm lg:text-md rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-1 py-0.5 font-semibold cursor-pointer`}
+          >
+            <img
+              src="./src/assets/SVG/cross.svg"
+              alt=""
+              className={
+                "w-6 m-0 p-0 grayscale invert " +
+                (currentVersion?.theme?.bgColor === "bg-gray-100" &&
+                  "invert-0 ")
+              }
+            />
+          </button>
+        )} */}
       </div>
     </>
   );

@@ -28,6 +28,8 @@ export default function Instrument({ instrumentObject }) {
 
   const [showFeatureSelect, setShowFeatureSelect] = useState<boolean>(false);
   const [addedFeatures, setAddedFeatures] = useState<string[]>([]);
+  const [showFeatureWarning, setShowFeatureWarning] = useState<boolean>(false);
+  const [featureWarningText, setFeatureWarningText] = useState<string>();
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -57,51 +59,133 @@ export default function Instrument({ instrumentObject }) {
     setCurrentVersion(newVersionObject as Version);
   }
 
-  // function addInstrumentFeature(e) {
-  //   if (e.target.value) {
-  //     if (!addedFeatures.includes(e.target.value)) {
-  //       setAddedFeatures((prevState) => [...prevState, e.target.value]);
-  //     }
-  //   }
-
-  //   setShowFeatureSelect((prevState) => !prevState);
+  // function deleteInstrumentFeature(e) {
   // }
+
+  function addInstrumentFeature(e) {
+    if (e.target.value) {
+      if (!addedFeatures.includes(e.target.value)) {
+        if (
+          (e.target.value === "guitarTab" &&
+            addedFeatures.includes("bassTab")) ||
+          (e.target.value === "guitarTab" &&
+            currentInstrument.instrument.match(/bass\s*(guitar)?/i)) ||
+          (e.target.value === "guitarTab" &&
+            addedFeatures.includes("guitarTab")) ||
+          (e.target.value === "guitarTab" &&
+            currentInstrument.instrument.match(
+              /(electric|acoustic)?\s*guitar/i
+            )) ||
+          (e.target.value === "bassTab" &&
+            addedFeatures.includes("guitarTab")) ||
+          (e.target.value === "bassTab" &&
+            currentInstrument.instrument.match(
+              /(electric|acoustic)?\s*guitar/i
+            )) ||
+          (e.target.value === "bassTab" && addedFeatures.includes("bassTab")) ||
+          (e.target.value === "bassTab" &&
+            currentInstrument.instrument.match(/bass\s*(guitar)?/i))
+        ) {
+          setFeatureWarningText("Tabs already exist!");
+          setShowFeatureWarning(true);
+          setTimeout(() => {
+            setShowFeatureWarning(false);
+          }, 4000);
+          return;
+        } else if (
+          e.target.value === "drumMachine" &&
+          currentInstrument.instrument.match(/drums?/i)
+        ) {
+          setFeatureWarningText("Drums already exist!");
+          setShowFeatureWarning(true);
+          setTimeout(() => {
+            setShowFeatureWarning(false);
+          }, 4000);
+          return;
+        } else if (e.target.value === "drumMachine") {
+          if (currentVersion) {
+            const hasMatchingProperty = Object.keys(currentVersion).some(
+              (property) => /drums?/i.test(property)
+            );
+            if (hasMatchingProperty) {
+              setFeatureWarningText("Drums already exist!");
+              setShowFeatureWarning(true);
+              setTimeout(() => {
+                setShowFeatureWarning(false);
+              }, 4000);
+              return;
+            }
+          }
+        }
+        setAddedFeatures((prevState) => [...prevState, e.target.value]);
+      } else {
+        if (e.target.value === "lyrics") {
+          setFeatureWarningText("Lyrics already exist!");
+          setShowFeatureWarning(true);
+          setTimeout(() => {
+            setShowFeatureWarning(false);
+          }, 4000);
+          return;
+        } else if (e.target.value === "drumMachine") {
+          setFeatureWarningText("Drums already exist!");
+          setShowFeatureWarning(true);
+          setTimeout(() => {
+            setShowFeatureWarning(false);
+          }, 4000);
+          return;
+        }
+      }
+    }
+
+    setShowFeatureSelect((prevState) => !prevState);
+  }
 
   function handleLyricModal() {
     setShowLyricModal((prevState) => !prevState);
   }
 
-  // useEffect(() => {
-  //   if (modalRef) {
-  //     modalRef.current?.scrollIntoView();
-  //   }
-  // });
+  useEffect(() => {
+    if (currentVersion) {
+      setCurrentVersion((prevVersionData) => {
+        return {
+          ...prevVersionData,
+          [instrumentObject.instrument]: {
+            ...prevVersionData?.[instrumentObject.instrument],
+            addedFeatures: addedFeatures,
+          },
+        } as Version;
+      });
+    }
+    if (addedFeatures.includes("lyrics")) {
+      if (!currentVersion?.[instrumentObject.instrument].lyrics) {
+        setCurrentVersion((prevVersionData) => {
+          return {
+            ...prevVersionData,
+            [instrumentObject.instrument]: {
+              ...prevVersionData?.[instrumentObject.instrument],
+              lyrics: "",
+            },
+          } as Version;
+        });
+      }
+    }
+  }, [addedFeatures]);
 
-  // useEffect(() => {
-  //   setCurrentVersion((prevVersionData) => {
-  //     return {
-  //       ...prevVersionData,
-  //       [instrumentObject.instrument]: {
-  //         ...prevVersionData[instrumentObject.instrument],
-  //         addedFeatures: addedFeatures,
-  //       },
-  //     };
-  //   });
-  // }, [addedFeatures]);
-
-  // useEffect(() => {
-  //   if (currentVersion[instrumentObject.instrument].addedFeatures) {
-  //     setAddedFeatures(
-  //       currentVersion[instrumentObject.instrument].addedFeatures
-  //     );
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (currentVersion) {
+      if (currentVersion[instrumentObject.instrument].addedFeatures) {
+        setAddedFeatures(
+          currentVersion[instrumentObject.instrument].addedFeatures
+        );
+      }
+    }
+  }, []);
 
   useOnClickOutside(modalRef, handleLyricModal);
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-between">
+      <div className="flex h-8 justify-between">
         <input
           type="text"
           className={
@@ -148,7 +232,9 @@ export default function Instrument({ instrumentObject }) {
               </button>
             </>
           )}
-          {/* 
+          {showFeatureWarning && (
+            <span className="text-sm font-semibold">{featureWarningText}</span>
+          )}
           {showFeatureSelect ? (
             <FeatureDropdown addInstrumentFeature={addInstrumentFeature} />
           ) : (
@@ -162,7 +248,7 @@ export default function Instrument({ instrumentObject }) {
                 addInstrumentFeature(e);
               }}
             />
-          )} */}
+          )}
 
           <img
             src={

@@ -55,7 +55,7 @@ export default function App() {
       setCurrentTheme("Dark");
     }
 
-    let localSongs = JSON.parse(
+    const localSongs = JSON.parse(
       localStorage.getItem("songapp-songs") as string
     );
     if (localSongs === undefined || !localSongs || localSongs.length === 0) {
