@@ -7,6 +7,8 @@ import { useThemeContext } from "@/contexts/theme-context";
 
 import { v4 as uuidv4 } from "uuid";
 
+import { AnimatePresence, motion } from "framer-motion";
+
 interface SongHeaderProps {
   currentSong: Song;
   setCurrentSong: Dispatch<SetStateAction<Song | undefined>>;
@@ -52,13 +54,16 @@ export default function SongHeader({
         <div
           key={key}
           className={
-            `h-9 font-semibold text-xs lg:text-base p-2 rounded-t-2xl flex justify-center items-center content-center ` +
+            `h-9 font-semibold text-xs lg:text-base p-2 group rounded-t-2xl flex justify-center items-center content-center cursor-pointer ` +
             (currentVersion?.version === value.version
               ? `bg-hidden pr-1 border-x-3 border-t-3 ${value?.theme?.borderColor} ${value?.theme?.activeColor} ` +
                 (currentTheme === "Dark" &&
                   value?.theme?.textColor === "text-black" &&
                   "text-white")
-              : `border ${value?.theme?.borderColor} ${value?.theme?.bgColor} ${value?.theme?.textColor} `)
+              : `border-x-3 border-t-3 hover:bg-inherit hover:${value?.theme?.activeColor} ${value?.theme?.borderColor} ${value?.theme?.bgColor} ${value?.theme?.textColor}  ` +
+                (currentTheme === "Dark" &&
+                  value?.theme?.textColor === "text-black" &&
+                  "hover:text-white"))
           }
         >
           {versionRenameToggle && currentVersion?.version === value.version ? (
@@ -76,10 +81,12 @@ export default function SongHeader({
           ) : (
             <button
               onClick={handleVersionChange}
-              onDoubleClick={() =>
-                setVersionRenameToggle((prevState) => !prevState)
-              }
               value={key}
+              className={
+                currentVersion?.version !== value.version
+                  ? `group-hover:scale-105 transition-transform `
+                  : ""
+              }
             >
               {value.version}
             </button>
@@ -92,7 +99,7 @@ export default function SongHeader({
                 id="song-title-edit"
                 alt=""
                 className={
-                  "w-4 ml-1 p-0 cursor-pointer " +
+                  "w-4 ml-1 p-0 cursor-pointer hover:scale-125 transition-transform  " +
                   (currentTheme === "Dark" && "grayscale invert")
                 }
                 onClick={() =>
@@ -107,7 +114,7 @@ export default function SongHeader({
                 id="song-title-cross"
                 alt=""
                 className={
-                  "w-6 m-0 p-0 cursor-pointer " +
+                  "w-6 m-0 p-0 cursor-pointer hover:scale-125 transition-transform  " +
                   (currentTheme === "Dark" && "grayscale invert")
                 }
                 onClick={handleDeleteVersionModal}
@@ -330,13 +337,13 @@ export default function SongHeader({
           {versionElements}
           <button
             onClick={handleVersionModal}
-            className={`border ${currentVersion?.theme?.borderColor} p-2 rounded-t-2xl h-9 ${currentVersion?.theme?.bgColor}`}
+            className={`border ${currentVersion?.theme?.borderColor} group p-2 rounded-t-2xl h-9 ${currentVersion?.theme?.bgColor}`}
           >
             <img
               src="./src/assets/SVG/plus.svg"
               alt=""
               className={
-                "w-5 " +
+                "w-5 group-hover:scale-125 transition-transform " +
                 (currentVersion?.theme?.bgColor !== ("bg-gray-100" || "") &&
                   "invert")
               }
@@ -352,7 +359,7 @@ export default function SongHeader({
           <a
             onClick={handleSongDownload}
             className={
-              `font-bold ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.bgColor} border-2 ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.hoverColor}  py-1 px-2 lg:py-2 lg:px-4 rounded-2xl cursor-pointer ` +
+              `font-bold ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.bgColor} hover:scale-105 transition-transform border-2 ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.hoverColor}  py-1 px-2 lg:py-2 lg:px-4 rounded-2xl cursor-pointer ` +
               (currentTheme === "Dark"
                 ? " hover:bg-neutral-800 "
                 : " hover:bg-white ") +
@@ -366,7 +373,7 @@ export default function SongHeader({
           </a>
           <label
             className={
-              `font-bold ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.bgColor} border-2 ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.hoverColor}  py-1 px-2 lg:py-2 lg:px-4 rounded-2xl cursor-pointer ` +
+              `font-bold ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.bgColor} hover:scale-105 transition-transform border-2 ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.hoverColor}  py-1 px-2 lg:py-2 lg:px-4 rounded-2xl cursor-pointer ` +
               (currentTheme === "Dark"
                 ? " hover:bg-neutral-800 "
                 : " hover:bg-white ") +
@@ -393,99 +400,129 @@ export default function SongHeader({
           {currentSong.updated}
         </p>
       </div>
-      {showVersionModal && (
-        <div
-          ref={versionModalRef}
-          className={
-            "fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 lg:w-2/5 w-4/5  flex flex-col justify-between border rounded-xl z-10 py-6 px-6 " +
-            (currentTheme === "Light"
-              ? "bg-white text-black border-gray-300"
-              : "bg-neutral-800 text-white border-neutral-600")
-          }
-        >
-          <span className="text-xl">Enter new section name</span>
-          <input
-            autoFocus
-            value={versionModalInput}
-            onChange={(e) => setVersionModalInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && addNewVersion()}
-            type="text"
-            className={
-              "max-w-full font-normal mb-2 border border-gray-300 px-2 rounded-lg " +
-              (currentTheme === "Light" ? "bg-white" : "bg-neutral-800")
-            }
-          ></input>
-          <div className="flex gap-4 justify-end">
-            {modalWarning && (
-              <span className="font-semibold text-md ml-2">
-                Section must have a name!
-              </span>
-            )}
-            <button
-              onClick={addNewVersion}
-              className={
-                "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
-                (currentTheme === "Light"
-                  ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
-                  : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
-              }
-            >
-              OK
-            </button>
-            <button
+      <AnimatePresence>
+        {showVersionModal && (
+          <>
+            <motion.div
               onClick={handleVersionModal}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              exit={{ opacity: 0 }}
+              key="new-section-backdrop"
+              className="fixed top-0 left-0 z-10 h-full w-full bg-neutral-900"
+            ></motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: -100 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -400 }}
               className={
-                "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
+                "fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 lg:w-2/5 w-4/5  flex flex-col justify-between border rounded-xl z-10 py-6 px-6 " +
                 (currentTheme === "Light"
-                  ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
-                  : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
+                  ? "bg-white text-black border-gray-300"
+                  : "bg-neutral-800 text-white border-neutral-600")
               }
             >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
+              <span className="text-xl">Enter new section name</span>
+              <input
+                autoFocus
+                value={versionModalInput}
+                onChange={(e) => setVersionModalInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && addNewVersion()}
+                type="text"
+                className={
+                  "max-w-full font-normal mb-2 border border-gray-300 px-2 rounded-lg " +
+                  (currentTheme === "Light" ? "bg-white" : "bg-neutral-800")
+                }
+              ></input>
+              <div className="flex gap-4 justify-end">
+                {modalWarning && (
+                  <span className="font-semibold text-md ml-2">
+                    Section must have a name!
+                  </span>
+                )}
+                <button
+                  onClick={addNewVersion}
+                  className={
+                    "border-2 py-2 px-4 rounded-2xl cursor-pointer hover:scale-110 transition-transform " +
+                    (currentTheme === "Light"
+                      ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
+                      : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
+                  }
+                >
+                  OK
+                </button>
+                <button
+                  onClick={handleVersionModal}
+                  className={
+                    "border-2 py-2 px-4 rounded-2xl cursor-pointer hover:scale-110 transition-transform " +
+                    (currentTheme === "Light"
+                      ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
+                      : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
+                  }
+                >
+                  Cancel
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
-      {showDeleteVersionModal && (
-        <div
-          ref={deleteVersionModalRef}
-          className={
-            "fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 w-2/5 flex flex-col justify-between border rounded-xl z-10 py-6 px-6 " +
-            (currentTheme === "Light"
-              ? "bg-white text-black border-gray-300"
-              : "bg-neutral-800 text-white border-neutral-600")
-          }
-        >
-          <span className="text-xl">
-            Are you sure you want to delete the selected section?
-          </span>
-          <div className="flex gap-4 justify-end">
-            <button
-              onClick={handleDeleteVersion}
-              className={
-                "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
-                (currentTheme === "Light"
-                  ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
-                  : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
-              }
-            >
-              Yes
-            </button>
-            <button
+      <AnimatePresence>
+        {showDeleteVersionModal && (
+          <>
+            <motion.div
               onClick={handleDeleteVersionModal}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              exit={{ opacity: 0 }}
+              key="section-delete-backdrop"
+              className="fixed top-0 left-0 z-10 h-full w-full bg-neutral-900"
+            ></motion.div>
+            <motion.div
+              key="delete-version"
+              initial={{ opacity: 0, y: -100 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -400 }}
+              // ref={deleteVersionModalRef}
               className={
-                "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
+                "fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 lg:w-2/5 w-4/5  flex flex-col justify-between border rounded-xl z-10 py-6 px-6 " +
                 (currentTheme === "Light"
-                  ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
-                  : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
+                  ? "bg-white text-black border-gray-300"
+                  : "bg-neutral-800 text-white border-neutral-600")
               }
             >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
+              <span className="text-xl">
+                Are you sure you want to delete the selected section?
+              </span>
+              <div className="flex gap-4 justify-end">
+                <button
+                  onClick={handleDeleteVersion}
+                  className={
+                    "border-2 py-2 px-4 rounded-2xl cursor-pointer hover:scale-110 transition-transform " +
+                    (currentTheme === "Light"
+                      ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
+                      : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
+                  }
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={handleDeleteVersionModal}
+                  className={
+                    "border-2 py-2 px-4 rounded-2xl cursor-pointer hover:scale-110 transition-transform " +
+                    (currentTheme === "Light"
+                      ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
+                      : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
+                  }
+                >
+                  Cancel
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

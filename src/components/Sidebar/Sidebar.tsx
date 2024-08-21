@@ -11,6 +11,8 @@ import { useThemeContext } from "@/contexts/theme-context";
 import { useSidebarListContext } from "@/contexts/sidebarlist-context";
 import { useOnClickOutside } from "usehooks-ts";
 
+import { AnimatePresence, motion } from "framer-motion";
+
 interface SidebarProps {
   songs: Song[];
   setSongs: (newSongArray) => void;
@@ -183,45 +185,60 @@ export default function Sidebar({
           <SidebarSettings setSongs={setSongs} />
         </div>
       )}
-      {showSongDeleteModal && (
-        <div
-          ref={deleteSongModalRef}
-          className={
-            "fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 lg:w-2/5 w-4/5 flex flex-col justify-between border rounded-xl z-10 py-6 px-6 " +
-            (currentTheme === "Light"
-              ? "bg-white text-black border-gray-300"
-              : "bg-neutral-800 text-white border-neutral-600")
-          }
-        >
-          <span className="text-xl">
-            Are you sure you want to delete the selected song?
-          </span>
-          <div className="flex gap-4 justify-end">
-            <button
-              onClick={handleDeleteSong}
-              className={
-                "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
-                (currentTheme === "Light"
-                  ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
-                  : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
-              }
-            >
-              Yes
-            </button>
-            <button
+      <AnimatePresence>
+        {showSongDeleteModal && (
+          <>
+            <motion.div
               onClick={handleSongDeleteModal}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              exit={{ opacity: 0 }}
+              key="song-delete-backdrop"
+              className="fixed top-0 left-0 z-10 h-full w-full bg-neutral-900"
+            ></motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: -300 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -400 }}
+              // ref={deleteSongModalRef}
               className={
-                "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
+                "fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 lg:w-2/5 w-4/5 flex flex-col justify-between border rounded-xl z-10 py-6 px-6 " +
                 (currentTheme === "Light"
-                  ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
-                  : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
+                  ? "bg-white text-black border-gray-300"
+                  : "bg-neutral-800 text-white border-neutral-600")
               }
             >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
+              <span className="text-xl">
+                Are you sure you want to delete the selected song?
+              </span>
+              <div className="flex gap-4 justify-end">
+                <button
+                  onClick={handleDeleteSong}
+                  className={
+                    "border-2 py-2 px-4 rounded-2xl cursor-pointer hover:scale-110 transition-transform " +
+                    (currentTheme === "Light"
+                      ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
+                      : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
+                  }
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={handleSongDeleteModal}
+                  className={
+                    "border-2 py-2 px-4 rounded-2xl cursor-pointer hover:scale-110 transition-transform " +
+                    (currentTheme === "Light"
+                      ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
+                      : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
+                  }
+                >
+                  Cancel
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

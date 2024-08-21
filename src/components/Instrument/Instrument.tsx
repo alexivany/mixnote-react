@@ -11,6 +11,7 @@ import { useThemeContext } from "@/contexts/theme-context";
 import FeatureDropdown from "./FeatureDropdown";
 import { useCurrentVersionContext } from "@/contexts/currentversion-context";
 import { Version } from "@/types";
+import { AnimatePresence } from "framer-motion";
 
 export default function Instrument({ instrumentObject }) {
   const { currentTheme } = useThemeContext();
@@ -199,7 +200,7 @@ export default function Instrument({ instrumentObject }) {
         <div className="flex relative gap-2 justify-center items-center">
           {showDeleteWarning && (
             <>
-              <span className="text-sm font-semibold">
+              <span className="text-xs lg:text-sm whitespace-nowrap font-semibold">
                 Are you sure you want to delete this instrument?
               </span>
               <button
@@ -242,7 +243,8 @@ export default function Instrument({ instrumentObject }) {
               src="./src/assets/SVG/function-add-fill.svg"
               alt=""
               className={
-                "w-6 m-0 p-0 " + (currentTheme === "Dark" && "grayscale invert")
+                "w-6 m-0 p-0 cursor-pointer hover:scale-110 transition-transform " +
+                (currentTheme === "Dark" && "grayscale invert")
               }
               onClick={(e) => {
                 addInstrumentFeature(e);
@@ -323,7 +325,7 @@ export default function Instrument({ instrumentObject }) {
               <div
                 onMouseEnter={() => setShowAiOptions(true)}
                 onMouseLeave={() => setShowAiOptions(false)}
-                className={`absolute right-5 bottom-4 text-sm lg:text-md rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold cursor-pointer`}
+                className={`absolute right-5 hover:scale-105 transition-transform  bottom-4 text-sm lg:text-md rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold cursor-pointer`}
               >
                 {showAiOptions ? (
                   <>
@@ -371,17 +373,17 @@ export default function Instrument({ instrumentObject }) {
               </div>
             </div>
           )}
-
-          {showLyricModal && (
-            <LyricModal
-              modalRef={modalRef}
-              handleLyricModal={handleLyricModal}
-              setCurrentVersion={setCurrentVersion}
-              instrumentObject={instrumentObject}
-              aiOptionType={aiOptionType}
-            />
-          )}
-
+          <AnimatePresence>
+            {showLyricModal && (
+              <LyricModal
+                modalRef={modalRef}
+                handleLyricModal={handleLyricModal}
+                setCurrentVersion={setCurrentVersion}
+                instrumentObject={instrumentObject}
+                aiOptionType={aiOptionType}
+              />
+            )}
+          </AnimatePresence>
           {(currentInstrument.instrument.match(/drums?/i) ||
             addedFeatures.includes("drumMachine")) && (
             <DrumMachine instrumentToTab={currentInstrument.instrument} />

@@ -6,6 +6,7 @@ import OpenAI from "openai";
 import { Modal, Version, InstrumentData } from "../../types";
 import { useApiContext } from "../../contexts/api-context";
 import { useThemeContext } from "@/contexts/theme-context";
+import { motion } from "framer-motion";
 
 interface LyricModalProps {
   modalRef: React.RefObject<HTMLDivElement>;
@@ -48,7 +49,6 @@ export default function LyricModal({
 
   const generateLyrics = async (e) => {
     e.preventDefault();
-    console.log(e);
     if (
       lyricModalInput.about !== "" &&
       lyricModalInput.section !== "" &&
@@ -134,188 +134,212 @@ export default function LyricModal({
   });
 
   return (
-    <div
-      ref={modalRef}
-      className={
-        "absolute top-1/2 gap-4  self-center font-semibold m-auto w-4/5 flex flex-col justify-between border rounded-xl z-10 p-6 " +
-        (currentTheme === "Light"
-          ? "border-gray-300 bg-white"
-          : "bg-neutral-800 border-neutral-600")
-      }
-    >
-      {aiOptionType === "edit" && (
-        <>
-          <span className="text-xl">What is your song about?</span>
-          <input
-            autoFocus
-            value={lyricModalInput.about}
-            onChange={handleModalInputChange}
-            // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
-            type="text"
-            name="about"
-            className={
-              "max-w-full font-normal mb-2 border px-2 rounded-lg " +
-              (currentTheme === "Light"
-                ? "bg-white border-gray-300"
-                : "bg-neutral-800 border-neutral-600")
-            }
-          ></input>
-          <div className="grid grid-cols-4 grid-rows-1 gap-6 items-end">
-            <div className="flex flex-col gap-2">
-              <span className="text-md">
-                How many lines do you want generated?
-              </span>
-              <input
-                value={lyricModalInput.lines}
-                onChange={handleModalInputChange}
-                // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
-                type="number"
-                name="lines"
-                min="1"
-                max="99"
-                className={
-                  "max-w-full font-normal mb-2 border px-2 rounded-lg " +
-                  (currentTheme === "Light"
-                    ? "bg-white border-gray-300"
-                    : "bg-neutral-800 border-neutral-600")
-                }
-              ></input>
-            </div>
-            <div className="flex flex-col gap-2">
-              <span className="text-md">
-                What section of your song is this for?
-              </span>
-              <input
-                value={lyricModalInput.section}
-                onChange={handleModalInputChange}
-                // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
-                type="text"
-                list="sections"
-                name="section"
-                className={
-                  "max-w-full font-normal mb-2 border px-2 rounded-lg " +
-                  (currentTheme === "Light"
-                    ? "bg-white border-gray-300"
-                    : "bg-neutral-800 border-neutral-600")
-                }
-              ></input>
-            </div>
-            <div className="flex flex-col gap-2">
-              <span className="text-md">
-                What is the feeling or mood of the song?
-              </span>
-              <input
-                value={lyricModalInput.mood}
-                onChange={handleModalInputChange}
-                // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
-                type="text"
-                name="mood"
-                className={
-                  "max-w-full font-normal mb-2 border px-2 rounded-lg " +
-                  (currentTheme === "Light"
-                    ? "bg-white border-gray-300"
-                    : "bg-neutral-800 border-neutral-600")
-                }
-              ></input>
-            </div>
-            <div className="flex flex-col gap-2">
-              <span className="text-md">
-                How poetic should the lyrics be? (10 being the most poetic)
-              </span>
-              <input
-                value={lyricModalInput.poetic}
-                onChange={handleModalInputChange}
-                // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
-                type="number"
-                name="poetic"
-                min="0"
-                max="10"
-                className={
-                  "max-w-full font-normal mb-2 border px-2 rounded-lg " +
-                  (currentTheme === "Light"
-                    ? "bg-white border-gray-300"
-                    : "bg-neutral-800 border-neutral-600")
-                }
-              ></input>
-            </div>
-          </div>
-        </>
-      )}
-
-      <span className="text-lg">Please enter your OpenAI API Key</span>
-      <input
-        value={apiKey}
-        onChange={(e) => setApiKey(e.target.value)}
-        // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
-        type="text"
-        name="api-key"
-        min="1"
-        max="99"
+    <>
+      <motion.div
+        onClick={handleLyricModal}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.6 }}
+        exit={{ opacity: 0 }}
+        key="new-song-backdrop"
+        className="fixed top-0 left-0 z-10 h-full w-full bg-neutral-900"
+      ></motion.div>
+      <motion.div
+        initial={{ opacity: 0, x: 300 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: 400 }}
+        // ref={modalRef}
         className={
-          "max-w-full font-normal mb-2 border  px-2 rounded-lg " +
+          "fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 lg:w-3/5 w-4/5 flex flex-col justify-between border  rounded-xl z-10 py-6 px-6 " +
           (currentTheme === "Light"
-            ? "bg-white border-gray-300"
+            ? "border-gray-300 bg-white"
             : "bg-neutral-800 border-neutral-600")
         }
-      ></input>
-
-      <div className="flex gap-4 justify-end items-center">
-        {modalWarning && (
-          <div className="flex gap-2 justify-between items-center">
-            <span className="font-semibold text-md ml-2">
-              {modalWarningText}
-            </span>
-            <img
-              src="./src/assets/SVG/loader-4-line.svg"
-              alt=""
+      >
+        {aiOptionType === "edit" && (
+          <>
+            <span className="text-xl">What is your song about?</span>
+            <input
+              autoFocus
+              value={lyricModalInput.about}
+              onChange={handleModalInputChange}
+              // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
+              type="text"
+              name="about"
               className={
-                "animate-spin w-6 m-0 p-0 " +
-                (currentTheme === "Dark" && "grayscale invert")
+                "max-w-full font-normal mb-2 border px-2 rounded-lg " +
+                (currentTheme === "Light"
+                  ? "bg-white border-gray-300"
+                  : "bg-neutral-800 border-neutral-600")
               }
-            />
-          </div>
+            ></input>
+            <div className="grid grid-cols-4 grid-rows-1 gap-6 items-end">
+              <div className="flex flex-col gap-2">
+                <span className="text-md">
+                  How many lines do you want generated?
+                </span>
+                <input
+                  value={lyricModalInput.lines}
+                  onChange={handleModalInputChange}
+                  // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
+                  type="number"
+                  name="lines"
+                  min="1"
+                  max="99"
+                  className={
+                    "max-w-full font-normal mb-2 border px-2 rounded-lg " +
+                    (currentTheme === "Light"
+                      ? "bg-white border-gray-300"
+                      : "bg-neutral-800 border-neutral-600")
+                  }
+                ></input>
+              </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-md">
+                  What section of your song is this for?
+                </span>
+                <input
+                  value={lyricModalInput.section}
+                  onChange={handleModalInputChange}
+                  // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
+                  type="text"
+                  list="sections"
+                  name="section"
+                  className={
+                    "max-w-full font-normal mb-2 border px-2 rounded-lg " +
+                    (currentTheme === "Light"
+                      ? "bg-white border-gray-300"
+                      : "bg-neutral-800 border-neutral-600")
+                  }
+                ></input>
+              </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-md">
+                  What is the feeling or mood of the song?
+                </span>
+                <input
+                  value={lyricModalInput.mood}
+                  onChange={handleModalInputChange}
+                  // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
+                  type="text"
+                  name="mood"
+                  className={
+                    "max-w-full font-normal mb-2 border px-2 rounded-lg " +
+                    (currentTheme === "Light"
+                      ? "bg-white border-gray-300"
+                      : "bg-neutral-800 border-neutral-600")
+                  }
+                ></input>
+              </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-md">
+                  How poetic should the lyrics be? (10 being the most poetic)
+                </span>
+                <input
+                  value={lyricModalInput.poetic}
+                  onChange={handleModalInputChange}
+                  // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
+                  type="number"
+                  name="poetic"
+                  min="0"
+                  max="10"
+                  className={
+                    "max-w-full font-normal mb-2 border px-2 rounded-lg " +
+                    (currentTheme === "Light"
+                      ? "bg-white border-gray-300"
+                      : "bg-neutral-800 border-neutral-600")
+                  }
+                ></input>
+              </div>
+            </div>
+          </>
         )}
-        <button
-          onClick={(e) => {
-            if (aiOptionType === "auto") {
-              setLyricModalInput({
-                about: "A catchy pop song",
-                lines: 8,
-                section: "Verse",
-                mood: "Neutral",
-                poetic: 6,
-              });
+
+        <span className="text-lg">Please enter your OpenAI API Key</span>
+        <input
+          value={apiKey}
+          onChange={(e) => setApiKey(e.target.value)}
+          // onKeyDown={(e) => e.key === "Enter" && addNewSong()}
+          type="text"
+          name="api-key"
+          min="1"
+          max="99"
+          className={
+            "max-w-full font-normal mb-2 border  px-2 rounded-lg " +
+            (currentTheme === "Light"
+              ? "bg-white border-gray-300"
+              : "bg-neutral-800 border-neutral-600")
+          }
+        ></input>
+
+        <div className="flex gap-4 justify-end items-center">
+          {modalWarning && (
+            <div className="flex gap-2 justify-between items-center">
+              <span className="font-semibold text-md ml-2">
+                {modalWarningText}
+              </span>
+              <img
+                src="./src/assets/SVG/loader-4-line.svg"
+                alt=""
+                className={
+                  "animate-spin w-6 m-0 p-0 " +
+                  (currentTheme === "Dark" && "grayscale invert")
+                }
+              />
+            </div>
+          )}
+          <button
+            onClick={(e) => {
+              if (aiOptionType === "auto") {
+                if (!instrumentObject.lyrics?.match(/^\s*$/)) {
+                  setLyricModalInput({
+                    about: `${instrumentObject.lyrics}`,
+                    lines: 8,
+                    section: "Verse",
+                    mood: "Neutral",
+                    poetic: 6,
+                  });
+                } else {
+                  console.log("new lyrics");
+                  setLyricModalInput({
+                    about: "A catchy pop song",
+                    lines: 8,
+                    section: "Verse",
+                    mood: "Neutral",
+                    poetic: 6,
+                  });
+                }
+              }
+              generateLyrics(e);
+            }}
+            className={
+              "border-2 py-2 px-4 rounded-2xl cursor-pointer hover:scale-110 transition-transform " +
+              (currentTheme === "Light"
+                ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
+                : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
             }
-            generateLyrics(e);
-          }}
-          className={
-            "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
-            (currentTheme === "Light"
-              ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
-              : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
-          }
-        >
-          Generate
-        </button>
-        <button
-          onClick={handleLyricModal}
-          className={
-            "border-2 py-2 px-4 rounded-2xl cursor-pointer " +
-            (currentTheme === "Light"
-              ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
-              : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
-          }
-        >
-          Cancel
-        </button>
-      </div>
-      <datalist id="sections">
-        <option value="Verse"></option>
-        <option value="Pre-chorus"></option>
-        <option value="Chorus"></option>
-        <option value="Post-chorus"></option>
-        <option value="Bridge"></option>
-      </datalist>
-    </div>
+          >
+            Generate
+          </button>
+          <button
+            onClick={handleLyricModal}
+            className={
+              "border-2 py-2 px-4 rounded-2xl cursor-pointer hover:scale-110 transition-transform " +
+              (currentTheme === "Light"
+                ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
+                : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
+            }
+          >
+            Cancel
+          </button>
+        </div>
+        <datalist id="sections">
+          <option value="Verse"></option>
+          <option value="Pre-chorus"></option>
+          <option value="Chorus"></option>
+          <option value="Post-chorus"></option>
+          <option value="Bridge"></option>
+        </datalist>
+      </motion.div>
+    </>
   );
 }

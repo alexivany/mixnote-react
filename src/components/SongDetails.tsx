@@ -51,6 +51,7 @@ export default function SongDetails({
             tags: [...(prevSongData?.tags ?? []), e.target.value],
           } as Song;
         });
+        setTagInputToggle(false);
       } else {
         setCurrentSong((prevSongData) => {
           return {
@@ -100,7 +101,7 @@ export default function SongDetails({
         <button
           onClick={handleTagInput}
           id="tag-add-button"
-          className="border-2 border-gray-400 rounded-2xl py-1 px-2 text-xs  whitespace-nowrap font-semibold text-gray-400 cursor-pointer"
+          className="border-2 h-7 hover:scale-105 transition-transform border-gray-400 rounded-2xl py-1 px-2 text-xs  whitespace-nowrap font-semibold text-gray-400 cursor-pointer"
         >
           {tagInputToggle ? (
             <input
@@ -136,7 +137,7 @@ export default function SongDetails({
               placeholder="Key"
               maxLength={8}
               className={
-                "text-gray-400 border-0 w-16 font-semibold focus:outline-none focus:border-b-2 focus:border-gray-400 " +
+                "text-gray-400 w-24 border-0  font-semibold focus:outline-none focus:border-b-2 focus:border-gray-400 " +
                 (currentTheme === "Light" ? "" : "bg-neutral-800")
               }
             />

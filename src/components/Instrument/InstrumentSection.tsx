@@ -112,7 +112,7 @@ E|------------------------------------------------------------------------------
           onChange={(e) => setNewInstrumentInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleNewInstrument()}
           className={
-            "border rounded-lg p-2 " +
+            "border rounded-lg p-2 w-full md:w-auto " +
             (currentTheme === "Light"
               ? "border-gray-300 "
               : "bg-neutral-800 border-neutral-600")
@@ -124,7 +124,7 @@ E|------------------------------------------------------------------------------
         <button
           onClick={handleNewInstrument}
           className={
-            `border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor} px-4 py-2 font-semibold text-sm lg:text-base cursor-pointer ` +
+            `border-2 rounded-2xl hover:scale-105 transition-transform whitespace-nowrap ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor} px-4 py-2 font-semibold text-sm lg:text-base cursor-pointer ` +
             (currentTheme === "Dark"
               ? " hover:bg-neutral-800 "
               : " hover:bg-white ") +

@@ -199,7 +199,7 @@ D|------------------------------------------------------------------------------
         <button
           onClick={handleAddRow}
           className={
-            `border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor}  ${currentVersion?.theme?.hoverColor} px-4 py-2 font-semibold  text-sm lg:text-md cursor-pointer ` +
+            `border-2 rounded-2xl hover:scale-105 transition-transform  ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor}  ${currentVersion?.theme?.hoverColor} px-4 py-2 font-semibold  text-sm lg:text-md cursor-pointer ` +
             (currentTheme === "Dark"
               ? " hover:bg-neutral-800 "
               : " hover:bg-white ") +
@@ -213,7 +213,7 @@ D|------------------------------------------------------------------------------
         <button
           onClick={handleClearTab}
           className={
-            `border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor} px-4 py-2 font-semibold text-sm lg:text-md cursor-pointer ` +
+            `border-2 rounded-2xl hover:scale-105 transition-transform  ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor} px-4 py-2 font-semibold text-sm lg:text-md cursor-pointer ` +
             (currentTheme === "Dark"
               ? " hover:bg-neutral-800 "
               : " hover:bg-white ") +
@@ -226,7 +226,7 @@ D|------------------------------------------------------------------------------
         </button>
         <a
           className={
-            `border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor} px-4 py-2 font-semibold text-sm lg:text-md cursor-pointer ` +
+            `border-2 rounded-2xl hover:scale-105 transition-transform ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor} px-4 py-2 font-semibold text-sm lg:text-md cursor-pointer ` +
             (currentTheme === "Dark"
               ? " hover:bg-neutral-800 "
               : " hover:bg-white ") +

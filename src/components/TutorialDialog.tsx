@@ -66,7 +66,7 @@ export default function TutorialDialog({ setSongs }: TutorialDialogProps) {
                 <div className="bg-neutral-700 px-4 py-3 flex justify-center sm:flex-row-reverse sm:px-6">
                   <button
                     onClick={handleSongModal}
-                    className={`border-2 rounded-2xl bg-neutral-500 text-gray-100 border-2 px-4 py-2 font-semibold text-sm lg:text-base border-neutral-500 cursor-pointer border-neutral-700 hover:bg-neutral-600 hover:border-neutral-600 `}
+                    className={`hover:scale-110 transition border-2 rounded-2xl bg-neutral-500 text-gray-100 border-2 px-4 py-2 font-semibold text-sm lg:text-base border-neutral-500 cursor-pointer border-neutral-700 hover:bg-neutral-600 hover:border-neutral-600 `}
                   >
                     Create New Song
                   </button>

@@ -61,6 +61,12 @@ body::-webkit-scrollbar-thumb:hover {
   }
 }
 
+@media only screen and (max-width: 640px) {
+  #bpm-slider {
+    width: 6rem;
+  }
+}
+
 #bpm-slider::-webkit-slider-runnable-track {
   background: #e4e4e7;
   border-radius: 1rem;
