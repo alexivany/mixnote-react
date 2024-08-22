@@ -494,11 +494,11 @@ E|------------------------------------------------------------------------------
           </>
         )}
 
-        <div className="flex gap-4 justify-between">
+        <div className="flex gap-2 md:gap-4 justify-between">
           <button
             onClick={() => setShowSongAiOptions((prevState) => !prevState)}
             className={
-              "border-2 py-2 px-4 rounded-2xl cursor-pointer hover:opacity-100  hover:scale-110 transition-transform " +
+              "border-2 py-2 px-2 text-xs md:text-md md:py-2 md:px-4  rounded-2xl cursor-pointer hover:opacity-100  hover:scale-110 transition-transform " +
               (currentTheme === "Light"
                 ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200 "
                 : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500 ") +
@@ -515,7 +515,7 @@ E|------------------------------------------------------------------------------
             />
           </button>
 
-          <div className="flex gap-4">
+          <div className="flex gap-2 md:gap-4">
             {modalWarning && (
               <div className="flex gap-2 justify-between items-center">
                 <span className="font-semibold text-md ml-2">
@@ -540,7 +540,7 @@ E|------------------------------------------------------------------------------
                 isRecording && setIsHoveredOnRecordingButton(false)
               }
               className={
-                "border-2 py-2 px-4 rounded-2xl cursor-pointer hover:opacity-100 group hover:scale-110 transition-transform " +
+                "border-2 py-2 px-2 text-xs md:text-md md:py-2 md:px-4 rounded-2xl cursor-pointer hover:opacity-100 group hover:scale-110 transition-transform " +
                 (currentTheme === "Light"
                   ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200 "
                   : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500 ")
@@ -580,7 +580,7 @@ E|------------------------------------------------------------------------------
                 showSongAiOptions ? generateUI() : addNewSong();
               }}
               className={
-                "border-2 py-2 px-4 rounded-2xl cursor-pointer hover:scale-110 transition-transform " +
+                "border-2 py-2 px-3 text-xs md:text-md md:py-2 md:px-4  rounded-2xl cursor-pointer hover:scale-110 transition-transform " +
                 (currentTheme === "Light"
                   ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
                   : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
@@ -591,7 +591,7 @@ E|------------------------------------------------------------------------------
             <button
               onClick={handleSongModalReset}
               className={
-                "border-2 py-2 px-4 rounded-2xl cursor-pointer hover:scale-110 transition-transform " +
+                "border-2 py-2 px-3 text-xs md:text-md md:py-2 md:px-4 rounded-2xl cursor-pointer hover:scale-110 transition-transform " +
                 (currentTheme === "Light"
                   ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
                   : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")

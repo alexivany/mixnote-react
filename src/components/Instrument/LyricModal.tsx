@@ -157,7 +157,7 @@ export default function LyricModal({
       >
         {aiOptionType === "edit" && (
           <>
-            <span className="text-xl">What is your song about?</span>
+            <span className="text-md md:text-xl">What is your song about?</span>
             <input
               autoFocus
               value={lyricModalInput.about}
@@ -172,9 +172,9 @@ export default function LyricModal({
                   : "bg-neutral-800 border-neutral-600")
               }
             ></input>
-            <div className="grid grid-cols-4 grid-rows-1 gap-6 items-end">
+            <div className="grid grid-cols-2 grid-rows-2 md:grid-cols-4 md:grid-rows-1 gap-6 items-end">
               <div className="flex flex-col gap-2">
-                <span className="text-md">
+                <span className="text-xs md:text-md">
                   How many lines do you want generated?
                 </span>
                 <input
@@ -194,7 +194,7 @@ export default function LyricModal({
                 ></input>
               </div>
               <div className="flex flex-col gap-2">
-                <span className="text-md">
+                <span className="text-xs md:text-md">
                   What section of your song is this for?
                 </span>
                 <input
@@ -213,7 +213,7 @@ export default function LyricModal({
                 ></input>
               </div>
               <div className="flex flex-col gap-2">
-                <span className="text-md">
+                <span className="text-xs md:text-md">
                   What is the feeling or mood of the song?
                 </span>
                 <input
@@ -231,7 +231,7 @@ export default function LyricModal({
                 ></input>
               </div>
               <div className="flex flex-col gap-2">
-                <span className="text-md">
+                <span className="text-xs md:text-md">
                   How poetic should the lyrics be? (10 being the most poetic)
                 </span>
                 <input
@@ -254,7 +254,9 @@ export default function LyricModal({
           </>
         )}
 
-        <span className="text-lg">Please enter your OpenAI API Key</span>
+        <span className="text-sm md:text-lg">
+          Please enter your OpenAI API Key
+        </span>
         <input
           value={apiKey}
           onChange={(e) => setApiKey(e.target.value)}

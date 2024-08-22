@@ -34,7 +34,7 @@ export default function TutorialDialog({ setSongs }: TutorialDialogProps) {
         )}
         {!showSongModal && (
           <div className="fixed inset-0 z-10 w-screen  overflow-y-auto">
-            <div className="flex min-h-full items-end border-neutral-600 rounded-lg justify-center p-4 text-center sm:items-center sm:p-0">
+            <div className="flex min-h-full items-center border-neutral-600 rounded-lg justify-center p-4 text-center sm:items-center sm:p-0">
               <div className="relative transform overflow-hidden border-2 border-neutral-600 rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <div className="bg-neutral-800 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                   <div className="sm:flex sm:items-start">
