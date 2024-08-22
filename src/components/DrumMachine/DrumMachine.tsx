@@ -230,7 +230,7 @@ export default function DrumMachine({ instrumentToTab }) {
         }
       >
         <div className="grid grid-cols-9 grid-rows-2 lg:grid-rows-1 lg:grid-cols-16 gap-3 lg:gap-1 justify-items-center items-center">
-          <span className="col-span-1 lg:row-span-1 row-span-3 font-semibold"></span>
+          <span className="col-span-1 lg:row-span-1 row-span-3  font-semibold"></span>
           {indicators &&
             indicators.map((_, i) => {
               return (

@@ -127,23 +127,23 @@ export default function Sidebar({
       }
     >
       <div className="flex justify-between items-center border-b border-gray-300">
-        <h1 className="font-medium text-2xl">MixNote</h1>
-        <div className="flex">
+        <div className="flex gap-2">
+          <h1 className="font-medium text-2xl">MixNote</h1>
           <img
             src="/SVG/music-slider.svg"
             alt=""
             className={"w-6 " + (currentTheme === "Dark" && "grayscale invert")}
           />
-          <img
-            src="/SVG/hamburger.svg"
-            className={
-              "w-6 inline lg:hidden " +
-              (currentTheme === "Dark" && "grayscale invert")
-            }
-            onClick={() => setShowSidebarList((prevState) => !prevState)}
-            alt=""
-          />
         </div>
+        <img
+          src="/SVG/hamburger.svg"
+          className={
+            "w-6 inline lg:hidden cursor-pointer hover:scale-125 transition-transform  " +
+            (currentTheme === "Dark" && "grayscale invert")
+          }
+          onClick={() => setShowSidebarList((prevState) => !prevState)}
+          alt=""
+        />
       </div>
       {showWarning && <span className="ml-2 font-semibold">{warningText}</span>}
       {showSidebarList && (
