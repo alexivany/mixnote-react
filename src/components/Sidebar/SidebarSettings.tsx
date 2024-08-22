@@ -16,6 +16,7 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
   const { currentTheme, setCurrentTheme } = useThemeContext();
 
   const [showSongModal, setShowSongModal] = useState<boolean>(false);
+  const [showAboutModal, setShowAboutModal] = useState<boolean>(false);
 
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
 
@@ -27,6 +28,10 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
 
   function handleSongModal() {
     setShowSongModal((prevState) => !prevState);
+  }
+
+  function handleAboutModal() {
+    setShowAboutModal((prevState) => !prevState);
   }
 
   function handleSettingsModal() {
@@ -93,6 +98,7 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
         Preferences
       </button>
       <button
+        onClick={handleAboutModal}
         className={
           "flex gap-4 text-sm md:text-lg items-center hover:bg-gray-50 hover:font-semibold hover:rounded-2xl hover:scale-110 transition-transform hover:outline hover:outline-4 hover:outline-gray-50 group " +
           (currentTheme === "Dark" && "hover:text-black")
@@ -175,6 +181,65 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
               <div className="flex gap-4 justify-end">
                 <button
                   onClick={handleSettingsModal}
+                  className={
+                    "border-2 py-2 px-4 rounded-2xl cursor-pointer hover:scale-110 transition-transform " +
+                    (currentTheme === "Light"
+                      ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200"
+                      : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500")
+                  }
+                >
+                  OK
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showAboutModal && (
+          <>
+            <motion.div
+              onClick={handleAboutModal}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              exit={{ opacity: 0 }}
+              key="settings-backdrop"
+              className="fixed top-0 left-0 z-10 h-full w-full bg-neutral-900"
+            ></motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: -300 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -400 }}
+              // ref={settingsModalRef}
+              className={
+                "fixed top-1/4 left-0 gap-4 font-semibold m-auto right-0 lg:w-2/5 w-4/5  flex flex-col justify-between border rounded-xl z-10 py-6 px-6 " +
+                (currentTheme === "Light"
+                  ? "bg-white text-black border-gray-300"
+                  : "bg-neutral-800 text-white border-neutral-600")
+              }
+            >
+              <div className="mt-2 flex flex-col gap-2">
+                <div className="video-responsive">
+                  <iframe
+                    src="https://www.youtube.com/embed/AKB5SEuHcoU?si=SB5pei7-FCi9Xqyr"
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                </div>
+                <p className="text-sm  align-center mt-2 text-center">
+                  MixNote is a songwriting journal made by musicians, for
+                  musicians, to help with every step of your creative process.
+                </p>
+                <p className="text-sm  align-center mt-2 text-center">
+                  Contact: ivany.world@gmail.com
+                </p>
+              </div>
+              <div className="flex gap-4 justify-center">
+                <button
+                  onClick={handleAboutModal}
                   className={
                     "border-2 py-2 px-4 rounded-2xl cursor-pointer hover:scale-110 transition-transform " +
                     (currentTheme === "Light"

@@ -290,7 +290,7 @@ export default function DrumMachine({ instrumentToTab }) {
             <div className="flex p-2 gap-2">
               <button
                 className={
-                  ` text-sm lg:text-md rounded-2xl border-2 ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor} p-1 lg:px-3 lg:py-2 font-semibold cursor-pointer ` +
+                  ` text-sm lg:text-md rounded-2xl border-2 hover:scale-110 transition-transform ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor} p-1 lg:px-3 lg:py-2 font-semibold cursor-pointer ` +
                   (currentTheme === "Dark"
                     ? " hover:bg-neutral-800 "
                     : " hover:bg-white ") +
@@ -305,7 +305,7 @@ export default function DrumMachine({ instrumentToTab }) {
               <button
                 onClick={stopSeq}
                 className={
-                  ` text-sm lg:text-md rounded-2xl border-2 ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor} p-1 lg:px-3 lg:py-2 font-semibold cursor-pointer ` +
+                  ` text-sm lg:text-md rounded-2xl border-2 hover:scale-110 transition-transform  ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor} p-1 lg:px-3 lg:py-2 font-semibold cursor-pointer ` +
                   (currentTheme === "Dark"
                     ? " hover:bg-neutral-800 "
                     : " hover:bg-white ") +
@@ -319,7 +319,7 @@ export default function DrumMachine({ instrumentToTab }) {
               <button
                 onClick={clearSeq}
                 className={
-                  ` text-sm lg:text-md rounded-2xl border-2 ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor}  p-1 lg:px-3 lg:py-2 font-semibold cursor-pointer ` +
+                  ` text-sm lg:text-md rounded-2xl border-2 hover:scale-110 transition-transform ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} ${currentVersion?.theme?.hoverColor}  p-1 lg:px-3 lg:py-2 font-semibold cursor-pointer ` +
                   (currentTheme === "Dark"
                     ? " hover:bg-neutral-800 "
                     : " hover:bg-white ") +

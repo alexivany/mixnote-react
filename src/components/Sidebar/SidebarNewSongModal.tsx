@@ -47,7 +47,7 @@ export default function SidebarNewSongModal({
 
   const recognitionRef = useRef<SpeechRecognition>();
   const [isRecording, setIsRecording] = useState<boolean>(false);
-  const [isSpeechDetected, setIsSpeechDetected] = useState<boolean>(false);
+  // const [isSpeechDetected, setIsSpeechDetected] = useState<boolean>(false);
   const [isHoveredOnRecordingButton, setIsHoveredOnRecordingButton] =
     useState<boolean>(false);
 
@@ -67,10 +67,10 @@ export default function SidebarNewSongModal({
     recognitionRef.current.onaudiostart = () => {};
 
     recognitionRef.current.onspeechstart = () => {
-      setIsSpeechDetected(true);
+      // setIsSpeechDetected(true);
     };
     recognitionRef.current.onspeechend = () => {
-      setIsSpeechDetected(false);
+      // setIsSpeechDetected(false);
     };
     recognitionRef.current.onstart = () => {
       setIsRecording(true);
@@ -540,7 +540,7 @@ E|------------------------------------------------------------------------------
                 isRecording && setIsHoveredOnRecordingButton(false)
               }
               className={
-                "border-2 py-2 px-4 rounded-2xl cursor-pointer hover:opacity-100  hover:scale-110 transition-transform " +
+                "border-2 py-2 px-4 rounded-2xl cursor-pointer hover:opacity-100 group hover:scale-110 transition-transform " +
                 (currentTheme === "Light"
                   ? "bg-gray-100 border-gray-100 hover:bg-gray-200 hover:bg-gray-200 "
                   : "bg-neutral-700 border-neutral-700 hover:bg-neutral-500 hover:border-neutral-500 ")
@@ -552,10 +552,7 @@ E|------------------------------------------------------------------------------
                     <img
                       src="./src/assets/SVG/stop-fill.svg"
                       alt=""
-                      className={
-                        "w-5 m-0 p-0 animate-pulse " +
-                        (currentTheme === "Light" ? "invert-0 " : "invert ")
-                      }
+                      className={"w-5 m-0 p-0 animate-pulse "}
                     />
                   ) : (
                     <img
@@ -572,7 +569,7 @@ E|------------------------------------------------------------------------------
                   src="./src/assets/SVG/microphone.svg"
                   alt=""
                   className={
-                    "w-5 m-0 p-0 grayscale  " +
+                    "w-5 m-0 p-0 grayscale opacity-40 group-hover:opacity-100 " +
                     (currentTheme === "Light" ? "invert-0 " : "invert ")
                   }
                 />

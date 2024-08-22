@@ -137,8 +137,10 @@ export default function TextEditor({ objectKey, noteToLoad }) {
         (editor?.isFocused && "outline-2 outline-gray-500 ")
       }
     >
-      {editor && showMenuBar && <MenuBar editor={editor} />}
-      <EditorContent editor={editor} />
+      <div className="w-5/6 md:w-11/12">
+        {editor && showMenuBar && <MenuBar editor={editor} />}
+        <EditorContent editor={editor} />
+      </div>
     </div>
   );
 }
