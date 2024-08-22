@@ -119,7 +119,7 @@
   color: #0d0d0d;
   display: flex;
   flex-direction: column;
-  max-height: 26rem;
+  min-height: 26rem;
 
   &__header {
     align-items: center;

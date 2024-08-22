@@ -113,7 +113,7 @@ export default function MenuBar({ editor }: { editor: Editor }) {
   ];
 
   return (
-    <div className="absolute mt-negrem3 ml-negrem1">
+    <div className="absolute mt-negrem5 md:mt-negrem3 ml-negrem1">
       <div className="editor__header">
         {items.map((item, index) => (
           <Fragment key={index}>

@@ -137,7 +137,7 @@ export default function SongDetails({
               placeholder="Key"
               maxLength={8}
               className={
-                "text-gray-400 w-24 border-0  font-semibold focus:outline-none focus:border-b-2 focus:border-gray-400 " +
+                "text-gray-400 w-20 md:w-24 border-0  text-xs md:text-md  font-semibold focus:outline-none focus:border-b-2 focus:border-gray-400 " +
                 (currentTheme === "Light" ? "" : "bg-neutral-800")
               }
             />
@@ -152,7 +152,7 @@ export default function SongDetails({
               placeholder="BPM"
               maxLength={6}
               className={
-                "text-gray-400 border-0 w-12 font-semibold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:outline-none focus:border-b-2 focus:border-gray-400 " +
+                "text-gray-400 border-0 w-12 font-semibold text-xs md:text-md [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:outline-none focus:border-b-2 focus:border-gray-400 " +
                 (currentTheme === "Light" ? "bg-white" : "bg-neutral-800")
               }
             />

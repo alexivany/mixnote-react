@@ -27,6 +27,7 @@ module.exports = {
         },
       },
       margin: {
+        negrem5: "-5rem",
         negrem3: "-3rem",
         negrem1: "-0.5rem",
       },

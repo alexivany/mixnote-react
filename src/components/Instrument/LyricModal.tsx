@@ -47,8 +47,8 @@ export default function LyricModal({
     });
   }
 
-  const generateLyrics = async (e) => {
-    e.preventDefault();
+  const generateLyrics = async () => {
+    // e.preventDefault();
     if (
       lyricModalInput.about !== "" &&
       lyricModalInput.section !== "" &&
@@ -290,7 +290,7 @@ export default function LyricModal({
             </div>
           )}
           <button
-            onClick={(e) => {
+            onClick={() => {
               if (aiOptionType === "auto") {
                 if (!instrumentObject.lyrics?.match(/^\s*$/)) {
                   setLyricModalInput({
@@ -311,7 +311,7 @@ export default function LyricModal({
                   });
                 }
               }
-              generateLyrics(e);
+              generateLyrics();
             }}
             className={
               "border-2 py-2 px-4 rounded-2xl cursor-pointer hover:scale-110 transition-transform " +
