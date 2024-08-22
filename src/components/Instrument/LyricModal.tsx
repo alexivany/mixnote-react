@@ -278,7 +278,7 @@ export default function LyricModal({
                 {modalWarningText}
               </span>
               <img
-                src="./src/assets/SVG/loader-4-line.svg"
+                src="/SVG/loader-4-line.svg"
                 alt=""
                 className={
                   "animate-spin w-6 m-0 p-0 " +

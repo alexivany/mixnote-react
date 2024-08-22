@@ -130,12 +130,12 @@ export default function Sidebar({
         <h1 className="font-medium text-2xl">MixNote</h1>
         <div className="flex">
           <img
-            src="./src/assets/SVG/music-slider.svg"
+            src="/SVG/music-slider.svg"
             alt=""
             className={"w-6 " + (currentTheme === "Dark" && "grayscale invert")}
           />
           <img
-            src="./src/assets/SVG/hamburger.svg"
+            src="/SVG/hamburger.svg"
             className={
               "w-6 inline lg:hidden " +
               (currentTheme === "Dark" && "grayscale invert")

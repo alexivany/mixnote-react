@@ -95,7 +95,7 @@ export default function SongHeader({
           <div className="flex">
             {currentVersion?.version === value.version && (
               <img
-                src="./src/assets/SVG/pencil-fill.svg"
+                src="/SVG/pencil-fill.svg"
                 id="song-title-edit"
                 alt=""
                 className={
@@ -110,7 +110,7 @@ export default function SongHeader({
 
             {currentVersion?.version === value.version && (
               <img
-                src="./src/assets/SVG/cross.svg"
+                src="/SVG/cross.svg"
                 id="song-title-cross"
                 alt=""
                 className={
@@ -322,7 +322,7 @@ export default function SongHeader({
           />
           {showTitleCross && (
             <img
-              src="./src/assets/SVG/cross.svg"
+              src="/SVG/cross.svg"
               id="song-title-cross"
               alt=""
               className={
@@ -340,7 +340,7 @@ export default function SongHeader({
             className={`border ${currentVersion?.theme?.borderColor} group p-2 rounded-t-2xl h-9 ${currentVersion?.theme?.bgColor}`}
           >
             <img
-              src="./src/assets/SVG/plus.svg"
+              src="/SVG/plus.svg"
               alt=""
               className={
                 "w-5 group-hover:scale-125 transition-transform " +

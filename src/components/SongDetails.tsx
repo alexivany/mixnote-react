@@ -161,7 +161,7 @@ export default function SongDetails({
         <div className="flex h-7">
           <img
             id="red-blob"
-            src="./src/assets/SVG/blobs/red-blob.svg"
+            src="/SVG/blobs/red-blob.svg"
             alt=""
             className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             data-bgcolor="bg-red-500"
@@ -173,7 +173,7 @@ export default function SongDetails({
           />
           <img
             id="orange-blob"
-            src="./src/assets/SVG/blobs/orange-blob.svg"
+            src="/SVG/blobs/orange-blob.svg"
             alt=""
             className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             data-bgcolor="bg-orange-500"
@@ -185,7 +185,7 @@ export default function SongDetails({
           />
           <img
             id="yellow-blob"
-            src="./src/assets/SVG/blobs/yellow-blob.svg"
+            src="/SVG/blobs/yellow-blob.svg"
             alt=""
             className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             data-bgcolor="bg-yellow-400"
@@ -197,7 +197,7 @@ export default function SongDetails({
           />
           <img
             id="green-blob"
-            src="./src/assets/SVG/blobs/green-blob.svg"
+            src="/SVG/blobs/green-blob.svg"
             alt=""
             className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             data-bgcolor="bg-green-500"
@@ -209,7 +209,7 @@ export default function SongDetails({
           />
           <img
             id="teal-blob"
-            src="./src/assets/SVG/blobs/teal-blob.svg"
+            src="/SVG/blobs/teal-blob.svg"
             alt=""
             className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             data-bgcolor="bg-teal-500"
@@ -221,7 +221,7 @@ export default function SongDetails({
           />
           <img
             id="cyan-blob"
-            src="./src/assets/SVG/blobs/cyan-blob.svg"
+            src="/SVG/blobs/cyan-blob.svg"
             alt=""
             className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             data-bgcolor="bg-cyan-500"
@@ -233,7 +233,7 @@ export default function SongDetails({
           />
           <img
             id="blue-blob"
-            src="./src/assets/SVG/blobs/blue-blob.svg"
+            src="/SVG/blobs/blue-blob.svg"
             alt=""
             className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             data-bgcolor="bg-blue-500"
@@ -245,7 +245,7 @@ export default function SongDetails({
           />
           <img
             id="purple-blob"
-            src="./src/assets/SVG/blobs/purple-blob.svg"
+            src="/SVG/blobs/purple-blob.svg"
             alt=""
             className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             data-bgcolor="bg-purple-500"
@@ -257,7 +257,7 @@ export default function SongDetails({
           />
           <img
             id="pink-blob"
-            src="./src/assets/SVG/blobs/pink-blob.svg"
+            src="/SVG/blobs/pink-blob.svg"
             alt=""
             className="w-5 lg:w-6 cursor-pointer transition-width duration-200 hover:w-7"
             data-bgcolor="bg-pink-500"
@@ -269,7 +269,7 @@ export default function SongDetails({
           />
           <img
             id="grey-blob"
-            src="./src/assets/SVG/blobs/grey-blob.svg"
+            src="/SVG/blobs/grey-blob.svg"
             alt=""
             data-bgcolor="bg-gray-100"
             data-textcolor="text-black"

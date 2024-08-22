@@ -506,7 +506,7 @@ E|------------------------------------------------------------------------------
             }
           >
             <img
-              src="./src/assets/SVG/magic-fill.svg"
+              src="/SVG/magic-fill.svg"
               alt=""
               className={
                 "w-5 m-0 p-0 grayscale  " +
@@ -522,7 +522,7 @@ E|------------------------------------------------------------------------------
                   {modalWarningText}
                 </span>
                 <img
-                  src="./src/assets/SVG/loader-4-line.svg"
+                  src="/SVG/loader-4-line.svg"
                   alt=""
                   className={
                     "animate-spin w-6 m-0 p-0 " +
@@ -550,13 +550,13 @@ E|------------------------------------------------------------------------------
                 <>
                   {isHoveredOnRecordingButton ? (
                     <img
-                      src="./src/assets/SVG/stop-fill.svg"
+                      src="/SVG/stop-fill.svg"
                       alt=""
                       className={"w-5 m-0 p-0 animate-pulse "}
                     />
                   ) : (
                     <img
-                      src="./src/assets/SVG/microphone-red.svg"
+                      src="/SVG/microphone-red.svg"
                       alt=""
                       className={
                         "w-5 m-0 p-0 animate-pulse scale-125 transition-transform "
@@ -566,7 +566,7 @@ E|------------------------------------------------------------------------------
                 </>
               ) : (
                 <img
-                  src="./src/assets/SVG/microphone.svg"
+                  src="/SVG/microphone.svg"
                   alt=""
                   className={
                     "w-5 m-0 p-0 grayscale opacity-40 group-hover:opacity-100 " +

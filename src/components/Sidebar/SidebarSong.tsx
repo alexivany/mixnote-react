@@ -57,7 +57,7 @@ export default function SidebarSong({
         <div className="flex">
           {currentSong.id === song.id && (
             <img
-              src="./src/assets/SVG/pencil-fill.svg"
+              src="/SVG/pencil-fill.svg"
               id="song-title-edit"
               alt=""
               className={
@@ -68,7 +68,7 @@ export default function SidebarSong({
           )}
           {currentSong.id === song.id && (
             <img
-              src="./src/assets/SVG/cross.svg"
+              src="/SVG/cross.svg"
               id="song-title-cross"
               alt=""
               className="w-6 m-0 p-0 hover:scale-125 transition-transform"

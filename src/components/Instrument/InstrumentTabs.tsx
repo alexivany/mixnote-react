@@ -256,7 +256,7 @@ D|------------------------------------------------------------------------------
             className={`absolute right-2 top-2 text-sm lg:text-md rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-1 py-0.5 font-semibold cursor-pointer`}
           >
             <img
-              src="./src/assets/SVG/cross.svg"
+              src="/SVG/cross.svg"
               alt=""
               className={
                 "w-6 m-0 p-0 grayscale invert " +

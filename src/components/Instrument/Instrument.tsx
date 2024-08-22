@@ -240,7 +240,7 @@ export default function Instrument({ instrumentObject }) {
             <FeatureDropdown addInstrumentFeature={addInstrumentFeature} />
           ) : (
             <img
-              src="./src/assets/SVG/function-add-fill.svg"
+              src="/SVG/function-add-fill.svg"
               alt=""
               className={
                 "w-6 m-0 p-0 cursor-pointer hover:scale-110 transition-transform " +
@@ -255,8 +255,8 @@ export default function Instrument({ instrumentObject }) {
           <img
             src={
               showInstrumentNotes
-                ? "./src/assets/SVG/arrow-drop-up-line.svg"
-                : "./src/assets/SVG/arrow-drop-down-line.svg"
+                ? "/SVG/arrow-drop-up-line.svg"
+                : "/SVG/arrow-drop-down-line.svg"
             }
             alt=""
             className={
@@ -269,7 +269,7 @@ export default function Instrument({ instrumentObject }) {
           />
 
           <img
-            src="./src/assets/SVG/cross.svg"
+            src="/SVG/cross.svg"
             alt=""
             className={
               "transition-transform w-6 m-0 p-0 cursor-pointer hover:scale-125 " +
@@ -361,7 +361,7 @@ export default function Instrument({ instrumentObject }) {
                   </>
                 ) : (
                   <img
-                    src="./src/assets/SVG/magic-fill.svg"
+                    src="/SVG/magic-fill.svg"
                     alt=""
                     className={
                       "w-5 m-0 p-0 grayscale invert " +

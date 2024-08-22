@@ -59,7 +59,7 @@ export default function Tag({ tag, i, setCurrentSong, currentSong }: TagProps) {
       #{tag}
       {tagCrossToggle && (
         <img
-          src="./src/assets/SVG/cross.svg"
+          src="/SVG/cross.svg"
           alt=""
           className={
             "w-4 hover:invert " +
