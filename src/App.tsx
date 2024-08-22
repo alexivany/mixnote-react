@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import Sidebar from "./components/Sidebar/Sidebar";
 import SongView from "./components/SongView";
 
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 
 import { Song, Version } from "./types";
 
@@ -16,24 +16,24 @@ import { useSidebarListContext } from "./contexts/sidebarlist-context";
 import _ from "lodash";
 import TutorialDialog from "./components/TutorialDialog";
 
-const PLACEHOLDER_LOCAL_SONGS: Song[] = [
-  {
-    id: uuidv4(),
-    title: "My First Song",
-    ["Verse"]: {
-      version: "Verse",
-      generalNotes: "",
-      theme: {
-        activeColor: "text-black",
-        bgColor: "bg-gray-100",
-        borderColor: "border-gray-100",
-        textColor: "text-black",
-        hoverColor: "hover:text-black",
-      },
-      versionId: uuidv4(),
-    } as Version,
-  },
-];
+// const PLACEHOLDER_LOCAL_SONGS: Song[] = [
+//   {
+//     id: uuidv4(),
+//     title: "My First Song",
+//     ["Verse"]: {
+//       version: "Verse",
+//       generalNotes: "",
+//       theme: {
+//         activeColor: "text-black",
+//         bgColor: "bg-gray-100",
+//         borderColor: "border-gray-100",
+//         textColor: "text-black",
+//         hoverColor: "hover:text-black",
+//       },
+//       versionId: uuidv4(),
+//     } as Version,
+//   },
+// ];
 export default function App() {
   const [songs, setSongs] = useState<Song[]>();
 
