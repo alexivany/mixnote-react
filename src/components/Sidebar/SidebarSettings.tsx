@@ -146,7 +146,7 @@ export default function SidebarSettings({ setSongs }: SidebarSettings) {
                   : "bg-neutral-800 text-white border-neutral-600")
               }
             >
-              <span className="text-xl">User OpenAI API Key</span>
+              <span className="text-xl">OpenAI API Key</span>
               <input
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}

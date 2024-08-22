@@ -238,8 +238,7 @@ export default function DrumMachine({ instrumentToTab }) {
                   <input
                     name="seq-indicators"
                     type="radio"
-                    // disabled
-
+                    disabled
                     className="appearance-none peer"
                     ref={(elm) => {
                       if (!elm) return;
