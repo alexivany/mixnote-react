@@ -3,16 +3,25 @@ import Instrument from "./Instrument";
 import { useThemeContext } from "@/contexts/theme-context";
 import { useCurrentVersionContext } from "@/contexts/currentversion-context";
 import { Version } from "@/types";
+import { AnimatePresence } from "framer-motion";
+import InstrumentModal from "./InstrumentModal";
 
 export default function InstrumentSection() {
   const { currentTheme } = useThemeContext();
 
   const { currentVersion, setCurrentVersion } = useCurrentVersionContext();
 
+  const [showInstrumentModal, setShowInstrumentModal] =
+    useState<boolean>(false);
+
   const [newInstrumentInput, setNewInstrumentInput] = useState<string>("");
   const [instrumentWarning, setInstrumentWarning] = useState<boolean>(false);
   const [instrumentWarningText, setInstrumentWarningText] =
     useState<string>("");
+
+  function handleInstrumentModal() {
+    setShowInstrumentModal((prevState) => !prevState);
+  }
 
   function handleNewInstrument() {
     const duplicateCheck = Object.entries(currentVersion as Version).find(
@@ -135,6 +144,19 @@ E|------------------------------------------------------------------------------
         >
           Add Instrument
         </button>
+        <button
+          onClick={handleInstrumentModal}
+          className={`hover:scale-110 hover:brightness-90 transition-transform text-sm lg:text-md border-2 rounded-2xl ${currentVersion?.theme?.borderColor} ${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.textColor} px-4 py-2 font-semibold`}
+        >
+          <img
+            src="/SVG/magic-fill.svg"
+            alt=""
+            className={
+              "w-6 m-0 p-0 grayscale invert " +
+              (currentVersion?.theme?.bgColor === "bg-gray-100" && "invert-0 ")
+            }
+          />
+        </button>
         {instrumentWarning && (
           <span className="font-semibold text-md ml-2">
             {instrumentWarningText}
@@ -147,6 +169,11 @@ E|------------------------------------------------------------------------------
           <option value="Drums"></option>
           <option value="Vocals"></option>
         </datalist>
+        <AnimatePresence>
+          {showInstrumentModal && (
+            <InstrumentModal handleInstrumentModal={handleInstrumentModal} />
+          )}
+        </AnimatePresence>
       </div>
       <div className="flex flex-col gap-4">{instrumentElements}</div>
     </>

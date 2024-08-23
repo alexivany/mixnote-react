@@ -36,6 +36,7 @@ export default function SidebarNewSongModal({
 
   const [showSongAiOptions, setShowSongAiOptions] = useState<boolean>(false);
   const [modalWarning, setModalWarning] = useState<boolean>(false);
+  const [modalLoader, setModalLoader] = useState<boolean>(false);
 
   const [modalWarningText, setModalWarningText] = useState<string>();
 
@@ -96,7 +97,6 @@ export default function SidebarNewSongModal({
     recognitionRef.current.start();
   };
 
-  console.log(showSongAiOptions);
   function addNewSong() {
     if (songModalInput.match(/^\s*$/)) {
       setModalWarningText("Song must have a name!");
@@ -169,6 +169,12 @@ export default function SidebarNewSongModal({
   });
 
   async function generateUI() {
+    if (!apiKey || apiKey.match(/^\s*$/)) {
+      setModalWarningText("Please enter an API Key!");
+      setModalLoader(false);
+      setModalWarning(true);
+      return;
+    }
     const openai = new OpenAI({
       apiKey: apiKey,
       dangerouslyAllowBrowser: true,
@@ -176,6 +182,7 @@ export default function SidebarNewSongModal({
 
     setModalWarningText("Generating song...");
     setModalWarning(true);
+    setModalLoader(true);
 
     const response = await openai.beta.chat.completions.parse({
       model: "gpt-4o-2024-08-06",
@@ -518,17 +525,19 @@ E|------------------------------------------------------------------------------
           <div className="flex gap-2 md:gap-4">
             {modalWarning && (
               <div className="flex gap-2 justify-between items-center">
-                <span className="font-semibold text-md ml-2">
+                <span className="font-semibold text-xs md:text-lg ml-2">
                   {modalWarningText}
                 </span>
-                <img
-                  src="/SVG/loader-4-line.svg"
-                  alt=""
-                  className={
-                    "animate-spin w-6 m-0 p-0 " +
-                    (currentTheme === "Dark" && "grayscale invert")
-                  }
-                />
+                {modalLoader && (
+                  <img
+                    src="/SVG/loader-4-line.svg"
+                    alt=""
+                    className={
+                      "animate-spin w-6 m-0 p-0 " +
+                      (currentTheme === "Dark" && "grayscale invert")
+                    }
+                  />
+                )}
               </div>
             )}
             <button
