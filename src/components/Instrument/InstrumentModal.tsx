@@ -1,8 +1,12 @@
 import { useApiContext } from "@/contexts/api-context";
+import { useCurrentVersionContext } from "@/contexts/currentversion-context";
 import { useThemeContext } from "@/contexts/theme-context";
+import { Version } from "@/types";
 import { motion } from "framer-motion";
 import OpenAI from "openai";
+import { zodResponseFormat } from "openai/helpers/zod.mjs";
 import { useState } from "react";
+import { z } from "zod";
 
 interface InstrumentModalProps {
   handleInstrumentModal(): void;
@@ -15,11 +19,21 @@ export default function InstrumentModal({
 
   const { apiKey, setApiKey } = useApiContext();
 
+  const { setCurrentVersion } = useCurrentVersionContext();
+
   const [aiInput, setAiInput] = useState<string>();
 
   const [modalWarning, setModalWarning] = useState<boolean>(false);
   const [modalWarningText, setModalWarningText] = useState<string>();
   const [modalLoader, setModalLoader] = useState<boolean>(false);
+
+  const instrumentOutputSchema = z.object({
+    instrument: z.string().optional(),
+    label: z.string().optional(),
+    notes: z.string().optional(),
+    tabs: z.string().optional(),
+    lyrics: z.string().optional(),
+  });
 
   async function generateUI() {
     if (!apiKey || apiKey.match(/^\s*$/)) {
@@ -41,9 +55,71 @@ export default function InstrumentModal({
       dangerouslyAllowBrowser: true,
     });
 
-    setModalWarningText("Generating song...");
+    setModalWarningText("Generating instrument...");
     setModalLoader(true);
     setModalWarning(true);
+
+    const response = await openai.beta.chat.completions.parse({
+      model: "gpt-4o-2024-08-06",
+      temperature: 0.1,
+      messages: [
+        {
+          role: "system",
+          content: `You are creating a new instrument object based off of the following prompt. Please extract as much of the following information from the given text as possible and return it as a JSON object: 
+          Instrument as a string, Notes as a string, Label as a string, if the Instrument is guitar: Instrument Guitar Tab as a guitar tab formatted multi-line string with each line being 165 characters long that starts with "e|" and ends with "|" (empty spaces should be filled with a hyphen), if the Instrument is bass: Instrument Bass Tab as a bass tab formatted multi-line string with each line being 165 characters long that starts with "G|" and ends with "|" (empty spaces should be filled with a hyphen), if the Instrument is vocals:  Lyrics as a string`,
+        },
+        {
+          role: "user",
+          content: "guitar",
+        },
+        {
+          role: "assistant",
+          content: `{
+    instrument: "Guitar",
+    label: "Guitar",
+    notes: "This is a sample note for the guitar tab.",
+  tabs: "e|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nB|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nG|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nD|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nA|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nE|-----------------------------------------------------------------------------------------------------------------------------------------------------|",
+}`,
+        },
+        {
+          role: "user",
+          content: `dreamy lyrics that go "oh yeah, oh yeah"`,
+        },
+        {
+          role: "assistant",
+          content: `{
+    instrument: "Vocals",
+    label: "Vocals",
+    notes: "Soft, dreamy vocals.",
+          lyrics: "oh yeah, oh yeah"
+}`,
+        },
+        {
+          role: "user",
+          content: `${aiInput}`,
+        },
+      ],
+      response_format: zodResponseFormat(
+        instrumentOutputSchema,
+        "instrumentOutputSchema"
+      ),
+    });
+
+    if (response) {
+      const message = response.choices[0]?.message;
+      const jsonObject = message?.parsed;
+
+      if (jsonObject) {
+        setCurrentVersion((prevVersionData) => {
+          return {
+            ...prevVersionData,
+            [jsonObject.instrument as string]: jsonObject,
+          } as Version;
+        });
+      }
+    }
+    setModalWarning(false);
+    handleInstrumentModal();
   }
   return (
     <>

@@ -193,107 +193,107 @@ export default function SidebarNewSongModal({
           content: `You are creating a new song template project based off of the following prompt. Please extract as much of the following information from the given text as possible and return it as a JSON object: 
           Title as a string, General Notes as a string, Instruments as an array of strings, Sections as an array of strings, Key as a string, BPM as a number, Instrument Guitar Tab as a guitar tab formatted multi-line string with each line being 165 characters long that starts with "e|" and ends with "|" (empty spaces should be filled with a hyphen), Instrument Bass Tab as a bass tab formatted multi-line string with each line being 165 characters long that starts with "G|" and ends with "|" (empty spaces should be filled with a hyphen), Drum Pattern, Lyrics as a string`,
         },
+        // {
+        //   role: "user",
+        //   content: `I have a song named Loud Bark that is 120 bpm in A major with a 4/4 beat. I have a verse and a chorus with electric guitar, distorted bass guitar, drums and vocals. The lyrics for the chorus are "oh yeah, oh yeah"`,
+        // },
+        // {
+        //   role: "assistant",
+        //   content: `{
+        //     title: "Loud Bark",
+        //     bpm: 120,
+        //     key: "A major",
+        //     sections: [
+        //       {
+        //         section: "Verse",
+        //         generalNotes:
+        //           "The verse section features a driving rhythm with a focus on the electric guitar and bass.",
+        //         theme: {
+        //           activeColor: "",
+        //           bgColor: "",
+        //           borderColor: "",
+        //           textColor: "",
+        //         },
+        //         instruments: [
+        //           {
+        //             instrument: "Electric Guitar",
+        //             label: "Electric Guitar",
+        //             notes:
+        //               "Play with a clean tone, focusing on rhythm and chord progression.",
+        //             tabs: "e|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nB|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nG|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nD|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nA|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nE|-----------------------------------------------------------------------------------------------------------------------------------------------------|",
+        //           },
+        //           {
+        //             instrument: "Distorted Bass Guitar",
+        //             label: "Distorted Bass Guitar",
+        //             notes:
+        //               "Add a gritty, distorted tone to complement the electric guitar.",
+        //             tabs: "G|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nD|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nA|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nE|-----------------------------------------------------------------------------------------------------------------------------------------------------|",
+        //           },
+        //           {
+        //             instrument: "Drums",
+        //             label: "Drums",
+        //             notes:
+        //               "Keep a steady 4/4 beat with a focus on snare and bass drum.",
+        //           },
+        //           {
+        //             instrument: "Vocals",
+        //             label: "Vocals",
+        //             notes: "Focus on delivering the verse lyrics with energy.",
+        //             lyrics: "",
+        //           },
+        //         ],
+        //       },
+        //       {
+        //         section: "Chorus",
+        //         generalNotes:
+        //           "The chorus is energetic with a catchy hook and emphasizes the lyrics.",
+        //         theme: {
+        //           activeColor: "",
+        //           bgColor: "",
+        //           borderColor: "",
+        //           textColor: "",
+        //         },
+        //         instruments: [
+        //           {
+        //             instrument: "Electric Guitar",
+        //             label: "Electric Guitar",
+        //             notes:
+        //               "Switch to a more powerful, overdriven sound for the chorus.",
+        //             tabs: "e|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nB|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nG|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nD|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nA|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nE|-----------------------------------------------------------------------------------------------------------------------------------------------------|",
+        //           },
+        //           {
+        //             instrument: "Distorted Bass Guitar",
+        //             label: "Distorted Bass Guitar",
+        //             notes:
+        //               "Continue with a heavy, distorted bass line to drive the chorus.",
+        //             tabs: "G|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nD|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nA|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nE|-----------------------------------------------------------------------------------------------------------------------------------------------------|",
+        //           },
+        //           {
+        //             instrument: "Drums",
+        //             label: "Drums",
+        //             notes:
+        //               "Increase intensity with cymbal crashes and a strong backbeat.",
+        //           },
+        //           {
+        //             instrument: "Vocals",
+        //             label: "Vocals",
+        //             notes:
+        //               "Deliver the chorus with enthusiasm and emphasis on the repeated phrase.",
+        //             lyrics: "oh yeah, oh yeah",
+        //           },
+        //         ],
+        //       },
+        //     ],
+        //   }`,
+        // },
         {
           role: "user",
-          content: `I have a song named Loud Bark that is 120 bpm in A major with a 4/4 beat. I have a verse and a chorus with electric guitar, a distorted bass guitar, drums and vocals. The lyrics for the chorus are "oh yeah, oh yeah"`,
+          content: "song is called My First Song",
         },
         {
           role: "assistant",
           content: `{
-            title: "Loud Bark",
-            bpm: 120,
-            key: "A major",
-            sections: [
-              {
-                section: "Verse",
-                generalNotes:
-                  "The verse section features a driving rhythm with a focus on the electric guitar and bass.",
-                theme: {
-                  activeColor: "",
-                  bgColor: "",
-                  borderColor: "",
-                  textColor: "",
-                },
-                instruments: [
-                  {
-                    instrument: "Electric Guitar",
-                    label: "Electric Guitar",
-                    notes:
-                      "Play with a clean tone, focusing on rhythm and chord progression.",
-                    tabs: "e|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nB|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nG|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nD|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nA|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nE|-----------------------------------------------------------------------------------------------------------------------------------------------------|",
-                  },
-                  {
-                    instrument: "Distorted Bass Guitar",
-                    label: "Distorted Bass Guitar",
-                    notes:
-                      "Add a gritty, distorted tone to complement the electric guitar.",
-                    tabs: "G|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nD|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nA|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nE|-----------------------------------------------------------------------------------------------------------------------------------------------------|",
-                  },
-                  {
-                    instrument: "Drums",
-                    label: "Drums",
-                    notes:
-                      "Keep a steady 4/4 beat with a focus on snare and bass drum.",
-                  },
-                  {
-                    instrument: "Vocals",
-                    label: "Vocals",
-                    notes: "Focus on delivering the verse lyrics with energy.",
-                    lyrics: "",
-                  },
-                ],
-              },
-              {
-                section: "Chorus",
-                generalNotes:
-                  "The chorus is energetic with a catchy hook and emphasizes the lyrics.",
-                theme: {
-                  activeColor: "",
-                  bgColor: "",
-                  borderColor: "",
-                  textColor: "",
-                },
-                instruments: [
-                  {
-                    instrument: "Electric Guitar",
-                    label: "Electric Guitar",
-                    notes:
-                      "Switch to a more powerful, overdriven sound for the chorus.",
-                    tabs: "e|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nB|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nG|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nD|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nA|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nE|-----------------------------------------------------------------------------------------------------------------------------------------------------|",
-                  },
-                  {
-                    instrument: "Distorted Bass Guitar",
-                    label: "Distorted Bass Guitar",
-                    notes:
-                      "Continue with a heavy, distorted bass line to drive the chorus.",
-                    tabs: "G|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nD|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nA|-----------------------------------------------------------------------------------------------------------------------------------------------------|\nE|-----------------------------------------------------------------------------------------------------------------------------------------------------|",
-                  },
-                  {
-                    instrument: "Drums",
-                    label: "Drums",
-                    notes:
-                      "Increase intensity with cymbal crashes and a strong backbeat.",
-                  },
-                  {
-                    instrument: "Vocals",
-                    label: "Vocals",
-                    notes:
-                      "Deliver the chorus with enthusiasm and emphasis on the repeated phrase.",
-                    lyrics: "oh yeah, oh yeah",
-                  },
-                ],
-              },
-            ],
-          }`,
-        },
-        {
-          role: "user",
-          content: "song is called Test Song",
-        },
-        {
-          role: "assistant",
-          content: `{
-            title: "Test Song",
+            title: "My First Song",
             bpm: 120,
             key: "C Major",
             sections: [
@@ -330,18 +330,12 @@ export default function SidebarNewSongModal({
       // function_call: { name: "generate_song" },
     });
 
-    console.log(response);
-    console.log(response.choices[0]?.message);
     if (response) {
-      console.log(response);
-
       const message = response.choices[0]?.message;
       const jsonObject = message?.parsed;
       // const jsonObject = JSON.parse(
       //   response.choices[0].message.content as string
       // );
-
-      console.log(jsonObject);
 
       if (jsonObject) {
         const newSong = {
