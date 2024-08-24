@@ -1,30 +1,38 @@
-# React + TypeScript + Vite
+<h1 align="center">MixNote 🎶</h1>
+<p align="center"> A songwriting journal made by musicians, for musicians, to help with every step of your creative process. </p>
+<h3 align="center"><a href="https://www.mixnote.ca/">DEMO</a></h3>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+<img align="center" src="https://raw.githubusercontent.com/alexivany/mixnote-react/main/public/MixNoteScreenshot01.png">
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+### Introduction
+MixNote is a songwriting journal made by musicians, for musicians, to help with every step of your creative process.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Create a song and keep track of tabs for your guitar and bass parts, remember drum beats and fills with a built-in drum machine, and easily generate lyric ideas with the help of AI. Each song can include multiple sections, useful for arranging a song with verse or chorus structures, or documenting different versions during the mixing and recording process.
+You can also create custom tags for songs, easily organising larger projects.
 
-- Configure the top-level `parserOptions` property like this:
+Easily generate an entire song's worth of notes with OpenAI integration.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+### Development
+MixNote was built with React, TypeScript & Tailwind.
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Libraries used:
+
+- [Zod](https://zod.dev/) used for validating AI structured output.
+- [p5.js](https://p5js.org/) used for the animated waveform during Drum Machine playback.
+- [TipTap](https://tiptap.dev/) used for the note text editors.
+- [OpenAi](https://openai.com/api/) used for song, lyric and instrument generation.
+- [Framer Motion](https://www.framer.com/motion/) used for modal animations.
+- [Tone.js](https://tonejs.github.io/) used for drum sampler and audio playback.
+
+### Credits
+A **huge** thank you to my [Get Coding](https://www.getcoding.ca/) mentor [Hai Nghiem](https://www.linkedin.com/in/haiphunghiem/) for his AI knowledge, support and guidance while I built this.
+
+### Contact
+Please contact me with any comments or concerns, I love hearing feedback!
+
+- Email: ivany.world@gmail.com
+- Github: https://github.com/alexivany
