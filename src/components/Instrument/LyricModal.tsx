@@ -35,6 +35,7 @@ export default function LyricModal({
 
   const [modalWarning, setModalWarning] = useState<boolean>(false);
   const [modalWarningText, setModalWarningText] = useState<string>();
+  const [modalLoader, setModalLoader] = useState<boolean>(false);
 
   const { apiKey, setApiKey } = useApiContext();
 
@@ -49,6 +50,12 @@ export default function LyricModal({
 
   const generateLyrics = async () => {
     // e.preventDefault();
+    if (!apiKey || apiKey.match(/^\s*$/)) {
+      setModalWarningText("Please enter an API Key!");
+      setModalLoader(false);
+      setModalWarning(true);
+      return;
+    }
     if (
       lyricModalInput.about !== "" &&
       lyricModalInput.section !== "" &&
@@ -61,6 +68,7 @@ export default function LyricModal({
 
       setModalWarningText("Generating lyrics...");
       setModalWarning(true);
+      setModalLoader(true);
 
       const response = await openai.chat.completions.create({
         model: "gpt-4o-mini",
@@ -279,14 +287,16 @@ export default function LyricModal({
               <span className="font-semibold text-md ml-2">
                 {modalWarningText}
               </span>
-              <img
-                src="/SVG/loader-4-line.svg"
-                alt=""
-                className={
-                  "animate-spin w-6 m-0 p-0 " +
-                  (currentTheme === "Dark" && "grayscale invert")
-                }
-              />
+              {modalLoader && (
+                <img
+                  src="/SVG/loader-4-line.svg"
+                  alt=""
+                  className={
+                    "animate-spin w-6 m-0 p-0 " +
+                    (currentTheme === "Dark" && "grayscale invert")
+                  }
+                />
+              )}
             </div>
           )}
           <button
@@ -301,7 +311,6 @@ export default function LyricModal({
                     poetic: 6,
                   });
                 } else {
-                  console.log("new lyrics");
                   setLyricModalInput({
                     about: "A catchy pop song",
                     lines: 8,
