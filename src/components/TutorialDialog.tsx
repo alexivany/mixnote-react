@@ -48,7 +48,7 @@ export default function TutorialDialog({ setSongs }: TutorialDialogProps) {
                       <div className="mt-2 flex flex-col gap-2">
                         <div className="video-responsive">
                           <iframe
-                            src="https://www.youtube.com/embed/AKB5SEuHcoU?si=SB5pei7-FCi9Xqyr"
+                            src="https://www.youtube.com/embed/-n7PKySGp_Q?si=2NhPTjPTX5r3x512"
                             title="YouTube video player"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             referrerPolicy="strict-origin-when-cross-origin"
