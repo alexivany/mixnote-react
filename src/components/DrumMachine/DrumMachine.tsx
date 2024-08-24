@@ -250,8 +250,7 @@ export default function DrumMachine({ instrumentToTab }) {
                       ` w-4 h-4 rounded-2xl border-4  peer-checked:bg-white ` +
                       (currentVersion?.theme?.bgColor === "bg-gray-100"
                         ? "bg-gray-300 border-gray-300 "
-                        : `${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.borderColor} `) +
-                      (currentTheme === "Dark" && "bg-neutral-800")
+                        : `${currentVersion?.theme?.bgColor} ${currentVersion?.theme?.borderColor} `)
                     }
                   ></div>
                 </label>
